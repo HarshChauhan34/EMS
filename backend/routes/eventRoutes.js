@@ -1,4 +1,5 @@
 import express from "express";
+
 import {
   createEvent,
   getAllEvents,
@@ -10,13 +11,39 @@ import {
 import { protect } from "../middleware/authMiddleware.js";
 import { adminOnly } from "../middleware/roleMiddleware.js";
 
+// ✅ multer
+import upload from "../middleware/upload.js";
+
 const router = express.Router();
 
+// ================= GET =================
+
 router.get("/", getAllEvents);
+
 router.get("/:id", getEventById);
 
-router.post("/", protect, adminOnly, createEvent);
-router.put("/:id", protect, adminOnly, updateEvent);
+// ================= CREATE =================
+
+router.post(
+  "/",
+  protect,
+  adminOnly,
+  upload.single("image"), // ✅ add
+  createEvent,
+);
+
+// ================= UPDATE =================
+
+router.put(
+  "/:id",
+  protect,
+  adminOnly,
+  upload.single("image"), // ✅ add
+  updateEvent,
+);
+
+// ================= DELETE =================
+
 router.delete("/:id", protect, adminOnly, deleteEvent);
 
-export default router;  
+export default router;

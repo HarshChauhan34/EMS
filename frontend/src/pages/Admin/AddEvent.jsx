@@ -13,7 +13,10 @@ function AddEvent() {
     location: "",
     price: "",
     totalSeats: "",
+    image: null,
   });
+
+  const [preview, setPreview] = useState(null);
 
   const handleChange = (e) => {
     setForm({
@@ -22,11 +25,37 @@ function AddEvent() {
     });
   };
 
+  // ✅ image change
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+
+    setForm({
+      ...form,
+      image: file,
+    });
+
+    setPreview(URL.createObjectURL(file));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await createEvent(form);
+      const formData = new FormData();
+
+      formData.append("title", form.title);
+      formData.append("description", form.description);
+      formData.append("category", form.category);
+      formData.append("date", form.date);
+      formData.append("location", form.location);
+      formData.append("price", form.price);
+      formData.append("totalSeats", form.totalSeats);
+
+      if (form.image) {
+        formData.append("image", form.image);
+      }
+
+      await createEvent(formData);
 
       alert("Event created");
 
@@ -47,32 +76,33 @@ function AddEvent() {
           onSubmit={handleSubmit}
           className="grid grid-cols-1 sm:grid-cols-2 gap-4"
         >
+          {/* Title */}
           <div>
-            <label className="text-sm font-medium">Title</label>
+            <label>Title</label>
 
             <input
               name="title"
-              placeholder="Event title"
               onChange={handleChange}
               className="border p-2 rounded w-full"
               required
             />
           </div>
 
+          {/* Category */}
           <div>
-            <label className="text-sm font-medium">Category</label>
+            <label>Category</label>
 
             <input
               name="category"
-              placeholder="Category"
               onChange={handleChange}
               className="border p-2 rounded w-full"
               required
             />
           </div>
 
+          {/* Date */}
           <div>
-            <label className="text-sm font-medium">Date</label>
+            <label>Date</label>
 
             <input
               type="date"
@@ -83,55 +113,82 @@ function AddEvent() {
             />
           </div>
 
+          {/* Location */}
           <div>
-            <label className="text-sm font-medium">Location</label>
+            <label>Location</label>
 
             <input
               name="location"
-              placeholder="Location"
               onChange={handleChange}
               className="border p-2 rounded w-full"
               required
             />
           </div>
 
+          {/* Price */}
           <div>
-            <label className="text-sm font-medium">Price</label>
+            <label>Price</label>
 
             <input
               name="price"
-              placeholder="Price"
               onChange={handleChange}
               className="border p-2 rounded w-full"
               required
             />
           </div>
 
+          {/* Seats */}
           <div>
-            <label className="text-sm font-medium">Total Seats</label>
+            <label>Total Seats</label>
 
             <input
               name="totalSeats"
-              placeholder="Total seats"
               onChange={handleChange}
               className="border p-2 rounded w-full"
               required
             />
           </div>
 
+          {/* Image */}
           <div className="sm:col-span-2">
-            <label className="text-sm font-medium">Description</label>
+            <label>Event Image</label>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImage}
+              className="border p-2 rounded w-full"
+            />
+
+            {preview && (
+              <img
+                src={preview}
+                alt=""
+                className="
+                mt-2
+                w-full
+                h-40
+                object-cover
+                rounded
+                "
+              />
+            )}
+          </div>
+
+          {/* Description */}
+          <div className="sm:col-span-2">
+            <label>Description</label>
 
             <textarea
               name="description"
-              placeholder="Description"
+              rows={3}
               onChange={handleChange}
               className="border p-2 rounded w-full"
-              rows={3}
               required
             />
           </div>
 
+          {/* Button */}
           <div className="sm:col-span-2">
             <button
               className="
@@ -142,8 +199,6 @@ function AddEvent() {
               text-white
               py-2
               rounded-lg
-              hover:opacity-90
-              transition
               "
             >
               Create Event

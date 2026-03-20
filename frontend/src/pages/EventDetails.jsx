@@ -48,23 +48,30 @@ function EventDetails() {
 
   if (!event)
     return (
-      <div className="flex justify-center items-center h-screen text-lg sm:text-xl">
+      <div className="flex justify-center items-center h-screen text-lg">
         Loading...
       </div>
     );
 
+  const imageUrl = event.image
+    ? `http://localhost:5000/${event.image}`
+    : "https://via.placeholder.com/800x400";
+
   return (
     <div className="min-h-screen bg-gray-100 py-4 sm:py-8 px-2 sm:px-6">
-      <div
-        className="
-        max-w-4xl
-        mx-auto
-        bg-white
-        rounded-xl
-        shadow-lg
-        overflow-hidden
-        "
-      >
+      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        {/* Image */}
+        <img
+          src={imageUrl}
+          alt="event"
+          className="
+          w-full
+          h-52
+          sm:h-72
+          object-cover
+          "
+        />
+
         {/* Header */}
         <div
           className="
@@ -89,15 +96,7 @@ function EventDetails() {
           </p>
 
           {/* Info Grid */}
-          <div
-            className="
-            grid
-            grid-cols-1
-            sm:grid-cols-2
-            gap-3
-            text-sm
-            "
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <div className="bg-gray-100 p-3 rounded">
               📅 Date
               <br />
@@ -134,13 +133,7 @@ function EventDetails() {
             <div className="flex justify-center items-center gap-4">
               <button
                 onClick={() => setSeats(seats > 1 ? seats - 1 : 1)}
-                className="
-                px-3
-                py-1
-                bg-gray-300
-                rounded
-                text-lg
-                "
+                className="px-3 py-1 bg-gray-300 rounded text-lg"
               >
                 -
               </button>
@@ -151,20 +144,14 @@ function EventDetails() {
                 onClick={() =>
                   setSeats(seats < event.availableSeats ? seats + 1 : seats)
                 }
-                className="
-                px-3
-                py-1
-                bg-gray-300
-                rounded
-                text-lg
-                "
+                className="px-3 py-1 bg-gray-300 rounded text-lg"
               >
                 +
               </button>
             </div>
           </div>
 
-          {/* Book button */}
+          {/* Book */}
           <button
             onClick={handleBook}
             disabled={event.availableSeats === 0}

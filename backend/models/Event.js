@@ -5,6 +5,7 @@ const eventSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
+      trim: true,
     },
 
     description: {
@@ -42,14 +43,25 @@ const eventSchema = new mongoose.Schema(
       required: true,
     },
 
+    // ✅ NEW IMAGE FIELD
+    image: {
+      type: String,
+      default: "",
+    },
+
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+  }
 );
 
-const Event = mongoose.model("Event", eventSchema);
+const Event = mongoose.model(
+  "Event",
+  eventSchema
+);
 
 export default Event;

@@ -20,6 +20,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/dashboard", dashboardRoutes); 
+app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {
   res.send("Event Management System API is running...");
