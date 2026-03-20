@@ -1,0 +1,157 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import API from "../services/api";
+import { bookEvent } from "../services/bookingService";
+import { useNavigate } from "react-router-dom";
+
+function EventDetails() {
+  const { id } = useParams();
+
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleBook = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      await bookEvent({
+        eventId: event._id,
+        seats: 1,
+      });
+
+      alert("Booking successful");
+    } catch (error) {
+      alert(error.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvent();
+  }, []);
+
+  const fetchEvent = async () => {
+    try {
+      const res = await API.get(`/events/${id}`);
+      setEvent(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (!event)
+    return (
+      <div className="flex justify-center items-center h-screen text-xl">
+        Loading...
+      </div>
+    );
+
+  return (
+    <div className="min-h-screen bg-gray-100 py-6 px-3 sm:px-6">
+      <div
+        className="
+        max-w-4xl
+        mx-auto
+        bg-white
+        rounded-xl
+        shadow-lg
+        overflow-hidden
+        "
+      >
+        {/* Header */}
+        <div
+          className="
+          bg-gradient-to-r
+          from-indigo-600
+          via-purple-600
+          to-pink-500
+          text-white
+          p-4 sm:p-6
+          "
+        >
+          <h1 className="text-xl sm:text-3xl font-bold">{event.title}</h1>
+
+          <p className="text-sm sm:text-base opacity-90">{event.category}</p>
+        </div>
+
+        {/* Body */}
+        <div className="p-4 sm:p-6 space-y-4">
+          {/* Description */}
+          <p className="text-gray-700 text-sm sm:text-base">
+            {event.description}
+          </p>
+
+          {/* Info Grid */}
+          <div
+            className="
+            grid
+            grid-cols-1
+            sm:grid-cols-2
+            gap-3
+            text-sm
+            "
+          >
+            <div className="bg-gray-100 p-3 rounded">
+              📅 Date
+              <br />
+              <span className="font-semibold">
+                {new Date(event.date).toLocaleDateString()}
+              </span>
+            </div>
+
+            <div className="bg-gray-100 p-3 rounded">
+              📍 Location
+              <br />
+              <span className="font-semibold">{event.location}</span>
+            </div>
+
+            <div className="bg-gray-100 p-3 rounded">
+              💰 Price
+              <br />
+              <span className="font-semibold">₹ {event.price}</span>
+            </div>
+
+            <div className="bg-gray-100 p-3 rounded">
+              🎟 Seats Available
+              <br />
+              <span className="font-semibold">{event.availableSeats}</span>
+            </div>
+          </div>
+
+          {/* Book Button */}
+          <button
+            onClick={handleBook}
+            disabled={event.availableSeats === 0 || loading}
+            className={`
+            w-full
+            mt-2
+            py-3
+            rounded-lg
+            text-base sm:text-lg
+            text-white
+            transition
+            ${
+              event.availableSeats === 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-green-500 to-emerald-600 hover:scale-[1.02]"
+            }
+            `}
+          >
+            {event.availableSeats === 0
+              ? "Sold Out"
+              : loading
+                ? "Booking..."
+                : "Book Now"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default EventDetails;
