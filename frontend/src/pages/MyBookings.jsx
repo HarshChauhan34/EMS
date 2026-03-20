@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  getMyBookings,
-  cancelBooking,
-} from "../services/bookingService";
+import { getMyBookings, cancelBooking } from "../services/bookingService";
 
 function MyBookings() {
   const [bookings, setBookings] = useState([]);
@@ -13,9 +10,9 @@ function MyBookings() {
 
   const fetchBookings = async () => {
     const res = await getMyBookings();
-    setBookings(res.data);
-  };
 
+    setBookings(res.data.filter((b) => b.bookingStatus !== "cancelled"));
+  };
   const handleCancel = async (id) => {
     await cancelBooking(id);
     fetchBookings();
@@ -24,7 +21,6 @@ function MyBookings() {
   return (
     <div className="min-h-screen bg-gray-100 py-6 px-3 sm:px-6">
       <div className="max-w-6xl mx-auto">
-
         {/* Header */}
         <div
           className="
@@ -39,12 +35,8 @@ function MyBookings() {
           shadow
           "
         >
-          <h1 className="text-xl sm:text-3xl font-bold">
-            My Bookings
-          </h1>
-          <p className="text-sm opacity-90">
-            All your event bookings
-          </p>
+          <h1 className="text-xl sm:text-3xl font-bold">My Bookings</h1>
+          <p className="text-sm opacity-90">All your event bookings</p>
         </div>
 
         {/* Empty */}
@@ -80,19 +72,12 @@ function MyBookings() {
               "
             >
               {/* Title */}
-              <h2 className="text-lg font-bold mb-1">
-                {b.event.title}
-              </h2>
+              <h2 className="text-lg font-bold mb-1">{b.event.title}</h2>
 
-              <p className="text-sm text-gray-500">
-                {b.event.location}
-              </p>
+              <p className="text-sm text-gray-500">{b.event.location}</p>
 
               <p className="text-sm">
-                📅{" "}
-                {new Date(
-                  b.event.date
-                ).toLocaleDateString()}
+                📅 {new Date(b.event.date).toLocaleDateString()}
               </p>
 
               <div className="mt-2 text-sm space-y-1">
@@ -124,9 +109,7 @@ function MyBookings() {
               {/* Cancel button */}
               {b.bookingStatus === "confirmed" && (
                 <button
-                  onClick={() =>
-                    handleCancel(b._id)
-                  }
+                  onClick={() => handleCancel(b._id)}
                   className="
                   mt-3
                   bg-red-500

@@ -1,35 +1,15 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import API from "../services/api";
 import { bookEvent } from "../services/bookingService";
-import { useNavigate } from "react-router-dom";
 
 function EventDetails() {
   const { id } = useParams();
 
   const [event, setEvent] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [seats, setSeats] = useState(1);
+
   const navigate = useNavigate();
-
-  const handleBook = async () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-
-    try {
-      await bookEvent({
-        eventId: event._id,
-        seats: 1,
-      });
-
-      alert("Booking successful");
-    } catch (error) {
-      alert(error.response?.data?.message);
-    }
-  };
 
   useEffect(() => {
     fetchEvent();
@@ -44,15 +24,37 @@ function EventDetails() {
     }
   };
 
+  const handleBook = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      await bookEvent({
+        eventId: event._id,
+        seats: seats,
+      });
+
+      alert("Booking successful");
+
+      fetchEvent();
+    } catch (error) {
+      alert(error.response?.data?.message);
+    }
+  };
+
   if (!event)
     return (
-      <div className="flex justify-center items-center h-screen text-xl">
+      <div className="flex justify-center items-center h-screen text-lg sm:text-xl">
         Loading...
       </div>
     );
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 px-3 sm:px-6">
+    <div className="min-h-screen bg-gray-100 py-4 sm:py-8 px-2 sm:px-6">
       <div
         className="
         max-w-4xl
@@ -74,13 +76,13 @@ function EventDetails() {
           p-4 sm:p-6
           "
         >
-          <h1 className="text-xl sm:text-3xl font-bold">{event.title}</h1>
+          <h1 className="text-lg sm:text-3xl font-bold">{event.title}</h1>
 
-          <p className="text-sm sm:text-base opacity-90">{event.category}</p>
+          <p className="text-xs sm:text-base opacity-90">{event.category}</p>
         </div>
 
         {/* Body */}
-        <div className="p-4 sm:p-6 space-y-4">
+        <div className="p-3 sm:p-6 space-y-4">
           {/* Description */}
           <p className="text-gray-700 text-sm sm:text-base">
             {event.description}
@@ -123,30 +125,63 @@ function EventDetails() {
             </div>
           </div>
 
-          {/* Book Button */}
+          {/* Seat selector */}
+          <div className="mt-4">
+            <p className="font-semibold mb-2 text-sm sm:text-base">
+              Select Seats
+            </p>
+
+            <div className="flex justify-center items-center gap-4">
+              <button
+                onClick={() => setSeats(seats > 1 ? seats - 1 : 1)}
+                className="
+                px-3
+                py-1
+                bg-gray-300
+                rounded
+                text-lg
+                "
+              >
+                -
+              </button>
+
+              <span className="text-lg sm:text-xl font-bold">{seats}</span>
+
+              <button
+                onClick={() =>
+                  setSeats(seats < event.availableSeats ? seats + 1 : seats)
+                }
+                className="
+                px-3
+                py-1
+                bg-gray-300
+                rounded
+                text-lg
+                "
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          {/* Book button */}
           <button
             onClick={handleBook}
-            disabled={event.availableSeats === 0 || loading}
-            className={`
+            disabled={event.availableSeats === 0}
+            className="
             w-full
-            mt-2
-            py-3
-            rounded-lg
-            text-base sm:text-lg
+            mt-4
+            bg-gradient-to-r
+            from-green-500
+            to-emerald-600
             text-white
-            transition
-            ${
-              event.availableSeats === 0
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-green-500 to-emerald-600 hover:scale-[1.02]"
-            }
-            `}
+            py-2 sm:py-3
+            rounded-lg
+            text-sm sm:text-lg
+            disabled:bg-gray-400
+            "
           >
-            {event.availableSeats === 0
-              ? "Sold Out"
-              : loading
-                ? "Booking..."
-                : "Book Now"}
+            {event.availableSeats === 0 ? "Sold Out" : "Book Now"}
           </button>
         </div>
       </div>
