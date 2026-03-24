@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  // eslint-disable-next-line no-constant-binary-expression
+  baseURL: "https://ems-4-dflv.onrender.com/api" || "http://localhost:5000/api",
 });
 
 API.interceptors.request.use((req) => {
