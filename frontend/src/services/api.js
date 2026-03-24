@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://ems-4-dflv.onrender.com/api",
+  baseURL: "http://localhost:5000/api",
 });
 
 API.interceptors.request.use((req) => {

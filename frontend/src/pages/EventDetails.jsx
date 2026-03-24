@@ -11,6 +11,8 @@ function EventDetails() {
 
   const navigate = useNavigate();
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
   useEffect(() => {
     fetchEvent();
   }, []);
@@ -25,8 +27,6 @@ function EventDetails() {
   };
 
   const handleBook = async () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-
     if (!user) {
       navigate("/login");
       return;
@@ -64,12 +64,7 @@ function EventDetails() {
         <img
           src={imageUrl}
           alt="event"
-          className="
-          w-full
-          h-52
-          sm:h-72
-          object-cover
-          "
+          className="w-full h-52 sm:h-72 object-cover"
         />
 
         {/* Header */}
@@ -81,7 +76,7 @@ function EventDetails() {
           to-pink-500
           text-white
           p-4 sm:p-6
-          "
+        "
         >
           <h1 className="text-lg sm:text-3xl font-bold">{event.title}</h1>
 
@@ -124,52 +119,74 @@ function EventDetails() {
             </div>
           </div>
 
-          {/* Seat selector */}
-          <div className="mt-4">
-            <p className="font-semibold mb-2 text-sm sm:text-base">
-              Select Seats
-            </p>
+          {/* Seat selector (only for user) */}
+          {user?.role !== "admin" && (
+            <div className="mt-4">
+              <p className="font-semibold mb-2 text-sm sm:text-base">
+                Select Seats
+              </p>
 
-            <div className="flex justify-center items-center gap-4">
-              <button
-                onClick={() => setSeats(seats > 1 ? seats - 1 : 1)}
-                className="px-3 py-1 bg-gray-300 rounded text-lg"
-              >
-                -
-              </button>
+              <div className="flex justify-center items-center gap-4">
+                <button
+                  onClick={() => setSeats(seats > 1 ? seats - 1 : 1)}
+                  className="px-3 py-1 bg-gray-300 rounded text-lg"
+                >
+                  -
+                </button>
 
-              <span className="text-lg sm:text-xl font-bold">{seats}</span>
+                <span className="text-lg sm:text-xl font-bold">{seats}</span>
 
-              <button
-                onClick={() =>
-                  setSeats(seats < event.availableSeats ? seats + 1 : seats)
-                }
-                className="px-3 py-1 bg-gray-300 rounded text-lg"
-              >
-                +
-              </button>
+                <button
+                  onClick={() =>
+                    setSeats(seats < event.availableSeats ? seats + 1 : seats)
+                  }
+                  className="px-3 py-1 bg-gray-300 rounded text-lg"
+                >
+                  +
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Book */}
-          <button
-            onClick={handleBook}
-            disabled={event.availableSeats === 0}
-            className="
-            w-full
-            mt-4
-            bg-gradient-to-r
-            from-green-500
-            to-emerald-600
-            text-white
-            py-2 sm:py-3
-            rounded-lg
-            text-sm sm:text-lg
-            disabled:bg-gray-400
-            "
-          >
-            {event.availableSeats === 0 ? "Sold Out" : "Book Now"}
-          </button>
+          {/* Buttons */}
+
+          {user?.role === "admin" ? (
+            <button
+              onClick={() => navigate(`/edit-event/${event._id}`)}
+              className="
+              w-full
+              mt-4
+              bg-gradient-to-r
+              from-blue-500
+              to-indigo-600
+              text-white
+              py-2 sm:py-3
+              rounded-lg
+              text-sm sm:text-lg
+              "
+            >
+              Edit Event
+            </button>
+          ) : (
+            <button
+              onClick={handleBook}
+              disabled={event.availableSeats === 0}
+              className="
+              w-full
+              mt-4
+              bg-gradient-to-r
+              from-green-500
+              to-emerald-600
+              text-white
+              py-2 sm:py-3
+              rounded-lg
+              text-sm sm:text-lg
+              disabled:bg-gray-400
+              "
+            >
+              {event.availableSeats === 0 ? "Sold Out" : "Book Now"}
+            </button>
+          )}
         </div>
       </div>
     </div>
