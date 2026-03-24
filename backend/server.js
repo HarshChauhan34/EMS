@@ -7,6 +7,8 @@ import eventRoutes from "./routes/eventRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import { protect } from "./middleware/authMiddleware.js";
+import adminRoutes from "./routes/adminRoutes.js";
+
 
 dotenv.config();
 connectDB();
@@ -21,6 +23,7 @@ app.use("/api/events", eventRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/dashboard", dashboardRoutes); 
 app.use("/uploads", express.static("uploads"));
+app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("Event Management System API is running...");

@@ -13,13 +13,25 @@ function MyBookings() {
 
     setBookings(res.data.filter((b) => b.bookingStatus !== "cancelled"));
   };
+
   const handleCancel = async (id) => {
     await cancelBooking(id);
     fetchBookings();
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 px-3 sm:px-6">
+    <div
+      className="
+      min-h-screen
+      bg-gradient-to-br
+      from-indigo-100
+      via-purple-100
+      to-pink-100
+      py-6
+      px-3
+      sm:px-6
+      "
+    >
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div
@@ -29,19 +41,27 @@ function MyBookings() {
           via-purple-600
           to-pink-500
           text-white
-          p-4 sm:p-6
-          rounded-lg
+          p-5
+          rounded-2xl
           mb-6
-          shadow
+          shadow-xl
           "
         >
-          <h1 className="text-xl sm:text-3xl font-bold">My Bookings</h1>
-          <p className="text-sm opacity-90">All your event bookings</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">🎟 My Bookings</h1>
+
+          <p className="opacity-90">All your confirmed event bookings</p>
         </div>
 
         {/* Empty */}
         {bookings.length === 0 && (
-          <div className="text-center mt-10 text-gray-500 text-lg">
+          <div
+            className="
+            text-center
+            mt-12
+            text-gray-600
+            text-lg
+            "
+          >
             No bookings yet
           </div>
         )}
@@ -53,41 +73,61 @@ function MyBookings() {
           grid-cols-1
           sm:grid-cols-2
           lg:grid-cols-3
-          gap-4
+          gap-5
           "
         >
           {bookings.map((b) => (
             <div
               key={b._id}
               className="
-              bg-white
-              rounded-xl
-              shadow-md
-              hover:shadow-xl
+              bg-white/90
+              backdrop-blur-md
+              rounded-2xl
+              shadow-lg
+              hover:shadow-2xl
+              hover:scale-105
               transition
-              p-4
+              p-5
               flex
               flex-col
               justify-between
+              border
               "
             >
               {/* Title */}
-              <h2 className="text-lg font-bold mb-1">{b.event.title}</h2>
+              <div>
+                <h2
+                  className="
+                  text-lg
+                  font-bold
+                  text-indigo-600
+                  "
+                >
+                  {b.event.title}
+                </h2>
 
-              <p className="text-sm text-gray-500">{b.event.location}</p>
+                <p className="text-sm text-gray-500">📍 {b.event.location}</p>
 
-              <p className="text-sm">
-                📅 {new Date(b.event.date).toLocaleDateString()}
-              </p>
+                <p className="text-sm">
+                  📅 {new Date(b.event.date).toLocaleDateString()}
+                </p>
+              </div>
 
-              <div className="mt-2 text-sm space-y-1">
-                <p>Seats: {b.seatsBooked}</p>
+              {/* Details */}
+              <div className="mt-3 text-sm space-y-1">
+                <p>
+                  🎫 Seats:
+                  <span className="font-semibold ml-1">{b.seatsBooked}</span>
+                </p>
 
-                <p>Amount: ₹{b.totalAmount}</p>
+                <p>
+                  💰 Amount:
+                  <span className="font-semibold ml-1">₹{b.totalAmount}</span>
+                </p>
               </div>
 
               {/* Status */}
-              <div className="mt-2">
+              <div className="mt-3">
                 <span
                   className={`
                   px-3
@@ -106,18 +146,23 @@ function MyBookings() {
                 </span>
               </div>
 
-              {/* Cancel button */}
+              {/* Cancel */}
               {b.bookingStatus === "confirmed" && (
                 <button
                   onClick={() => handleCancel(b._id)}
                   className="
-                  mt-3
-                  bg-red-500
-                  hover:bg-red-600
+                  mt-4
+                  bg-gradient-to-r
+                  from-red-500
+                  to-pink-500
+                  hover:from-red-600
+                  hover:to-pink-600
                   text-white
                   py-2
                   rounded-lg
                   text-sm
+                  shadow
+                  transition
                   "
                 >
                   Cancel Booking

@@ -24,12 +24,10 @@ export const registerUser = async (req, res) => {
       role: user.role,
       token: generateToken(user._id, user.role),
     });
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 export const loginUser = async (req, res) => {
   try {
@@ -52,8 +50,40 @@ export const loginUser = async (req, res) => {
     } else {
       res.status(401).json({ message: "Invalid email or password" });
     }
-
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const { name, email } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    user.name = name || user.name;
+    user.email = email || user.email;
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      token: generateToken(updatedUser._id, updatedUser.role),
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
