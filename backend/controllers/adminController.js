@@ -13,7 +13,6 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-
 export const getUserBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({

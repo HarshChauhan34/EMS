@@ -12,7 +12,6 @@ const router = express.Router();
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 
-// ✅ new
 router.put("/profile", protect, updateProfile);
 
 export default router;
