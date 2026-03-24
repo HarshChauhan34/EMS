@@ -8,3 +8,6 @@ export const getMyBookings = () =>
 
 export const cancelBooking = (id) =>
   API.put(`/bookings/cancel/${id}`);
+
+export const getAllBookings = () =>
+  API.get("/bookings");
