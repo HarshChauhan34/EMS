@@ -4,12 +4,13 @@ import API from "../../services/api";
 
 function EditEvent() {
   const { id } = useParams();
-
   const navigate = useNavigate();
 
   const [form, setForm] = useState({});
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
   useEffect(() => {
     fetchEvent();
@@ -22,9 +23,9 @@ function EditEvent() {
       setForm(res.data);
 
       if (res.data.image) {
-        setPreview(
-          `? https://ems-4-dflv.onrender.com/${res.data.image} : https://localhost:5000/${res.data.image}`,
-        );
+        const imgUrl = BASE_URL.replace("/api", "") + "/" + res.data.image;
+
+        setPreview(imgUrl);
       }
     } catch (error) {
       console.log(error);
@@ -38,13 +39,15 @@ function EditEvent() {
     });
   };
 
-  // ✅ image change
+  // image change
   const handleImage = (e) => {
     const file = e.target.files[0];
 
     setImage(file);
 
-    setPreview(URL.createObjectURL(file));
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -65,11 +68,8 @@ function EditEvent() {
         formData.append("image", image);
       }
 
-      await API.put(`/events/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      // ✅ do NOT set header manually
+      await API.put(`/events/${id}`, formData);
 
       alert("Event updated");
 
@@ -93,7 +93,6 @@ function EditEvent() {
           {/* Title */}
           <div>
             <label>Title</label>
-
             <input
               name="title"
               value={form.title || ""}
@@ -105,7 +104,6 @@ function EditEvent() {
           {/* Category */}
           <div>
             <label>Category</label>
-
             <input
               name="category"
               value={form.category || ""}
@@ -117,7 +115,6 @@ function EditEvent() {
           {/* Date */}
           <div>
             <label>Date</label>
-
             <input
               type="date"
               name="date"
@@ -130,7 +127,6 @@ function EditEvent() {
           {/* Location */}
           <div>
             <label>Location</label>
-
             <input
               name="location"
               value={form.location || ""}
@@ -142,7 +138,6 @@ function EditEvent() {
           {/* Price */}
           <div>
             <label>Price</label>
-
             <input
               name="price"
               value={form.price || ""}
@@ -154,7 +149,6 @@ function EditEvent() {
           {/* Seats */}
           <div>
             <label>Total Seats</label>
-
             <input
               name="totalSeats"
               value={form.totalSeats || ""}
@@ -178,13 +172,10 @@ function EditEvent() {
               <img
                 src={preview}
                 alt=""
-                className="
-                mt-2
-                w-full
-                h-40
-                object-cover
-                rounded
-                "
+                onError={(e) => {
+                  e.target.src = "https://via.placeholder.com/600x300";
+                }}
+                className="mt-2 w-full h-40 object-cover rounded"
               />
             )}
           </div>

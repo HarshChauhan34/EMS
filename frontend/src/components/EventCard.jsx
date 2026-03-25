@@ -12,6 +12,12 @@ function EventCard({ event, refresh }) {
 
   const isAdminPage = location.pathname.includes("/admin");
 
+  // ✅ API URL
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+  // ✅ server URL (remove /api)
+  const SERVER_URL = API_URL.replace("/api", "");
+
   const handleDelete = async () => {
     try {
       await deleteEvent(event._id);
@@ -36,16 +42,19 @@ function EventCard({ event, refresh }) {
       });
 
       alert("Booking successful");
+
       setShowSeat(false);
+
       refresh && refresh();
     } catch (error) {
       alert(error.response?.data?.message);
     }
   };
 
+  // ✅ fixed image url
   const imageUrl = event.image
-    ? `http://localhost:5000/${event.image}`
-    : `https://ems-4-dflv.onrender.com/${event.image}`;
+    ? `${SERVER_URL}/${event.image}`
+    : "https://via.placeholder.com/400x200?text=No+Image";
 
   return (
     <div
@@ -70,6 +79,9 @@ function EventCard({ event, refresh }) {
         <img
           src={imageUrl}
           alt=""
+          onError={(e) => {
+            e.target.src = "https://via.placeholder.com/400x200?text=No+Image";
+          }}
           className="
           w-full
           h-48
@@ -80,18 +92,10 @@ function EventCard({ event, refresh }) {
           "
         />
 
-        {/* gradient overlay */}
-        <div
-          className="
-          absolute
-          inset-0
-          bg-gradient-to-t
-          from-black/50
-          to-transparent
-          "
-        />
+        {/* overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
 
-        {/* category badge */}
+        {/* category */}
         <span
           className="
           absolute
@@ -113,47 +117,23 @@ function EventCard({ event, refresh }) {
       </div>
 
       <div className="p-4 flex flex-col flex-grow">
-        {/* TITLE */}
         <h2 className="text-lg font-bold text-gray-800">{event.title}</h2>
 
-        {/* DESCRIPTION */}
         <p className="text-gray-600 text-sm mt-1 line-clamp-2">
           {event.description}
         </p>
 
-        {/* INFO */}
         <div className="mt-3 text-sm space-y-1 text-gray-700">
           <p>📅 {new Date(event.date).toLocaleDateString()}</p>
           <p>📍 {event.location}</p>
         </div>
 
-        {/* PRICE + SEATS */}
         <div className="flex justify-between mt-3">
-          <span
-            className="
-            bg-green-200
-            text-green-800
-            px-3
-            py-1
-            rounded-full
-            text-xs
-            font-semibold
-            "
-          >
+          <span className="bg-green-200 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">
             ₹ {event.price}
           </span>
 
-          <span
-            className="
-            bg-blue-200
-            text-blue-800
-            px-3
-            py-1
-            rounded-full
-            text-xs
-            font-semibold
-            "
-          >
+          <span className="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">
             Seats {event.availableSeats}
           </span>
         </div>
@@ -170,9 +150,6 @@ function EventCard({ event, refresh }) {
             text-white
             py-2
             rounded-lg
-            hover:scale-105
-            transition
-            shadow
             "
           >
             View Details
@@ -189,9 +166,6 @@ function EventCard({ event, refresh }) {
               text-white
               py-2
               rounded-lg
-              hover:scale-105
-              transition
-              shadow
               "
             >
               Book Now
@@ -202,30 +176,14 @@ function EventCard({ event, refresh }) {
             <div className="flex gap-2">
               <button
                 onClick={() => navigate(`/admin/edit-event/${event._id}`)}
-                className="
-                flex-1
-                bg-gradient-to-r
-                from-yellow-400
-                to-orange-500
-                text-white
-                py-2
-                rounded-lg
-                "
+                className="flex-1 bg-yellow-500 text-white py-2 rounded-lg"
               >
                 Edit
               </button>
 
               <button
                 onClick={handleDelete}
-                className="
-                flex-1
-                bg-gradient-to-r
-                from-red-500
-                to-pink-600
-                text-white
-                py-2
-                rounded-lg
-                "
+                className="flex-1 bg-red-500 text-white py-2 rounded-lg"
               >
                 Delete
               </button>
@@ -235,28 +193,13 @@ function EventCard({ event, refresh }) {
 
         {/* SEAT SELECTOR */}
         {showSeat && !isAdminPage && (
-          <div
-            className="
-            mt-3
-            bg-white/90
-            backdrop-blur-md
-            p-3
-            rounded-lg
-            border
-            shadow
-            "
-          >
+          <div className="mt-3 bg-white p-3 rounded-lg border shadow">
             <p className="text-sm font-semibold mb-2">Select Seats</p>
 
             <div className="flex justify-center items-center gap-3 mb-3">
               <button
                 onClick={() => setSeats(seats > 1 ? seats - 1 : 1)}
-                className="
-                px-3
-                py-1
-                bg-gray-300
-                rounded
-                "
+                className="px-3 py-1 bg-gray-300 rounded"
               >
                 -
               </button>
@@ -267,12 +210,7 @@ function EventCard({ event, refresh }) {
                 onClick={() =>
                   setSeats(seats < event.availableSeats ? seats + 1 : seats)
                 }
-                className="
-                px-3
-                py-1
-                bg-gray-300
-                rounded
-                "
+                className="px-3 py-1 bg-gray-300 rounded"
               >
                 +
               </button>
@@ -280,15 +218,7 @@ function EventCard({ event, refresh }) {
 
             <button
               onClick={handleBook}
-              className="
-              w-full
-              bg-gradient-to-r
-              from-emerald-500
-              to-green-700
-              text-white
-              py-2
-              rounded-lg
-              "
+              className="w-full bg-green-600 text-white py-2 rounded-lg"
             >
               Confirm Booking
             </button>

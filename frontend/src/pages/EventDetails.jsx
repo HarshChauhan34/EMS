@@ -13,6 +13,12 @@ function EventDetails() {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
+  // ✅ API base
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+  // ✅ server base (remove /api)
+  const SERVER_URL = API_URL.replace("/api", "");
+
   useEffect(() => {
     fetchEvent();
   }, []);
@@ -53,9 +59,10 @@ function EventDetails() {
       </div>
     );
 
+  // ✅ correct image url
   const imageUrl = event.image
-    ? `http://localhost:5000/${event.image}`
-    : `https://ems-4-dflv.onrender.com/${event.image}`;
+    ? `${SERVER_URL}/${event.image}`
+    : "https://via.placeholder.com/600x300?text=No+Image";
 
   return (
     <div className="min-h-screen bg-gray-100 py-4 sm:py-8 px-2 sm:px-6">
@@ -64,6 +71,9 @@ function EventDetails() {
         <img
           src={imageUrl}
           alt="event"
+          onError={(e) => {
+            e.target.src = "https://via.placeholder.com/600x300?text=No+Image";
+          }}
           className="w-full h-52 sm:h-72 object-cover"
         />
 
@@ -85,12 +95,10 @@ function EventDetails() {
 
         {/* Body */}
         <div className="p-3 sm:p-6 space-y-4">
-          {/* Description */}
           <p className="text-gray-700 text-sm sm:text-base">
             {event.description}
           </p>
 
-          {/* Info Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <div className="bg-gray-100 p-3 rounded">
               📅 Date
@@ -119,28 +127,25 @@ function EventDetails() {
             </div>
           </div>
 
-          {/* Seat selector (only for user) */}
           {user?.role !== "admin" && (
             <div className="mt-4">
-              <p className="font-semibold mb-2 text-sm sm:text-base">
-                Select Seats
-              </p>
+              <p className="font-semibold mb-2">Select Seats</p>
 
               <div className="flex justify-center items-center gap-4">
                 <button
                   onClick={() => setSeats(seats > 1 ? seats - 1 : 1)}
-                  className="px-3 py-1 bg-gray-300 rounded text-lg"
+                  className="px-3 py-1 bg-gray-300 rounded"
                 >
                   -
                 </button>
 
-                <span className="text-lg sm:text-xl font-bold">{seats}</span>
+                <span className="text-lg font-bold">{seats}</span>
 
                 <button
                   onClick={() =>
                     setSeats(seats < event.availableSeats ? seats + 1 : seats)
                   }
-                  className="px-3 py-1 bg-gray-300 rounded text-lg"
+                  className="px-3 py-1 bg-gray-300 rounded"
                 >
                   +
                 </button>
@@ -148,22 +153,10 @@ function EventDetails() {
             </div>
           )}
 
-          {/* Buttons */}
-
           {user?.role === "admin" ? (
             <button
               onClick={() => navigate(`/edit-event/${event._id}`)}
-              className="
-              w-full
-              mt-4
-              bg-gradient-to-r
-              from-blue-500
-              to-indigo-600
-              text-white
-              py-2 sm:py-3
-              rounded-lg
-              text-sm sm:text-lg
-              "
+              className="w-full mt-4 bg-blue-600 text-white py-2 rounded"
             >
               Edit Event
             </button>
@@ -171,18 +164,7 @@ function EventDetails() {
             <button
               onClick={handleBook}
               disabled={event.availableSeats === 0}
-              className="
-              w-full
-              mt-4
-              bg-gradient-to-r
-              from-green-500
-              to-emerald-600
-              text-white
-              py-2 sm:py-3
-              rounded-lg
-              text-sm sm:text-lg
-              disabled:bg-gray-400
-              "
+              className="w-full mt-4 bg-green-600 text-white py-2 rounded"
             >
               {event.availableSeats === 0 ? "Sold Out" : "Book Now"}
             </button>

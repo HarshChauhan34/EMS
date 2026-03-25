@@ -1,8 +1,10 @@
 import axios from "axios";
 
+// ✅ dynamic base url
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 const API = axios.create({
-  // eslint-disable-next-line no-constant-binary-expression
-  baseURL: "https://ems-4-dflv.onrender.com/api" || "http://localhost:5000/api",
+  baseURL: BASE_URL,
 });
 
 API.interceptors.request.use((req) => {
