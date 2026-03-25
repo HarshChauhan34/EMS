@@ -78,13 +78,15 @@ function AdminDashboard() {
           <div className="bg-white p-4 rounded-lg shadow">
             <p className="text-gray-500 text-sm">Total Users</p>
             <h2 className="text-2xl font-bold text-green-600">
-              {users.length}
+              {users.filter((u) => u.role !== "admin").length}
             </h2>
           </div>
 
           <div className="bg-white p-4 rounded-lg shadow">
             <p className="text-gray-500 text-sm">Total Bookings</p>
-            <h2 className="text-2xl font-bold text-purple-600">{bookings.length}</h2>
+            <h2 className="text-2xl font-bold text-purple-600">
+              {bookings.length}
+            </h2>
           </div>
         </div>
 
