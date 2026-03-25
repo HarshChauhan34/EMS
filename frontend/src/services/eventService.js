@@ -4,13 +4,14 @@ export const getEvents = () => API.get("/events");
 
 export const getEventById = (id) => API.get(`/events/${id}`);
 
-export const createEvent = (data) =>
-  API.post("/events", data, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-  
-export const updateEvent = (id, data) => API.put(`/events/${id}`, data);
+// ✅ FIXED
+export const createEvent = (data) => {
+  return API.post("/events", data);
+};
+
+// ✅ also fix update (for image update)
+export const updateEvent = (id, data) => {
+  return API.put(`/events/${id}`, data);
+};
 
 export const deleteEvent = (id) => API.delete(`/events/${id}`);

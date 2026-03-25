@@ -54,8 +54,8 @@ function EventDetails() {
     );
 
   const imageUrl = event.image
-    ? `https://ems-4-dflv.onrender.com/${event.image}`
-    : "http://localhost:5000/${event.image}";
+    ? `http://localhost:5000/${event.image}`
+    : `https://ems-4-dflv.onrender.com/${event.image}`;
 
   return (
     <div className="min-h-screen bg-gray-100 py-4 sm:py-8 px-2 sm:px-6">

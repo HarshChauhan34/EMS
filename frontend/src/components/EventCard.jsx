@@ -44,8 +44,8 @@ function EventCard({ event, refresh }) {
   };
 
   const imageUrl = event.image
-    ? `https://ems-4-dflv.onrender.com/${event.image}`
-    : "http://localhost:5000/${event.image}";
+    ? `http://localhost:5000/${event.image}`
+    : `https://ems-4-dflv.onrender.com/${event.image}`;
 
   return (
     <div
