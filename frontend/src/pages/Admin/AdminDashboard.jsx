@@ -66,7 +66,6 @@ function AdminDashboard() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div className="bg-white p-4 rounded-lg shadow">
             <p className="text-gray-500 text-sm">Total Events</p>
@@ -90,7 +89,6 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* Events */}
         <h2 className="text-xl font-semibold mb-4">All Events</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">

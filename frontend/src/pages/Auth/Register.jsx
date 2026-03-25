@@ -3,7 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import API from "../../services/api";
 
 function Register() {
-
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -14,69 +13,42 @@ function Register() {
 
   const [loading, setLoading] = useState(false);
 
-
   const handleChange = (e) => {
-
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
   };
 
-
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
     try {
-
       setLoading(true);
 
-      const res = await API.post(
-        "/auth/register",
-        {
-          ...form,
-          role: "user",
-        }
-      );
+      const res = await API.post("/auth/register", {
+        ...form,
+        role: "user",
+      });
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(res.data)
-      );
+      localStorage.setItem("user", JSON.stringify(res.data));
 
       navigate("/");
-
     } catch (error) {
-
-      alert(
-        error.response?.data?.message ||
-        "Register failed"
-      );
-
+      alert(error.response?.data?.message || "Register failed");
     } finally {
-
       setLoading(false);
     }
   };
 
-
   return (
-
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500">
-
       <div className="backdrop-blur-lg bg-white/20 border border-white/30 shadow-2xl rounded-2xl p-8 w-96">
-
         <h2 className="text-3xl font-bold text-center text-white mb-6">
           Create Account
         </h2>
 
-
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4"
-        >
-
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
             name="name"
@@ -86,7 +58,6 @@ function Register() {
             className="w-full p-3 rounded-lg bg-white/80 outline-none focus:ring-2 focus:ring-indigo-500"
             required
           />
-
 
           <input
             type="email"
@@ -98,7 +69,6 @@ function Register() {
             required
           />
 
-
           <input
             type="password"
             name="password"
@@ -109,7 +79,6 @@ function Register() {
             required
           />
 
-
           <button
             type="submit"
             disabled={loading}
@@ -117,26 +86,15 @@ function Register() {
           >
             {loading ? "Please wait..." : "Register"}
           </button>
-
         </form>
 
-
         <p className="text-center text-white mt-4">
-
           Already have account?{" "}
-
-          <Link
-            to="/login"
-            className="font-bold underline"
-          >
+          <Link to="/login" className="font-bold underline">
             Login
           </Link>
-
         </p>
-        
-
       </div>
-
     </div>
   );
 }
