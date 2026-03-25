@@ -22,9 +22,10 @@ function EditEvent() {
       setForm(res.data);
 
       if (res.data.image) {
-        setPreview(`http://localhost:5000/${res.data.image}`);
+        setPreview(
+          `? https://ems-4-dflv.onrender.com/${res.data.image} : https://localhost:5000/${res.data.image}`,
+        );
       }
-
     } catch (error) {
       console.log(error);
     }
@@ -73,7 +74,6 @@ function EditEvent() {
       alert("Event updated");
 
       navigate("/admin");
-
     } catch (error) {
       console.log(error);
     }
@@ -81,9 +81,7 @@ function EditEvent() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center px-4">
-
       <div className="bg-white w-full max-w-3xl p-6 sm:p-8 rounded-xl shadow-lg">
-
         <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center">
           Edit Event
         </h1>
@@ -92,7 +90,6 @@ function EditEvent() {
           onSubmit={handleSubmit}
           className="grid grid-cols-1 sm:grid-cols-2 gap-4"
         >
-
           {/* Title */}
           <div>
             <label>Title</label>
@@ -168,7 +165,6 @@ function EditEvent() {
 
           {/* Image */}
           <div className="sm:col-span-2">
-
             <label>Event Image</label>
 
             <input
@@ -191,12 +187,10 @@ function EditEvent() {
                 "
               />
             )}
-
           </div>
 
           {/* Description */}
           <div className="sm:col-span-2">
-
             <label>Description</label>
 
             <textarea
@@ -206,12 +200,10 @@ function EditEvent() {
               rows={3}
               className="border p-2 rounded w-full"
             />
-
           </div>
 
           {/* Button */}
           <div className="sm:col-span-2">
-
             <button
               className="
               w-full
@@ -225,13 +217,9 @@ function EditEvent() {
             >
               Update Event
             </button>
-
           </div>
-
         </form>
-
       </div>
-
     </div>
   );
 }

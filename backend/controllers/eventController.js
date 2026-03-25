@@ -7,6 +7,8 @@ export const createEvent = async (req, res) => {
     const { title, description, category, date, location, price, totalSeats } =
       req.body;
 
+    const image = req.file ? req.file.filename : "";
+
     const event = await Event.create({
       title,
       description,
@@ -16,10 +18,7 @@ export const createEvent = async (req, res) => {
       price,
       totalSeats,
       availableSeats: totalSeats,
-
-      // ✅ image
-      image: req.file ? req.file.path : "",
-
+      image,
       createdBy: req.user._id,
     });
     console.log(req.file);
