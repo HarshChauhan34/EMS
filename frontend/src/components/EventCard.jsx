@@ -43,7 +43,6 @@ function EventCard({ event, refresh }) {
 
   return (
     <div className="group relative rounded-3xl overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-[0_10px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.7)] transition-all duration-500 hover:-translate-y-3">
-
       {/* IMAGE */}
       <div className="relative overflow-hidden">
         <img
@@ -56,7 +55,6 @@ function EventCard({ event, refresh }) {
 
         {/* TOP BAR */}
         <div className="absolute top-3 left-3 right-3 flex justify-between items-center">
-
           {/* CATEGORY */}
           <span className="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs px-3 py-1 rounded-full shadow-lg">
             {event.category}
@@ -75,23 +73,18 @@ function EventCard({ event, refresh }) {
 
         {/* TITLE */}
         <div className="absolute bottom-4 left-4 right-4 text-white">
-          <h2 className="text-lg font-bold leading-tight">
-            {event.title}
-          </h2>
+          <h2 className="text-lg font-bold leading-tight">{event.title}</h2>
         </div>
 
         {/* FLOATING ACTION BAR */}
         <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition duration-500">
           <div className="bg-black/80 backdrop-blur-md p-3 flex justify-between items-center text-white text-sm">
-
             <span>₹ {event.price}</span>
 
-            <span className="text-green-400">
-              🎟 {event.availableSeats}
-            </span>
+            <span className="text-green-400">🎟 {event.availableSeats}</span>
 
             <button
-              onClick={() => navigate(`/event/${event._id}`)}
+              onClick={() => navigate(`/event/${event._id}`)} 
               className="px-3 py-1 bg-indigo-600 rounded-full text-xs"
             >
               Details
@@ -102,7 +95,6 @@ function EventCard({ event, refresh }) {
 
       {/* CONTENT */}
       <div className="p-4 text-white space-y-3">
-
         <p className="text-sm text-gray-300 line-clamp-2">
           {event.description}
         </p>
@@ -143,7 +135,6 @@ function EventCard({ event, refresh }) {
         {/* BOOKING PANEL */}
         {showSeat && !isAdminPage && (
           <div className="mt-3 bg-black/80 backdrop-blur-xl p-4 rounded-xl border border-white/20 space-y-3 animate-fadeIn">
-
             <div className="flex justify-between items-center">
               <span>Select Seats</span>
               <span className="text-green-400">₹ {total}</span>
@@ -161,9 +152,7 @@ function EventCard({ event, refresh }) {
 
               <button
                 onClick={() =>
-                  setSeats(
-                    seats < event.availableSeats ? seats + 1 : seats
-                  )
+                  setSeats(seats < event.availableSeats ? seats + 1 : seats)
                 }
                 className="w-10 h-10 bg-green-500 rounded-full"
               >

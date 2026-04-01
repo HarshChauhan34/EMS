@@ -74,7 +74,7 @@ function AddEvent() {
             { name: "category", label: "Category" },
             { name: "location", label: "Location" },
             { name: "price", label: "Price" },
-            { name: "totalSeats", label: "Total Seats" },
+            { name: "availableSeats", label: "Available Seats" },
           ].map((field) => (
             <div key={field.name} className="relative">
               <input
