@@ -46,6 +46,7 @@ function AdminDashboard() {
   };
 
   const totalUsers = users.filter((u) => u.role !== "admin").length;
+
   const revenue = bookings.reduce(
     (total, b) => total + (b.totalAmount || 0),
     0
@@ -54,12 +55,10 @@ function AdminDashboard() {
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white">
 
-      {/* SIDEBAR */}
-      <div className="w-64 hidden md:flex flex-col p-6 bg-white/10 backdrop-blur-xl border-r border-white/20">
-
+      {/* SIDEBAR (FIXED) */}
+      <div className="w-64 hidden md:flex flex-col p-6 bg-white/10 backdrop-blur-xl border-r border-white/20 fixed left-0 top-0 h-screen">
         <h2 className="text-2xl font-bold mb-10">⚡ Admin</h2>
 
-        {/* MENU (Dashboard Removed) */}
         <nav className="flex flex-col gap-3">
           <button
             onClick={() => navigate("/admin/add-event")}
@@ -82,7 +81,7 @@ function AdminDashboard() {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="flex-1 p-4 md:p-8">
+      <div className="flex-1 p-4 md:p-8 md:ml-64">
 
         {/* TOP BAR */}
         <div className="flex justify-between items-center mb-8">
@@ -137,6 +136,7 @@ function AdminDashboard() {
 
         {/* EVENTS GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
           {events.map((event) => (
             <div
               key={event._id}
@@ -145,8 +145,8 @@ function AdminDashboard() {
               <EventCard event={event} refresh={fetchEvents} />
             </div>
           ))}
-        </div>
 
+        </div>
       </div>
     </div>
   );

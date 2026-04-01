@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { bookEvent } from "../services/bookingService";
 import { useState } from "react";
 
-
 function EventCard({ event, refresh }) {
   const navigate = useNavigate();
   const location = useLocation();
