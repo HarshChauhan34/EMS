@@ -19,7 +19,7 @@ function ManageUsers() {
     } catch (err) {
       console.log(err);
     }
-  };
+  };  
 
   // get only confirmed bookings
   const handleViewBookings = async (id) => {
