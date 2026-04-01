@@ -157,9 +157,12 @@ function Navbar() {
             : "max-h-0 opacity-0 overflow-hidden"
         }`}
       >
-        <div className="bg-gradient-to-b from-indigo-800 via-purple-800 to-pink-700 px-5 py-4 flex flex-col gap-4 text-lg">
+        <div className="bg-gradient-to-b from-indigo-800 via-purple-800 to-pink-700 px-5 py-4 flex flex-col gap-4 text-lg text-center">
           {user?.role === "user" && (
-            <Link to="/my-bookings" onClick={() => setMenuOpen(false)}>
+            <Link
+              to="/my-bookings"
+              onClick={() => setMenuOpen(false)}
+            >
               My Bookings
             </Link>
           )}

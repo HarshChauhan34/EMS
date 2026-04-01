@@ -16,9 +16,7 @@ function EventCard({ event, refresh }) {
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
   const SERVER_URL = API_URL.replace("/api", "");
 
-  const imageUrl = event.image
-    ? `${SERVER_URL}/${event.image}`
-    : "https://via.placeholder.com/400x200";
+  const imageUrl = `${SERVER_URL}/${event.image}`;
 
   const total = seats * event.price;
 
@@ -84,7 +82,7 @@ function EventCard({ event, refresh }) {
             <span className="text-green-400">🎟 {event.availableSeats}</span>
 
             <button
-              onClick={() => navigate(`/event/${event._id}`)} 
+              onClick={() => navigate(`/event/${event._id}`)}
               className="px-3 py-1 bg-indigo-600 rounded-full text-xs"
             >
               Details
