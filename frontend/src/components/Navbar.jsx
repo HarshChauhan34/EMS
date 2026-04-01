@@ -25,90 +25,62 @@ function Navbar() {
     navigate("/");
   };
 
+  const isActive = (path) =>
+    location.pathname === path
+      ? "text-yellow-300 border-b-2 border-yellow-300"
+      : "text-white";
+
+  const getInitials = (name) => {
+    if (!name) return "U";
+    return name.charAt(0).toUpperCase();
+  };
+
   return (
-    <nav
-      className="
-      sticky top-0 z-50
-      backdrop-blur-lg
-      bg-gradient-to-r
-      from-indigo-600/80
-      via-purple-600/80
-      to-pink-500/80
-      border-b
-      border-white/20
-      shadow-2xl
-      text-white
-      "
-    >
+    <nav className="sticky top-0 z-50 shadow-2xl bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-600 text-white">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         {/* LOGO */}
         <Link
           to="/"
-          className="
-          text-xl sm:text-2xl
-          font-bold
-          tracking-wide
-          flex items-center gap-2
-          hover:scale-105
-          transition
-          "
+          className="text-2xl font-extrabold flex items-center gap-2 group"
         >
-          🎟 <span>Event System</span>
+          🎟️
+          <span className="bg-gradient-to-r from-yellow-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent group-hover:brightness-125 transition">
+            EventPro
+          </span>
         </Link>
 
         {/* DESKTOP MENU */}
-        <div className="hidden md:flex items-center gap-6">
-          {/* USER */}
-          {user && user.role === "user" && (
+        <div className="hidden md:flex items-center gap-8 text-lg">
+          {user?.role === "user" && (
             <Link
               to="/my-bookings"
-              className="
-              hover:text-yellow-300
-              transition
-              font-medium
-              "
+              className={`${isActive("/my-bookings")} hover:text-yellow-300 transition duration-300`}
             >
               My Bookings
             </Link>
           )}
 
-          {/* ADMIN */}
-          {user && user.role === "admin" && (
+          {user?.role === "admin" && (
             <Link
               to="/admin/users"
-              className="hover:text-yellow-300 transition font-medium"
+              className={`${isActive("/admin/users")} hover:text-yellow-300 transition duration-300`}
             >
               Users
             </Link>
           )}
 
-          {/* NOT LOGIN */}
           {!user && (
             <>
               <Link
                 to="/login"
-                className="
-                px-4 py-1
-                rounded-full
-                bg-white
-                text-black
-                hover:bg-gray-200
-                transition
-                "
+                className="px-5 py-2 rounded-full bg-white text-black font-semibold hover:scale-105 hover:bg-gray-200 transition"
               >
                 Login
               </Link>
 
               <Link
                 to="/register"
-                className="
-                px-4 py-1
-                rounded-full
-                bg-yellow-400
-                text-black
-                hover:bg-yellow-300
-                transition
-                "
+                className="px-5 py-2 rounded-full bg-gradient-to-r from-yellow-400 via-pink-500 to-red-500 text-black font-bold shadow-lg hover:scale-105 hover:shadow-pink-500/50 transition"
               >
                 Register
               </Link>
@@ -120,37 +92,17 @@ function Navbar() {
             <div className="relative">
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="
-                w-10 h-10
-                rounded-full
-                bg-white
-                text-black
-                flex
-                items-center
-                justify-center
-                font-bold
-                shadow
-                hover:scale-110
-                transition
-                "
+                className="w-11 h-11 rounded-full bg-gradient-to-tr from-yellow-400 to-pink-500 text-black font-bold flex items-center justify-center shadow-lg hover:scale-110 hover:shadow-pink-400/60 transition"
               >
-                👤
+                {getInitials(user.name)}
               </button>
 
               {profileOpen && (
-                <div
-                  className="
-                  absolute
-                  right-0
-                  mt-3
-                  w-48
-                  rounded-xl
-                  overflow-hidden
-                  shadow-2xl
-                  bg-white
-                  text-black
-                  "
-                >
+                <div className="absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden shadow-2xl bg-white text-black animate-fadeIn">
+                  <div className="px-4 py-2 border-b font-semibold">
+                    👋 {user.name}
+                  </div>
+
                   <button
                     onClick={() => {
                       navigate("/profile");
@@ -158,7 +110,7 @@ function Navbar() {
                     }}
                     className="w-full px-4 py-2 text-left hover:bg-gray-100"
                   >
-                    Profile
+                    👤 Profile
                   </button>
 
                   {user.role === "admin" && (
@@ -169,7 +121,7 @@ function Navbar() {
                       }}
                       className="w-full px-4 py-2 text-left hover:bg-gray-100"
                     >
-                      Users
+                      ⚙️ Admin Panel
                     </button>
                   )}
 
@@ -178,15 +130,9 @@ function Navbar() {
                       logoutHandler();
                       setProfileOpen(false);
                     }}
-                    className="
-                    w-full
-                    px-4 py-2
-                    text-left
-                    text-red-600
-                    hover:bg-red-100
-                    "
+                    className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-100"
                   >
-                    Logout
+                    🚪 Logout
                   </button>
                 </div>
               )}
@@ -204,27 +150,21 @@ function Navbar() {
       </div>
 
       {/* MOBILE MENU */}
-      {menuOpen && (
-        <div
-          className="
-          md:hidden
-          bg-purple-700/95
-          backdrop-blur-lg
-          px-4
-          pb-4
-          flex
-          flex-col
-          gap-3
-          text-lg
-          "
-        >
-          {user && user.role === "user" && (
+      <div
+        className={`md:hidden transition-all duration-500 ${
+          menuOpen
+            ? "max-h-96 opacity-100"
+            : "max-h-0 opacity-0 overflow-hidden"
+        }`}
+      >
+        <div className="bg-gradient-to-b from-indigo-800 via-purple-800 to-pink-700 px-5 py-4 flex flex-col gap-4 text-lg">
+          {user?.role === "user" && (
             <Link to="/my-bookings" onClick={() => setMenuOpen(false)}>
               My Bookings
             </Link>
           )}
 
-          {user && user.role === "admin" && (
+          {user?.role === "admin" && (
             <Link to="/admin/users" onClick={() => setMenuOpen(false)}>
               Users
             </Link>
@@ -265,7 +205,7 @@ function Navbar() {
             </>
           )}
         </div>
-      )}
+      </div>
     </nav>
   );
 }

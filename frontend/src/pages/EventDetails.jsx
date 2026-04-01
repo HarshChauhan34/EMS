@@ -5,18 +5,14 @@ import { bookEvent } from "../services/bookingService";
 
 function EventDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [event, setEvent] = useState(null);
   const [seats, setSeats] = useState(1);
 
-  const navigate = useNavigate();
-
   const user = JSON.parse(localStorage.getItem("user"));
 
-  // ✅ API base
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
-  // ✅ server base (remove /api)
   const SERVER_URL = API_URL.replace("/api", "");
 
   useEffect(() => {
@@ -24,151 +20,168 @@ function EventDetails() {
   }, []);
 
   const fetchEvent = async () => {
-    try {
-      const res = await API.get(`/events/${id}`);
-      setEvent(res.data);
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await API.get(`/events/${id}`);
+    setEvent(res.data);
   };
 
   const handleBook = async () => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
+    if (!user) return navigate("/login");
 
     try {
-      await bookEvent({
-        eventId: event._id,
-        seats: seats,
-      });
-
-      alert("Booking successful");
-
+      await bookEvent({ eventId: event._id, seats });
+      alert("🎉 Booking Confirmed!");
       fetchEvent();
-    } catch (error) {
-      alert(error.response?.data?.message);
+    } catch (err) {
+      alert(err.response?.data?.message);
     }
   };
 
-  if (!event)
+  if (!event) {
     return (
-      <div className="flex justify-center items-center h-screen text-lg">
+      <div className="h-screen flex items-center justify-center text-xl font-semibold">
         Loading...
       </div>
     );
+  }
 
-  // ✅ correct image url
   const imageUrl = event.image
     ? `${SERVER_URL}/${event.image}`
-    : "https://via.placeholder.com/600x300?text=No+Image";
+    : "https://via.placeholder.com/800x400";
+
+  const totalPrice = seats * event.price;
 
   return (
-    <div className="min-h-screen bg-gray-100 py-4 sm:py-8 px-2 sm:px-6">
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-        {/* Image */}
-        <img
-          src={imageUrl}
-          alt="event"
-          onError={(e) => {
-            e.target.src = "https://via.placeholder.com/600x300?text=No+Image";
-          }}
-          className="w-full h-52 sm:h-72 object-cover"
-        />
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white px-4 py-8">
 
-        {/* Header */}
-        <div
-          className="
-          bg-gradient-to-r
-          from-indigo-600
-          via-purple-600
-          to-pink-500
-          text-white
-          p-4 sm:p-6
-        "
-        >
-          <h1 className="text-lg sm:text-3xl font-bold">{event.title}</h1>
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-8">
 
-          <p className="text-xs sm:text-base opacity-90">{event.category}</p>
-        </div>
+        {/* LEFT SIDE - EVENT */}
+        <div className="lg:col-span-2 space-y-6">
 
-        {/* Body */}
-        <div className="p-3 sm:p-6 space-y-4">
-          <p className="text-gray-700 text-sm sm:text-base">
-            {event.description}
-          </p>
+          {/* IMAGE */}
+          <div className="relative group rounded-2xl overflow-hidden shadow-2xl">
+            <img
+              src={imageUrl}
+              className="w-full h-[250px] sm:h-[400px] object-cover group-hover:scale-105 transition duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-            <div className="bg-gray-100 p-3 rounded">
-              📅 Date
-              <br />
-              <span className="font-semibold">
-                {new Date(event.date).toLocaleDateString()}
-              </span>
-            </div>
-
-            <div className="bg-gray-100 p-3 rounded">
-              📍 Location
-              <br />
-              <span className="font-semibold">{event.location}</span>
-            </div>
-
-            <div className="bg-gray-100 p-3 rounded">
-              💰 Price
-              <br />
-              <span className="font-semibold">₹ {event.price}</span>
-            </div>
-
-            <div className="bg-gray-100 p-3 rounded">
-              🎟 Seats Available
-              <br />
-              <span className="font-semibold">{event.availableSeats}</span>
+            <div className="absolute bottom-4 left-4">
+              <h1 className="text-2xl sm:text-4xl font-bold">
+                {event.title}
+              </h1>
+              <p className="opacity-80">{event.category}</p>
             </div>
           </div>
 
-          {user?.role !== "admin" && (
-            <div className="mt-4">
-              <p className="font-semibold mb-2">Select Seats</p>
+          {/* DETAILS */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 shadow-xl">
+            <p className="text-gray-200 leading-relaxed">
+              {event.description}
+            </p>
 
-              <div className="flex justify-center items-center gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 text-center">
+              <div className="bg-white/10 p-4 rounded-xl">
+                📅
+                <p className="text-xs opacity-70">Date</p>
+                <p className="font-semibold">
+                  {new Date(event.date).toLocaleDateString()}
+                </p>
+              </div>
+
+              <div className="bg-white/10 p-4 rounded-xl">
+                📍
+                <p className="text-xs opacity-70">Location</p>
+                <p className="font-semibold">{event.location}</p>
+              </div>
+
+              <div className="bg-white/10 p-4 rounded-xl">
+                💰
+                <p className="text-xs opacity-70">Price</p>
+                <p className="font-semibold">₹ {event.price}</p>
+              </div>
+
+              <div className="bg-white/10 p-4 rounded-xl">
+                🎟
+                <p className="text-xs opacity-70">Available</p>
+                <p className="font-semibold">{event.availableSeats}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT SIDE - BOOKING PANEL */}
+        <div className="sticky top-24 h-fit">
+
+          <div className="bg-white text-black rounded-2xl p-6 shadow-2xl space-y-5">
+
+            <h2 className="text-xl font-bold">🎟 Book Tickets</h2>
+
+            {/* PRICE */}
+            <div className="flex justify-between">
+              <span>Price per seat</span>
+              <span className="font-semibold">₹ {event.price}</span>
+            </div>
+
+            {/* SEATS */}
+            <div>
+              <p className="font-medium mb-2">Select Seats</p>
+
+              <div className="flex items-center justify-between bg-gray-100 rounded-xl p-3">
+
                 <button
                   onClick={() => setSeats(seats > 1 ? seats - 1 : 1)}
-                  className="px-3 py-1 bg-gray-300 rounded"
+                  className="w-10 h-10 bg-red-500 text-white rounded-full hover:scale-110 transition"
                 >
                   -
                 </button>
 
-                <span className="text-lg font-bold">{seats}</span>
+                <span className="text-xl font-bold">{seats}</span>
 
                 <button
                   onClick={() =>
-                    setSeats(seats < event.availableSeats ? seats + 1 : seats)
+                    setSeats(
+                      seats < event.availableSeats ? seats + 1 : seats
+                    )
                   }
-                  className="px-3 py-1 bg-gray-300 rounded"
+                  className="w-10 h-10 bg-green-500 text-white rounded-full hover:scale-110 transition"
                 >
                   +
                 </button>
               </div>
             </div>
-          )}
 
-          {user?.role === "admin" ? (
-            <button
-              onClick={() => navigate(`/edit-event/${event._id}`)}
-              className="w-full mt-4 bg-blue-600 text-white py-2 rounded"
-            >
-              Edit Event
-            </button>
-          ) : (
-            <button
-              onClick={handleBook}
-              disabled={event.availableSeats === 0}
-              className="w-full mt-4 bg-green-600 text-white py-2 rounded"
-            >
-              {event.availableSeats === 0 ? "Sold Out" : "Book Now"}
-            </button>
-          )}
+            {/* TOTAL */}
+            <div className="flex justify-between text-lg font-bold border-t pt-3">
+              <span>Total</span>
+              <span>₹ {totalPrice}</span>
+            </div>
+
+            {/* BUTTON */}
+            {user?.role === "admin" ? (
+              <button
+                onClick={() => navigate(`/edit-event/${event._id}`)}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold hover:scale-[1.02] transition"
+              >
+                Edit Event
+              </button>
+            ) : (
+              <button
+                onClick={handleBook}
+                disabled={event.availableSeats === 0}
+                className={`w-full py-3 rounded-xl font-semibold transition ${
+                  event.availableSeats === 0
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:scale-[1.03] shadow-lg"
+                }`}
+              >
+                {event.availableSeats === 0
+                  ? "Sold Out"
+                  : "🚀 Book Now"}
+              </button>
+            )}
+
+          </div>
         </div>
       </div>
     </div>

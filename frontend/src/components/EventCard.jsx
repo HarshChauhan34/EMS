@@ -9,208 +9,163 @@ function EventCard({ event, refresh }) {
 
   const [showSeat, setShowSeat] = useState(false);
   const [seats, setSeats] = useState(1);
+  const [liked, setLiked] = useState(false);
 
   const isAdminPage = location.pathname.includes("/admin");
 
-  // ✅ API URL
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
-  // ✅ server URL (remove /api)
   const SERVER_URL = API_URL.replace("/api", "");
 
+  const imageUrl = event.image
+    ? `${SERVER_URL}/${event.image}`
+    : "https://via.placeholder.com/400x200";
+
+  const total = seats * event.price;
+
   const handleDelete = async () => {
-    try {
-      await deleteEvent(event._id);
-      refresh && refresh();
-    } catch (error) {
-      console.log(error);
-    }
+    await deleteEvent(event._id);
+    refresh && refresh();
   };
 
   const handleBook = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
-
-    if (!user) {
-      navigate("/login");
-      return;
-    }
+    if (!user) return navigate("/login");
 
     try {
-      await bookEvent({
-        eventId: event._id,
-        seats: seats,
-      });
-
-      alert("Booking successful");
-
+      await bookEvent({ eventId: event._id, seats });
+      alert("🎉 Booked!");
       setShowSeat(false);
-
       refresh && refresh();
     } catch (error) {
       alert(error.response?.data?.message);
     }
   };
 
-  // ✅ fixed image url
-  const imageUrl = event.image
-    ? `${SERVER_URL}/${event.image}`
-    : "https://via.placeholder.com/400x200?text=No+Image";
-
   return (
-    <div
-      className="
-      rounded-2xl
-      overflow-hidden
-      shadow-lg
-      hover:shadow-2xl
-      transition
-      duration-300
-      flex
-      flex-col
-      h-full
-      bg-white/80
-      backdrop-blur-md
-      border
-      hover:-translate-y-2
-      "
-    >
+    <div className="group relative rounded-3xl overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-[0_10px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.7)] transition-all duration-500 hover:-translate-y-3">
+
       {/* IMAGE */}
       <div className="relative overflow-hidden">
         <img
           src={imageUrl}
-          alt=""
-          onError={(e) => {
-            e.target.src = "https://via.placeholder.com/400x200?text=No+Image";
-          }}
-          className="
-          w-full
-          h-48
-          object-cover
-          transition
-          duration-300
-          hover:scale-110
-          "
+          className="w-full h-56 object-cover transition duration-700 group-hover:scale-110 group-hover:brightness-75"
         />
 
-        {/* overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+        {/* GRADIENT OVERLAY */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-        {/* category */}
-        <span
-          className="
-          absolute
-          top-2
-          left-2
-          bg-gradient-to-r
-          from-pink-500
-          to-purple-600
-          text-white
-          text-xs
-          px-3
-          py-1
-          rounded-full
-          shadow
-          "
-        >
-          {event.category}
-        </span>
+        {/* TOP BAR */}
+        <div className="absolute top-3 left-3 right-3 flex justify-between items-center">
+
+          {/* CATEGORY */}
+          <span className="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs px-3 py-1 rounded-full shadow-lg">
+            {event.category}
+          </span>
+
+          {/* LIKE BUTTON */}
+          <button
+            onClick={() => setLiked(!liked)}
+            className={`text-xl transition ${
+              liked ? "text-red-500 scale-125" : "text-white"
+            }`}
+          >
+            ❤️
+          </button>
+        </div>
+
+        {/* TITLE */}
+        <div className="absolute bottom-4 left-4 right-4 text-white">
+          <h2 className="text-lg font-bold leading-tight">
+            {event.title}
+          </h2>
+        </div>
+
+        {/* FLOATING ACTION BAR */}
+        <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition duration-500">
+          <div className="bg-black/80 backdrop-blur-md p-3 flex justify-between items-center text-white text-sm">
+
+            <span>₹ {event.price}</span>
+
+            <span className="text-green-400">
+              🎟 {event.availableSeats}
+            </span>
+
+            <button
+              onClick={() => navigate(`/event/${event._id}`)}
+              className="px-3 py-1 bg-indigo-600 rounded-full text-xs"
+            >
+              Details
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="p-4 flex flex-col flex-grow">
-        <h2 className="text-lg font-bold text-gray-800">{event.title}</h2>
+      {/* CONTENT */}
+      <div className="p-4 text-white space-y-3">
 
-        <p className="text-gray-600 text-sm mt-1 line-clamp-2">
+        <p className="text-sm text-gray-300 line-clamp-2">
           {event.description}
         </p>
 
-        <div className="mt-3 text-sm space-y-1 text-gray-700">
+        <div className="text-xs text-gray-400 space-y-1">
           <p>📅 {new Date(event.date).toLocaleDateString()}</p>
           <p>📍 {event.location}</p>
         </div>
 
-        <div className="flex justify-between mt-3">
-          <span className="bg-green-200 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">
-            ₹ {event.price}
-          </span>
-
-          <span className="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">
-            Seats {event.availableSeats}
-          </span>
-        </div>
-
-        {/* BUTTONS */}
-        <div className="mt-4 flex flex-col gap-2">
+        {/* ACTION BUTTONS */}
+        {!isAdminPage && !showSeat && (
           <button
-            onClick={() => navigate(`/event/${event._id}`)}
-            className="
-            w-full
-            bg-gradient-to-r
-            from-indigo-600
-            to-purple-600
-            text-white
-            py-2
-            rounded-lg
-            "
+            onClick={() => setShowSeat(true)}
+            className="w-full py-2 rounded-xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white font-semibold shadow-lg hover:shadow-pink-500/40 hover:scale-[1.03] transition"
           >
-            View Details
+            🎟 Book Now
           </button>
+        )}
 
-          {!isAdminPage && !showSeat && (
+        {isAdminPage && (
+          <div className="flex gap-2">
             <button
-              onClick={() => setShowSeat(true)}
-              className="
-              w-full
-              bg-gradient-to-r
-              from-green-500
-              to-emerald-600
-              text-white
-              py-2
-              rounded-lg
-              "
+              onClick={() => navigate(`/admin/edit-event/${event._id}`)}
+              className="flex-1 py-2 rounded-xl bg-yellow-500 text-white"
             >
-              Book Now
+              Edit
             </button>
-          )}
 
-          {isAdminPage && (
-            <div className="flex gap-2">
-              <button
-                onClick={() => navigate(`/admin/edit-event/${event._id}`)}
-                className="flex-1 bg-yellow-500 text-white py-2 rounded-lg"
-              >
-                Edit
-              </button>
+            <button
+              onClick={handleDelete}
+              className="flex-1 py-2 rounded-xl bg-red-500 text-white"
+            >
+              Delete
+            </button>
+          </div>
+        )}
 
-              <button
-                onClick={handleDelete}
-                className="flex-1 bg-red-500 text-white py-2 rounded-lg"
-              >
-                Delete
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* SEAT SELECTOR */}
+        {/* BOOKING PANEL */}
         {showSeat && !isAdminPage && (
-          <div className="mt-3 bg-white p-3 rounded-lg border shadow">
-            <p className="text-sm font-semibold mb-2">Select Seats</p>
+          <div className="mt-3 bg-black/80 backdrop-blur-xl p-4 rounded-xl border border-white/20 space-y-3 animate-fadeIn">
 
-            <div className="flex justify-center items-center gap-3 mb-3">
+            <div className="flex justify-between items-center">
+              <span>Select Seats</span>
+              <span className="text-green-400">₹ {total}</span>
+            </div>
+
+            <div className="flex justify-center items-center gap-4">
               <button
                 onClick={() => setSeats(seats > 1 ? seats - 1 : 1)}
-                className="px-3 py-1 bg-gray-300 rounded"
+                className="w-10 h-10 bg-red-500 rounded-full"
               >
                 -
               </button>
 
-              <span className="font-bold text-lg">{seats}</span>
+              <span className="text-xl font-bold">{seats}</span>
 
               <button
                 onClick={() =>
-                  setSeats(seats < event.availableSeats ? seats + 1 : seats)
+                  setSeats(
+                    seats < event.availableSeats ? seats + 1 : seats
+                  )
                 }
-                className="px-3 py-1 bg-gray-300 rounded"
+                className="w-10 h-10 bg-green-500 rounded-full"
               >
                 +
               </button>
@@ -218,9 +173,9 @@ function EventCard({ event, refresh }) {
 
             <button
               onClick={handleBook}
-              className="w-full bg-green-600 text-white py-2 rounded-lg"
+              className="w-full py-2 rounded-xl bg-gradient-to-r from-green-400 to-emerald-600 font-semibold hover:scale-[1.05] transition"
             >
-              Confirm Booking
+              Confirm 🚀
             </button>
           </div>
         )}

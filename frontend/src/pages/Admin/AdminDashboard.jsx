@@ -12,6 +12,12 @@ function AdminDashboard() {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    fetchEvents();
+    fetchUsers();
+    fetchBookings();
+  }, []);
+
   const fetchEvents = async () => {
     try {
       const res = await getEvents();
@@ -39,97 +45,108 @@ function AdminDashboard() {
     }
   };
 
-  useEffect(() => {
-    fetchEvents();
-    fetchUsers();
-    fetchBookings();
-  }, []);
+  const totalUsers = users.filter((u) => u.role !== "admin").length;
+  const revenue = bookings.reduce(
+    (total, b) => total + (b.totalAmount || 0),
+    0
+  );
 
   return (
-    <div className="min-h-screen flex bg-gray-100">
-      {/* Sidebar */}
-      <div className="w-64 bg-gradient-to-b from-indigo-700 to-purple-700 text-white p-5 hidden md:flex flex-col">
-        <h2 className="text-2xl font-bold mb-8">Admin Panel</h2>
+    <div className="min-h-screen flex bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white">
 
+      {/* SIDEBAR */}
+      <div className="w-64 hidden md:flex flex-col p-6 bg-white/10 backdrop-blur-xl border-r border-white/20">
+
+        <h2 className="text-2xl font-bold mb-10">⚡ Admin</h2>
+
+        {/* MENU (Dashboard Removed) */}
         <nav className="flex flex-col gap-3">
           <button
             onClick={() => navigate("/admin/add-event")}
-            className="text-left px-3 py-2 rounded-lg hover:bg-white/20 transition"
+            className="px-4 py-2 rounded-xl hover:bg-white/20 transition text-left"
           >
             ➕ Add Event
           </button>
 
           <button
             onClick={() => navigate("/admin/users")}
-            className="text-left px-3 py-2 rounded-lg hover:bg-white/20 transition"
+            className="px-4 py-2 rounded-xl hover:bg-white/20 transition text-left"
           >
             👥 Users
           </button>
         </nav>
 
-        <div className="mt-auto text-sm opacity-70">© 2026 Event System</div>
+        <div className="mt-auto text-xs text-gray-400">
+          © 2026 EventPro
+        </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-4 md:p-6">
-        {/* Top Bar (Mobile) */}
-        <div className="md:hidden flex justify-between items-center mb-4">
-          <h1 className="text-xl font-bold">Admin</h1>
-          <button
-            onClick={() => navigate("/admin/add-event")}
-            className="bg-indigo-600 text-white px-3 py-1 rounded-lg"
-          >
-            + Event
-          </button>
-        </div>
+      {/* MAIN CONTENT */}
+      <div className="flex-1 p-4 md:p-8">
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white/70 backdrop-blur-lg p-5 rounded-2xl shadow hover:shadow-lg transition">
-            <p className="text-gray-500 text-sm">Total Events</p>
-            <h2 className="text-3xl font-bold text-indigo-600">
-              {events.length}
-            </h2>
-          </div>
-
-          <div className="bg-white/70 backdrop-blur-lg p-5 rounded-2xl shadow hover:shadow-lg transition">
-            <p className="text-gray-500 text-sm">Total Users</p>
-            <h2 className="text-3xl font-bold text-green-600">
-              {users.filter((u) => u.role !== "admin").length}
-            </h2>
-          </div>
-
-          <div className="bg-white/70 backdrop-blur-lg p-5 rounded-2xl shadow hover:shadow-lg transition">
-            <p className="text-gray-500 text-sm">Total Bookings</p>
-            <h2 className="text-3xl font-bold text-purple-600">
-              {bookings.length}
-            </h2>
-          </div>
-        </div>
-
-        {/* Title */}
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold">All Events</h2>
+        {/* TOP BAR */}
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold">
+            🎛 Admin Overview
+          </h1>
 
           <button
             onClick={() => navigate("/admin/add-event")}
-            className="hidden md:block bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition shadow"
+            className="bg-gradient-to-r from-pink-500 to-purple-600 px-4 py-2 rounded-xl shadow-lg hover:scale-105 transition"
           >
             + Add Event
           </button>
         </div>
 
-        {/* Events Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        {/* STATS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+          <div className="bg-white/10 backdrop-blur-xl p-5 rounded-2xl shadow-lg hover:scale-[1.03] transition">
+            <p className="text-gray-300 text-sm">Total Events</p>
+            <h2 className="text-3xl font-bold text-indigo-400">
+              {events.length}
+            </h2>
+          </div>
+
+          <div className="bg-white/10 backdrop-blur-xl p-5 rounded-2xl shadow-lg hover:scale-[1.03] transition">
+            <p className="text-gray-300 text-sm">Users</p>
+            <h2 className="text-3xl font-bold text-green-400">
+              {totalUsers}
+            </h2>
+          </div>
+
+          <div className="bg-white/10 backdrop-blur-xl p-5 rounded-2xl shadow-lg hover:scale-[1.03] transition">
+            <p className="text-gray-300 text-sm">Bookings</p>
+            <h2 className="text-3xl font-bold text-purple-400">
+              {bookings.length}
+            </h2>
+          </div>
+
+          <div className="bg-white/10 backdrop-blur-xl p-5 rounded-2xl shadow-lg hover:scale-[1.03] transition">
+            <p className="text-gray-300 text-sm">Revenue</p>
+            <h2 className="text-3xl font-bold text-yellow-400">
+              ₹ {revenue}
+            </h2>
+          </div>
+        </div>
+
+        {/* EVENTS HEADER */}
+        <div className="flex justify-between items-center mb-5">
+          <h2 className="text-xl font-semibold">🎟 All Events</h2>
+        </div>
+
+        {/* EVENTS GRID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {events.map((event) => (
             <div
               key={event._id}
-              className="transform hover:scale-105 transition duration-300"
+              className="hover:scale-[1.04] transition duration-300"
             >
               <EventCard event={event} refresh={fetchEvents} />
             </div>
           ))}
         </div>
+
       </div>
     </div>
   );

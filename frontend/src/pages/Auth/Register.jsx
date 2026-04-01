@@ -12,6 +12,7 @@ function Register() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setForm({
@@ -31,69 +32,104 @@ function Register() {
         role: "user",
       });
 
-      localStorage.setItem("user", JSON.stringify(res.data));
+      if (res.data) {
+        localStorage.setItem("user", JSON.stringify(res.data));
+      }
 
       navigate("/");
     } catch (error) {
-      alert(error.response?.data?.message || "Register failed");
+      console.log(error);
+      alert(
+        error.response?.data?.message || error.message || "Register failed"
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500">
-      <div className="backdrop-blur-lg bg-white/20 border border-white/30 shadow-2xl rounded-2xl p-8 w-96">
-        <h2 className="text-3xl font-bold text-center text-white mb-6">
-          Create Account
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 px-4">
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8">
+
+        {/* Header */}
+        <div className="text-center mb-6">
+          <h2 className="text-3xl font-bold text-gray-800">
+            Create Account 🚀
+          </h2>
+          <p className="text-gray-500">
+            Sign up to continue
+          </p>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+
+          {/* Name */}
           <input
             type="text"
             name="name"
             placeholder="Full Name"
             value={form.name}
             onChange={handleChange}
-            className="w-full p-3 rounded-lg bg-white/80 outline-none focus:ring-2 focus:ring-indigo-500"
             required
+            className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-400 outline-none"
           />
 
+          {/* Email */}
           <input
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder="Email address"
             value={form.email}
             onChange={handleChange}
-            className="w-full p-3 rounded-lg bg-white/80 outline-none focus:ring-2 focus:ring-indigo-500"
             required
+            className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-400 outline-none"
           />
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full p-3 rounded-lg bg-white/80 outline-none focus:ring-2 focus:ring-indigo-500"
-            required
-          />
+          {/* Password */}
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+              required
+              className="w-full border rounded-xl px-4 py-3 pr-12 focus:ring-2 focus:ring-indigo-400 outline-none"
+            />
 
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-3 text-gray-500"
+            >
+              {showPassword ? "🙈" : "👁"}
+            </button>
+          </div>
+
+          {/* Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold transition"
+            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:opacity-90 transition"
           >
-            {loading ? "Please wait..." : "Register"}
+            {loading ? "Creating account..." : "Register"}
           </button>
+
         </form>
 
-        <p className="text-center text-white mt-4">
-          Already have account?{" "}
-          <Link to="/login" className="font-bold underline">
+        {/* Footer */}
+        <p className="text-center text-gray-600 mt-6">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-indigo-600 font-semibold"
+          >
             Login
           </Link>
         </p>
+
       </div>
     </div>
   );
