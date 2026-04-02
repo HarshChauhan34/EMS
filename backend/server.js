@@ -26,7 +26,7 @@ const app = express();
 // ✅ CORS (better config)
 app.use(
   cors({
-    origin: "http://localhost:5173", // change to frontend URL in production
+    origin: "https://ems-4.vercel.app/", // change to frontend URL in production
     credentials: true,
   }),
 );
