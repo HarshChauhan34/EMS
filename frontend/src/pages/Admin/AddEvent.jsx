@@ -17,29 +17,50 @@ function AddEvent() {
   });
 
   const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
 
+  // ================= HANDLE INPUT =================
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // ================= HANDLE IMAGE =================
   const handleImage = (e) => {
     const file = e.target.files[0];
 
-    setForm({ ...form, image: file });
-
-    if (file) {
-      setPreview(URL.createObjectURL(file));
+    if (!file) {
+      setPreview(null);
+      return;
     }
+
+    // ✅ Validation (optional but good)
+    if (!file.type.startsWith("image")) {
+      alert("Only image files allowed");
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image size must be less than 2MB");
+      return;
+    }
+
+    setForm({ ...form, image: file });
+    setPreview(URL.createObjectURL(file));
   };
 
+  // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const formData = new FormData();
 
+      // ✅ Append all fields
       Object.keys(form).forEach((key) => {
-        if (form[key]) formData.append(key, form[key]);
+        if (form[key] !== null && form[key] !== "") {
+          formData.append(key, form[key]);
+        }
       });
 
       await createEvent(formData);
@@ -47,7 +68,9 @@ function AddEvent() {
       alert("Event created successfully 🚀");
       navigate("/admin");
     } catch (error) {
-      alert({ error });
+      alert(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -68,14 +91,13 @@ function AddEvent() {
           onSubmit={handleSubmit}
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          {/* INPUT FIELD COMPONENT */}
+          {/* INPUT FIELDS */}
           {[
             { name: "title", label: "Event Title" },
             { name: "category", label: "Category" },
             { name: "location", label: "Location" },
             { name: "price", label: "Price" },
             { name: "totalSeats", label: "Total Seats" },
-            { name: "availableSeats", label: "Available Seats" },
           ].map((field) => (
             <div key={field.name} className="relative">
               <input
@@ -85,14 +107,14 @@ function AddEvent() {
                 placeholder=" "
                 className="peer w-full px-4 pt-5 pb-2 rounded-xl bg-white/10 border border-white/20 focus:ring-2 focus:ring-indigo-500 outline-none"
               />
-              <label className="absolute left-4 top-2 text-sm text-gray-400 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-sm">
+              <label className="absolute left-4 top-2 text-sm text-gray-400 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-sm">
                 {field.label}
               </label>
             </div>
           ))}
 
           {/* DATE */}
-          <div className="relative">
+          <div>
             <input
               type="date"
               name="date"
@@ -115,17 +137,16 @@ function AddEvent() {
                 onChange={handleImage}
                 className="w-full cursor-pointer"
               />
-              <p className="text-sm text-gray-400 mt-1">PNG, JPG up to 5MB</p>
+              <p className="text-sm text-gray-400 mt-1">JPG, PNG (Max 2MB)</p>
             </div>
 
             {preview && (
-              <div className="mt-4 relative">
+              <div className="mt-4">
                 <img
                   src={preview}
                   alt="preview"
                   className="w-full h-60 object-cover rounded-xl shadow-lg"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-xl" />
               </div>
             )}
           </div>
@@ -145,10 +166,13 @@ function AddEvent() {
             </label>
           </div>
 
-          {/* SUBMIT BUTTON */}
+          {/* SUBMIT */}
           <div className="md:col-span-2">
-            <button className="w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 shadow-xl hover:scale-[1.03] transition">
-              🚀 Create Event
+            <button
+              disabled={loading}
+              className="w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 shadow-xl hover:scale-[1.03] transition disabled:opacity-50"
+            >
+              {loading ? "Uploading..." : "🚀 Create Event"}
             </button>
           </div>
         </form>

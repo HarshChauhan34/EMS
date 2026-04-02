@@ -10,40 +10,39 @@ import {
 
 import { protect } from "../middleware/authMiddleware.js";
 import { adminOnly } from "../middleware/roleMiddleware.js";
-
-// ✅ multer
 import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
-// ================= GET =================
+// ================= PUBLIC ROUTES =================
 
+// Get all events
 router.get("/", getAllEvents);
 
+// Get single event
 router.get("/:id", getEventById);
 
-// ================= CREATE =================
+// ================= ADMIN ROUTES =================
 
+// Create event
 router.post(
   "/",
   protect,
   adminOnly,
-  upload.single("image"), // ✅ add
+  upload.single("image"), // ✅ Cloudinary upload
   createEvent,
 );
 
-// ================= UPDATE =================
-
+// Update event
 router.put(
   "/:id",
   protect,
   adminOnly,
-  upload.single("image"), // ✅ add
+  upload.single("image"), // ✅ Replace image if new uploaded
   updateEvent,
 );
 
-// ================= DELETE =================
-
+// Delete event
 router.delete("/:id", protect, adminOnly, deleteEvent);
 
 export default router;

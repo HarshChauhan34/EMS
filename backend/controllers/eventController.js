@@ -1,13 +1,19 @@
 import Event from "../models/Event.js";
+import cloudinary from "../config/cloudinary.js";
 
 // ================= CREATE EVENT =================
 
 export const createEvent = async (req, res) => {
   try {
-    const { title, description, category, date, location, price, totalSeats } =
-      req.body;
-
-    const image = req.file ? req.file.filename : "";
+    const {
+      title,
+      description,
+      category,
+      date,
+      location,
+      price,
+      totalSeats,
+    } = req.body;
 
     const event = await Event.create({
       title,
@@ -18,10 +24,14 @@ export const createEvent = async (req, res) => {
       price,
       totalSeats,
       availableSeats: totalSeats,
-      image,
+
+      // ✅ Cloudinary URL + Public ID
+      image: req.file ? req.file.path : "",
+      imagePublicId: req.file ? req.file.filename : "",
+
       createdBy: req.user._id,
     });
-    console.log(req.file);
+
     res.status(201).json(event);
   } catch (error) {
     res.status(500).json({
@@ -30,12 +40,11 @@ export const createEvent = async (req, res) => {
   }
 };
 
-// ================= GET ALL =================
+// ================= GET ALL EVENTS =================
 
 export const getAllEvents = async (req, res) => {
   try {
     const events = await Event.find().populate("createdBy", "name email");
-
     res.json(events);
   } catch (error) {
     res.status(500).json({
@@ -44,13 +53,13 @@ export const getAllEvents = async (req, res) => {
   }
 };
 
-// ================= GET BY ID =================
+// ================= GET EVENT BY ID =================
 
 export const getEventById = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id).populate(
       "createdBy",
-      "name email",
+      "name email"
     );
 
     if (!event) {
@@ -79,22 +88,34 @@ export const updateEvent = async (req, res) => {
       });
     }
 
-    event.title = req.body.title;
-    event.description = req.body.description;
-    event.category = req.body.category;
-    event.date = req.body.date;
-    event.location = req.body.location;
-    event.price = req.body.price;
-    event.totalSeats = req.body.totalSeats;
+    // ✅ Update only provided fields
+    const fields = [
+      "title",
+      "description",
+      "category",
+      "date",
+      "location",
+      "price",
+      "totalSeats",
+      "availableSeats",
+    ];
 
-    // optional update available seats
-    if (req.body.availableSeats) {
-      event.availableSeats = req.body.availableSeats;
-    }
+    fields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        event[field] = req.body[field];
+      }
+    });
 
-    // ✅ update image if new uploaded
+    // ✅ If new image uploaded
     if (req.file) {
+      // 🔥 Delete old image from Cloudinary
+      if (event.imagePublicId) {
+        await cloudinary.uploader.destroy(event.imagePublicId);
+      }
+
+      // Save new image
       event.image = req.file.path;
+      event.imagePublicId = req.file.filename;
     }
 
     const updatedEvent = await event.save();
@@ -117,6 +138,11 @@ export const deleteEvent = async (req, res) => {
       return res.status(404).json({
         message: "Event not found",
       });
+    }
+
+    // 🔥 Delete image from Cloudinary
+    if (event.imagePublicId) {
+      await cloudinary.uploader.destroy(event.imagePublicId);
     }
 
     await event.deleteOne();
