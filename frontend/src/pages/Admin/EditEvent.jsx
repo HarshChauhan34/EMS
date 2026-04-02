@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import API from "../../services/api";
 
+const BASE_URL = "http://localhost:5000";
+
 function EditEvent() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -17,11 +19,19 @@ function EditEvent() {
   });
 
   const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [preview, setPreview] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ================= FETCH EVENT =================
   useEffect(() => {
     fetchEvent();
+
+    return () => {
+      // ✅ Clean blob preview
+      if (preview && preview.startsWith("blob:")) {
+        URL.revokeObjectURL(preview);
+      }
+    };
   }, []);
 
   const fetchEvent = async () => {
@@ -39,14 +49,16 @@ function EditEvent() {
         availableSeats: data.availableSeats || "",
       });
 
+      // ✅ FIXED: correct image URL
       if (data.image) {
-        setPreview(`http://localhost:5000${data.image}`);
+        setPreview(`${BASE_URL}/${data.image}`);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Fetch Error:", error);
     }
   };
 
+  // ================= HANDLE INPUT =================
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -60,6 +72,7 @@ function EditEvent() {
     }
   };
 
+  // ================= HANDLE IMAGE =================
   const handleImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -69,10 +82,16 @@ function EditEvent() {
       return;
     }
 
+    // ✅ Clean old preview
+    if (preview && preview.startsWith("blob:")) {
+      URL.revokeObjectURL(preview);
+    }
+
     setImage(file);
     setPreview(URL.createObjectURL(file));
   };
 
+  // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -89,13 +108,16 @@ function EditEvent() {
       if (image) formData.append("image", image);
 
       await API.put(`/events/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      alert("Event updated 🚀");
+      alert("Event updated successfully 🚀");
       navigate("/admin");
     } catch (error) {
-      alert("Update failed ❌");
+      console.error("Update Error:", error);
+      alert(error?.response?.data?.message || "Update failed ❌");
     } finally {
       setLoading(false);
     }
@@ -118,7 +140,7 @@ function EditEvent() {
           onSubmit={handleSubmit}
           className="p-6 md:p-10 grid md:grid-cols-2 gap-10"
         >
-          {/* LEFT SECTION */}
+          {/* LEFT */}
           <div className="space-y-6">
             <h2 className="text-lg font-semibold text-indigo-300">
               📌 Event Details
@@ -155,7 +177,6 @@ function EditEvent() {
               </div>
             ))}
 
-            {/* DATE */}
             <input
               type="date"
               name="date"
@@ -165,7 +186,7 @@ function EditEvent() {
             />
           </div>
 
-          {/* RIGHT SECTION */}
+          {/* RIGHT */}
           <div className="space-y-6">
             <h2 className="text-lg font-semibold text-pink-300">
               🖼 Media & Description
@@ -179,18 +200,18 @@ function EditEvent() {
                 onChange={handleImage}
                 className="absolute inset-0 opacity-0 cursor-pointer"
               />
-              <p className="text-gray-400 group-hover:text-indigo-400 transition">
+              <p className="text-gray-400 group-hover:text-indigo-400">
                 Click or Drag Image Here
               </p>
             </div>
 
-            {/* IMAGE PREVIEW */}
+            {/* PREVIEW */}
             {preview && (
-              <div className="relative overflow-hidden rounded-xl">
+              <div className="overflow-hidden rounded-xl">
                 <img
                   src={preview}
                   alt="preview"
-                  className="w-full h-56 object-cover transition duration-300 hover:scale-110"
+                  className="w-full h-56 object-cover hover:scale-110 transition"
                 />
               </div>
             )}
@@ -214,7 +235,7 @@ function EditEvent() {
               </label>
             </div>
 
-            {/* ACTION BUTTONS */}
+            {/* BUTTONS */}
             <div className="flex gap-4">
               <button
                 type="submit"
