@@ -14,17 +14,21 @@ function EventCard({ event, refresh }) {
 
   const isAdminPage = location.pathname.includes("/admin");
 
-  const API_URL = "http://localhost:5000";
+  const API_URL =
+    import.meta.env.VITE_API_URL?.replace("/api", "") ||
+    "http://localhost:5000";
 
-  // ✅ FIX: avoid double slash
+  // ✅ Safe image URL (fix double slash issue)
   const imageUrl = event?.image
-    ? `${API_URL}/${event.image}`.replace(/([^:]\/)\/+/g, "$1")
+    ? `${API_URL}${event.image.startsWith("/") ? "" : "/"}${event.image}`
     : "https://via.placeholder.com/400x250?text=No+Image";
 
   const total = seats * (event.price || 0);
 
   // ================= DELETE =================
-  const handleDelete = async () => {
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+
     const confirmDelete = window.confirm("Are you sure you want to delete?");
     if (!confirmDelete) return;
 
@@ -40,7 +44,9 @@ function EventCard({ event, refresh }) {
   };
 
   // ================= BOOK =================
-  const handleBook = async () => {
+  const handleBook = async (e) => {
+    e.stopPropagation();
+
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) return navigate("/login");
 
@@ -63,7 +69,10 @@ function EventCard({ event, refresh }) {
   };
 
   return (
-    <div className="group relative rounded-3xl overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3">
+    <div
+      onClick={() => navigate(`/event/${event._id}`)}
+      className="group cursor-pointer relative rounded-3xl overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3"
+    >
       {/* IMAGE */}
       <div className="relative overflow-hidden">
         <img
@@ -86,7 +95,10 @@ function EventCard({ event, refresh }) {
           </span>
 
           <button
-            onClick={() => setLiked(!liked)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setLiked(!liked);
+            }}
             className={`text-xl transition ${
               liked ? "text-red-500 scale-125" : "text-white"
             }`}
@@ -105,13 +117,6 @@ function EventCard({ event, refresh }) {
           <div className="bg-black/80 p-3 flex justify-between items-center text-sm">
             <span>₹ {event.price}</span>
             <span className="text-green-400">🎟 {event.availableSeats}</span>
-
-            <button
-              onClick={() => navigate(`/event/${event._id}`)}
-              className="px-3 py-1 bg-indigo-600 rounded-full text-xs"
-            >
-              Details
-            </button>
           </div>
         </div>
       </div>
@@ -130,7 +135,10 @@ function EventCard({ event, refresh }) {
         {/* USER ACTION */}
         {!isAdminPage && !showSeat && (
           <button
-            onClick={() => setShowSeat(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowSeat(true);
+            }}
             className="w-full py-2 rounded-xl bg-gradient-to-r from-pink-500 to-indigo-600 font-semibold hover:scale-[1.03] transition"
           >
             🎟 Book Now
@@ -141,7 +149,10 @@ function EventCard({ event, refresh }) {
         {isAdminPage && (
           <div className="flex gap-2">
             <button
-              onClick={() => navigate(`/admin/edit-event/${event._id}`)}
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/admin/edit-event/${event._id}`);
+              }}
               className="flex-1 py-2 rounded-xl bg-yellow-500"
             >
               Edit
@@ -159,13 +170,16 @@ function EventCard({ event, refresh }) {
 
         {/* BOOKING PANEL */}
         {showSeat && !isAdminPage && (
-          <div className="mt-3 bg-black/80 p-4 rounded-xl border border-white/20 space-y-3">
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="mt-3 bg-black/80 p-4 rounded-xl border border-white/20 space-y-3"
+          >
             <div className="flex justify-between">
               <span>Select Seats</span>
               <span className="text-green-400">₹ {total}</span>
             </div>
 
-            <div className="flex justify-center gap-4">
+            <div className="flex justify-center gap-4 items-center">
               <button
                 onClick={() => setSeats((prev) => Math.max(1, prev - 1))}
                 className="w-10 h-10 bg-red-500 rounded-full"
@@ -173,7 +187,7 @@ function EventCard({ event, refresh }) {
                 -
               </button>
 
-              <span className="text-xl">{seats}</span>
+              <span className="text-xl font-bold">{seats}</span>
 
               <button
                 onClick={() =>

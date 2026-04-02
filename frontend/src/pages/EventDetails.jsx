@@ -9,21 +9,33 @@ function EventDetails() {
 
   const [event, setEvent] = useState(null);
   const [seats, setSeats] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
+  // ✅ Use ENV (VERY IMPORTANT)
   const API_URL = "http://localhost:5000/api";
   const SERVER_URL = API_URL.replace("/api", "");
 
+  // ================= FETCH EVENT =================
   useEffect(() => {
     fetchEvent();
-  }, []);
+  }, [id]);
 
   const fetchEvent = async () => {
-    const res = await API.get(`/events/${id}`);
-    setEvent(res.data);
+    try {
+      setLoading(true);
+      const res = await API.get(`/events/${id}`);
+      setEvent(res.data);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to load event ❌");
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // ================= BOOK =================
   const handleBook = async () => {
     if (!user) return navigate("/login");
 
@@ -32,53 +44,58 @@ function EventDetails() {
       alert("🎉 Booking Confirmed!");
       fetchEvent();
     } catch (err) {
-      alert(err.response?.data?.message);
+      alert(err.response?.data?.message || "Booking failed ❌");
     }
   };
 
-  if (!event) {
+  // ================= LOADING =================
+  if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center text-xl font-semibold">
-        Loading...
+      <div className="h-screen flex items-center justify-center text-white text-xl">
+        ⏳ Loading Event...
       </div>
     );
   }
 
+  if (!event) {
+    return (
+      <div className="h-screen flex items-center justify-center text-red-400">
+        Event not found ❌
+      </div>
+    );
+  }
+
+  // ✅ FIX IMAGE PATH
   const imageUrl = event.image
-    ? `${SERVER_URL}/${event.image}`
-    : "https://via.placeholder.com/800x400";
+    ? `${SERVER_URL}${event.image.startsWith("/") ? "" : "/"}${event.image}`
+    : "/placeholder.jpg";
 
   const totalPrice = seats * event.price;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white px-4 py-8">
-
       <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-8">
-
-        {/* LEFT SIDE - EVENT */}
+        {/* LEFT SIDE */}
         <div className="lg:col-span-2 space-y-6">
-
           {/* IMAGE */}
           <div className="relative group rounded-2xl overflow-hidden shadow-2xl">
             <img
               src={imageUrl}
-              className="w-full h-[250px] sm:h-[400px] object-cover group-hover:scale-105 transition duration-500"
+              alt="event"
+              className="w-full h-[250px] sm:h-[400px] object-cover transition duration-700 group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
             <div className="absolute bottom-4 left-4">
-              <h1 className="text-2xl sm:text-4xl font-bold">
-                {event.title}
-              </h1>
+              <h1 className="text-2xl sm:text-4xl font-bold">{event.title}</h1>
               <p className="opacity-80">{event.category}</p>
             </div>
           </div>
 
           {/* DETAILS */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 shadow-xl">
-            <p className="text-gray-200 leading-relaxed">
-              {event.description}
-            </p>
+          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 shadow-xl">
+            <p className="text-gray-200 leading-relaxed">{event.description}</p>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 text-center">
               <div className="bg-white/10 p-4 rounded-xl">
@@ -110,11 +127,9 @@ function EventDetails() {
           </div>
         </div>
 
-        {/* RIGHT SIDE - BOOKING PANEL */}
+        {/* RIGHT SIDE */}
         <div className="sticky top-24 h-fit">
-
           <div className="bg-white text-black rounded-2xl p-6 shadow-2xl space-y-5">
-
             <h2 className="text-xl font-bold">🎟 Book Tickets</h2>
 
             {/* PRICE */}
@@ -128,9 +143,8 @@ function EventDetails() {
               <p className="font-medium mb-2">Select Seats</p>
 
               <div className="flex items-center justify-between bg-gray-100 rounded-xl p-3">
-
                 <button
-                  onClick={() => setSeats(seats > 1 ? seats - 1 : 1)}
+                  onClick={() => setSeats((prev) => Math.max(1, prev - 1))}
                   className="w-10 h-10 bg-red-500 text-white rounded-full hover:scale-110 transition"
                 >
                   -
@@ -140,9 +154,7 @@ function EventDetails() {
 
                 <button
                   onClick={() =>
-                    setSeats(
-                      seats < event.availableSeats ? seats + 1 : seats
-                    )
+                    setSeats((prev) => Math.min(event.availableSeats, prev + 1))
                   }
                   className="w-10 h-10 bg-green-500 text-white rounded-full hover:scale-110 transition"
                 >
@@ -160,10 +172,10 @@ function EventDetails() {
             {/* BUTTON */}
             {user?.role === "admin" ? (
               <button
-                onClick={() => navigate(`/edit-event/${event._id}`)}
+                onClick={() => navigate(`/admin/edit-event/${event._id}`)}
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold hover:scale-[1.02] transition"
               >
-                Edit Event
+                ✏ Edit Event
               </button>
             ) : (
               <button
@@ -175,12 +187,9 @@ function EventDetails() {
                     : "bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:scale-[1.03] shadow-lg"
                 }`}
               >
-                {event.availableSeats === 0
-                  ? "Sold Out"
-                  : "🚀 Book Now"}
+                {event.availableSeats === 0 ? "❌ Sold Out" : "🚀 Book Now"}
               </button>
             )}
-
           </div>
         </div>
       </div>
