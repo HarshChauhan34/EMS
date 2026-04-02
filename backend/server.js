@@ -24,9 +24,21 @@ const app = express();
 // ================= MIDDLEWARE =================
 
 // ✅ CORS (better config)
+import cors from "cors";
+
+const allowedOrigins = ["http://localhost:5173", "https://ems-4.vercel.app"];
+
 app.use(
   cors({
-    origin: "https://ems-4.vercel.app/", // change to frontend URL in production
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
