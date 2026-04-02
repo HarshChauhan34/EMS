@@ -21,31 +21,36 @@ connectDB();
 
 const app = express();
 
-// ================= MIDDLEWARE =================
-
-// ✅ CORS (better config)
-import cors from "cors";
+// ================= CORS FIX =================
 
 const allowedOrigins = ["http://localhost:5173", "https://ems-4.vercel.app"];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin: (origin, callback) => {
+      // allow requests like Postman or mobile apps (no origin)
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
+        return callback(null, true);
       }
+
+      console.log("❌ Blocked by CORS:", origin);
+      return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
   }),
 );
 
-// ✅ Body parser
+// ================= BODY PARSER =================
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// ================= STATIC FILES =================
+
+// ✅ VERY IMPORTANT for Multer images
+app.use("/uploads", express.static("uploads"));
 
 // ================= ROUTES =================
 
@@ -54,12 +59,11 @@ app.use("/api/events", eventRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/uploads", express.static("uploads"));
 
 // ================= TEST ROUTES =================
 
 app.get("/", (req, res) => {
-  res.send("Event Management System API is running...");
+  res.send("🚀 Event Management System API is running...");
 });
 
 app.get("/api/protected", protect, (req, res) => {
@@ -70,15 +74,17 @@ app.get("/api/protected", protect, (req, res) => {
 });
 
 // ================= 404 HANDLER =================
-app.use((req, res, next) => {
+
+app.use((req, res) => {
   res.status(404).json({
     message: "Route not found",
   });
 });
 
 // ================= ERROR HANDLER =================
+
 app.use((err, req, res, next) => {
-  console.error("❌ ERROR:", err.stack);
+  console.error("❌ ERROR:", err.message);
 
   res.status(err.status || 500).json({
     success: false,
