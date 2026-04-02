@@ -23,13 +23,13 @@ const app = express();
 
 // ================= CORS FIX =================
 
-const allowedOrigins = ["http://localhost:5173", "https://ems-4.vercel.app/"];
+// ❌ remove trailing slash
+const allowedOrigins = ["http://localhost:5173", "https://ems-4.vercel.app"];
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // allow requests like Postman or mobile apps (no origin)
-      if (!origin) return callback(null, true);
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // allow Postman
 
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
@@ -42,6 +42,9 @@ app.use(
   }),
 );
 
+// ✅ VERY IMPORTANT
+app.options("*", cors());
+
 // ================= BODY PARSER =================
 
 app.use(express.json());
@@ -49,7 +52,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // ================= STATIC FILES =================
 
-// ✅ VERY IMPORTANT for Multer images
 app.use("/uploads", express.static("uploads"));
 
 // ================= ROUTES =================
