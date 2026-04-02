@@ -29,8 +29,15 @@ router.post(
   "/",
   protect,
   adminOnly,
-  upload.single("image"), // ✅ Cloudinary upload
-  createEvent,
+  (req, res, next) => {
+    upload.single("image")(req, res, function (err) {
+      if (err) {
+        return res.status(400).json({ message: err.message });
+      }
+      next();
+    });
+  },
+  createEvent
 );
 
 // Update event
@@ -38,8 +45,15 @@ router.put(
   "/:id",
   protect,
   adminOnly,
-  upload.single("image"), // ✅ Replace image if new uploaded
-  updateEvent,
+  (req, res, next) => {
+    upload.single("image")(req, res, function (err) {
+      if (err) {
+        return res.status(400).json({ message: err.message });
+      }
+      next();
+    });
+  },
+  updateEvent
 );
 
 // Delete event

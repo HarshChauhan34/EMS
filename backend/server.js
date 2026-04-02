@@ -15,14 +15,25 @@ import adminRoutes from "./routes/adminRoutes.js";
 import { protect } from "./middleware/authMiddleware.js";
 
 dotenv.config();
+
+// Connect Database
 connectDB();
 
 const app = express();
 
 // ================= MIDDLEWARE =================
 
-app.use(cors());
+// ✅ CORS (better config)
+app.use(
+  cors({
+    origin: "http://localhost:5173", // change to frontend URL in production
+    credentials: true,
+  }),
+);
+
+// ✅ Body parser
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // ================= ROUTES =================
 
@@ -31,9 +42,7 @@ app.use("/api/events", eventRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/admin", adminRoutes);
-
-// ❌ REMOVE THIS (no longer needed with Cloudinary)
-// app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("uploads"));
 
 // ================= TEST ROUTES =================
 
@@ -48,12 +57,19 @@ app.get("/api/protected", protect, (req, res) => {
   });
 });
 
+// ================= 404 HANDLER =================
+app.use((req, res, next) => {
+  res.status(404).json({
+    message: "Route not found",
+  });
+});
+
 // ================= ERROR HANDLER =================
-
 app.use((err, req, res, next) => {
-  console.error(err.message);
+  console.error("❌ ERROR:", err.stack);
 
-  res.status(500).json({
+  res.status(err.status || 500).json({
+    success: false,
     message: err.message || "Server Error",
   });
 });
