@@ -18,6 +18,14 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
+    // Used for the Forgot Password feature
+    passwordResetToken: {
+      type: String,
+    },
+    passwordResetExpires: {
+      type: Date,
+    },
+
     role: {
       type: String,
       enum: ["admin", "user"],
