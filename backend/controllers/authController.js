@@ -4,7 +4,7 @@ import generateToken from "../utils/generateToken.js";
 import sendEmail from "../utils/sendEmail.js";
 
 // ================= REGISTER =================
-export const registerUser = async (req, res, next) => {
+export const registerUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
@@ -23,7 +23,7 @@ export const registerUser = async (req, res, next) => {
       role,
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -31,12 +31,13 @@ export const registerUser = async (req, res, next) => {
       token: generateToken(user._id, user.role),
     });
   } catch (error) {
-    next(error); // ✅ FIX
+    console.error("REGISTER ERROR:", error);
+    return res.status(500).json({ message: error.message });
   }
 };
 
 // ================= LOGIN =================
-export const loginUser = async (req, res, next) => {
+export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -62,7 +63,7 @@ export const loginUser = async (req, res, next) => {
       });
     }
 
-    res.json({
+    return res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -70,12 +71,13 @@ export const loginUser = async (req, res, next) => {
       token: generateToken(user._id, user.role),
     });
   } catch (error) {
-    next(error); // ✅ FIX
+    console.error("LOGIN ERROR:", error);
+    return res.status(500).json({ message: error.message });
   }
 };
 
 // ================= UPDATE PROFILE =================
-export const updateProfile = async (req, res, next) => {
+export const updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("+password");
 
@@ -94,7 +96,7 @@ export const updateProfile = async (req, res, next) => {
 
     const updatedUser = await user.save();
 
-    res.json({
+    return res.json({
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
@@ -102,12 +104,13 @@ export const updateProfile = async (req, res, next) => {
       token: generateToken(updatedUser._id, updatedUser.role),
     });
   } catch (error) {
-    next(error); // ✅ FIX
+    console.error("UPDATE PROFILE ERROR:", error);
+    return res.status(500).json({ message: error.message });
   }
 };
 
 // ================= FORGOT PASSWORD =================
-export const forgotPassword = async (req, res, next) => {
+export const forgotPassword = async (req, res) => {
   try {
     const email = String(req.body?.email || "")
       .trim()
@@ -134,24 +137,13 @@ export const forgotPassword = async (req, res, next) => {
 
     const mjmlTemplate = `
       <mjml>
-        <mj-body background-color="#f4f4f4">
+        <mj-body>
           <mj-section>
             <mj-column>
-              <mj-text font-size="22px" font-weight="bold">
-                🔐 Password Reset Request
-              </mj-text>
-
-              <mj-text>
-                Click the button below to reset your password.
-              </mj-text>
-
-              <mj-button href="${resetURL}" background-color="#6C63FF">
+              <mj-text>Password Reset</mj-text>
+              <mj-button href="${resetURL}">
                 Reset Password
               </mj-button>
-
-              <mj-text font-size="14px" color="#888">
-                This link will expire in 10 minutes.
-              </mj-text>
             </mj-column>
           </mj-section>
         </mj-body>
@@ -160,14 +152,17 @@ export const forgotPassword = async (req, res, next) => {
 
     await sendEmail(user.email, "Password Reset", mjmlTemplate);
 
-    res.status(200).json({ message });
+    return res.status(200).json({ message });
   } catch (error) {
-    next(error); // ✅ FIX
+    console.error("FORGOT PASSWORD ERROR:", error);
+    return res.status(500).json({
+      message: error.message || "Email sending failed",
+    });
   }
 };
 
 // ================= RESET PASSWORD =================
-export const resetPassword = async (req, res, next) => {
+export const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
 
@@ -196,10 +191,11 @@ export const resetPassword = async (req, res, next) => {
 
     await user.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Password reset successful",
     });
   } catch (error) {
-    next(error); // ✅ FIX
+    console.error("RESET PASSWORD ERROR:", error);
+    return res.status(500).json({ message: error.message });
   }
 };

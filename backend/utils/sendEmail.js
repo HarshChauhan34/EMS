@@ -2,22 +2,39 @@ import nodemailer from "nodemailer";
 import mjml2html from "mjml";
 
 const sendEmail = async (to, subject, mjmlContent) => {
-  const { html } = mjml2html(mjmlContent);
+  try {
+    // ✅ Convert MJML → HTML safely
+    const { html, errors } = mjml2html(mjmlContent);
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+    if (errors && errors.length > 0) {
+      console.error("MJML Errors:", errors);
+      throw new Error("Email template error");
+    }
 
-  await transporter.sendMail({
-    from: process.env.EMAIL_FROM,
-    to,
-    subject,
-    html,
-  });
+    // ✅ Create transporter
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    // ✅ Send email
+    const info = await transporter.sendMail({
+      from: process.env.EMAIL_FROM,
+      to,
+      subject,
+      html,
+    });
+
+    console.log("✅ Email sent:", info.response);
+  } catch (error) {
+    console.error("❌ EMAIL ERROR:", error.message);
+
+    // 🔥 VERY IMPORTANT
+    throw error; // ← this sends error back to controller safely
+  }
 };
 
 export default sendEmail;
