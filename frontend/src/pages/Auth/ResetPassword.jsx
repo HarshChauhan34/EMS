@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../services/api";
 
@@ -14,6 +14,15 @@ function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // ✅ check token exists
+  useEffect(() => {
+    if (!token) {
+      alert("Invalid reset link");
+      navigate("/login");
+    }
+  }, [token, navigate]);
+
+  // ================= HANDLE INPUT =================
   const handleChange = (e) => {
     setForm((prev) => ({
       ...prev,
@@ -21,10 +30,10 @@ function ResetPassword() {
     }));
   };
 
+  // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ validation
     if (!form.password || !form.confirmPassword) {
       alert("Please fill all fields");
       return;
@@ -52,9 +61,11 @@ function ResetPassword() {
 
       navigate("/login");
     } catch (error) {
+      console.error(error);
+
       alert(
         error.response?.data?.message ||
-          "Invalid or expired token"
+          "Invalid or expired reset link"
       );
     } finally {
       setLoading(false);
@@ -64,6 +75,8 @@ function ResetPassword() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 px-4">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8">
+        
+        {/* Header */}
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">
           Reset Password 🔐
         </h2>
@@ -73,6 +86,7 @@ function ResetPassword() {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          
           {/* Password */}
           <div className="relative">
             <input
@@ -109,7 +123,7 @@ function ResetPassword() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:opacity-90 transition"
+            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:opacity-90 transition disabled:opacity-50"
           >
             {loading ? "Updating..." : "Reset Password"}
           </button>
@@ -127,4 +141,4 @@ function ResetPassword() {
   );
 }
 
-export default ResetPassword;       
+export default ResetPassword;

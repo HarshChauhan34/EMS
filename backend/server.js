@@ -16,20 +16,19 @@ import { protect } from "./middleware/authMiddleware.js";
 
 dotenv.config();
 
-// Connect Database
+// ================= CONNECT DB =================
 connectDB();
 
 const app = express();
 
-// ================= CORS FIX =================
-
-// ❌ remove trailing slash
+// ================= CORS =================
 const allowedOrigins = ["http://localhost:5173", "https://ems-4.vercel.app"];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow Postman
+    origin: (origin, callback) => {
+      // allow Postman / mobile apps
+      if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
@@ -43,24 +42,20 @@ app.use(
 );
 
 // ================= BODY PARSER =================
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ================= STATIC FILES =================
-
+// ================= STATIC =================
 app.use("/uploads", express.static("uploads"));
 
 // ================= ROUTES =================
-
 app.use("/api/auth", authRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/admin", adminRoutes);
 
-// ================= TEST ROUTES =================
-
+// ================= TEST =================
 app.get("/", (req, res) => {
   res.send("🚀 Event Management System API is running...");
 });
@@ -72,18 +67,17 @@ app.get("/api/protected", protect, (req, res) => {
   });
 });
 
-// ================= 404 HANDLER =================
-
-app.use((req, res) => {
+// ================= 404 =================
+app.use((req, res, next) => {
   res.status(404).json({
+    success: false,
     message: "Route not found",
   });
 });
 
 // ================= ERROR HANDLER =================
-
 app.use((err, req, res, next) => {
-  console.error("❌ ERROR:", err.message);
+  console.error("❌ ERROR:", err.stack);
 
   res.status(err.status || 500).json({
     success: false,
@@ -92,7 +86,6 @@ app.use((err, req, res, next) => {
 });
 
 // ================= SERVER =================
-
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

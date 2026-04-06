@@ -1,25 +1,29 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
+// Auth Pages
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import ResetPassword from "./pages/Auth/ResetPassword";
+
+// Public Pages
 import Home from "./pages/Home";
+import EventDetails from "./pages/EventDetails";
+
+// User Pages
+import Profile from "./pages/Profile";
+import MyBookings from "./pages/MyBookings";
+
+// Admin Pages
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AddEvent from "./pages/Admin/AddEvent";
 import EditEvent from "./pages/Admin/EditEvent";
-import MyBookings from "./pages/MyBookings";
-import EventDetails from "./pages/EventDetails";
-import Profile from "./pages/Profile";
 import ManageUsers from "./pages/Admin/ManageUsers";
 
-// ✅ NEW (IMPORTANT)
-import ResetPassword from "./pages/Auth/ResetPassword";
-
-// Routes
+// Protected Routes
 import AdminRoute from "./routes/AdminRoute";
 import UserRoute from "./routes/UserRoute";
-
-import ForgotPassword from "./pages/Auth/ForgotPassword";
 
 function App() {
   return (
@@ -27,17 +31,17 @@ function App() {
       <Navbar />
 
       <Routes>
-        {/* Public Routes */}
+        {/* ================= PUBLIC ================= */}
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/event/:id" element={<EventDetails />} />
 
-        {/* ✅ Reset Password Route */}
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        {/* Auth */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-        {/* ================= USER PROTECTED ================= */}
+        {/* ================= USER ================= */}
         <Route
           path="/profile"
           element={
@@ -56,7 +60,7 @@ function App() {
           }
         />
 
-        {/* ================= ADMIN PROTECTED ================= */}
+        {/* ================= ADMIN ================= */}
         <Route
           path="/admin"
           element={
@@ -93,8 +97,15 @@ function App() {
           }
         />
 
-        {/* ❌ REMOVE THIS (unsafe public edit route) */}
-        {/* <Route path="/edit-event/:id" element={<EditEvent />} /> */}
+        {/* ================= 404 PAGE ================= */}
+        <Route
+          path="*"
+          element={
+            <h1 className="text-center mt-20 text-2xl font-bold">
+              404 - Page Not Found 🚫
+            </h1>
+          }
+        />
       </Routes>
     </>
   );

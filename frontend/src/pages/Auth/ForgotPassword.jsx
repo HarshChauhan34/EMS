@@ -9,28 +9,32 @@ function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email) {
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (!cleanEmail) {
       alert("Please enter your email");
       return;
     }
 
     try {
       setLoading(true);
+      setMessage(""); // ✅ clear old message
 
-      const res = await API.post("/auth/forgot-password", { email });
+      const res = await API.post("/auth/forgot-password", {
+        email: cleanEmail,
+      });
 
       setMessage(
-        res.data?.message ||
-          "If that email exists, we have sent a reset link."
+        res.data?.message || "If that email exists, we have sent a reset link.",
       );
     } catch (error) {
-      alert(
-        error.response?.data?.message ||
-          "Something went wrong"
-      );
+      console.error(error); // ✅ debug
+
+      alert(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -39,6 +43,7 @@ function ForgotPassword() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 px-4">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8">
+        {/* Header */}
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">
           Forgot Password 🔑
         </h2>
@@ -62,7 +67,7 @@ function ForgotPassword() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:opacity-90 transition"
+            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:opacity-90 transition disabled:opacity-50"
           >
             {loading ? "Sending..." : "Send Reset Link"}
           </button>
@@ -70,9 +75,7 @@ function ForgotPassword() {
 
         {/* Success Message */}
         {message && (
-          <p className="text-center text-green-600 mt-4 text-sm">
-            {message}
-          </p>
+          <p className="text-center text-green-600 mt-4 text-sm">{message}</p>
         )}
 
         {/* Back */}
