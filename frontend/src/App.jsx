@@ -19,6 +19,8 @@ import ResetPassword from "./pages/Auth/ResetPassword";
 import AdminRoute from "./routes/AdminRoute";
 import UserRoute from "./routes/UserRoute";
 
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+
 function App() {
   return (
     <>
@@ -33,6 +35,7 @@ function App() {
 
         {/* ✅ Reset Password Route */}
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* ================= USER PROTECTED ================= */}
         <Route
