@@ -27,6 +27,7 @@ const sendEmail = async (to, subject, mjmlContent) => {
       subject,
       html,
     });
+    console.log("Sending email to:", to);
 
     console.log("✅ Email sent:", info.response);
   } catch (error) {
