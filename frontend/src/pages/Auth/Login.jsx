@@ -38,28 +38,21 @@ function Login() {
         navigate("/");
       }
     } catch (error) {
-      alert(
-        error.response?.data?.message || error.message || "Login failed"
-      );
+      alert(error.response?.data?.message || error.message || "Login failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 px-4">
-      
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-600 via-purple-600 to-pink-500 px-4">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8">
-
         <div className="text-center mb-6">
-          <h2 className="text-3xl font-bold text-gray-800">
-            Welcome Back 👋
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-800">Welcome Back 👋</h2>
           <p className="text-gray-500">Login to your account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-
           {/* Email */}
           <input
             type="email"
@@ -97,11 +90,10 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:opacity-90 transition"
+            className="w-full bg-linear-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:opacity-90 transition"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
-
         </form>
 
         <p className="text-center text-gray-600 mt-6">
@@ -110,7 +102,6 @@ function Login() {
             Register
           </Link>
         </p>
-
       </div>
     </div>
   );

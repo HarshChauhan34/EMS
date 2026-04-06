@@ -36,7 +36,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 shadow-2xl bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-600 text-white">
+    <nav className="sticky top-0 z-50 shadow-2xl bg-linear-to-r from-indigo-700 via-purple-700 to-pink-600 text-white">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         {/* LOGO */}
         <Link
@@ -44,7 +44,7 @@ function Navbar() {
           className="text-2xl font-extrabold flex items-center gap-2 group"
         >
           🎟️
-          <span className="bg-gradient-to-r from-yellow-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent group-hover:brightness-125 transition">
+          <span className="bg-linear-to-r from-yellow-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent group-hover:brightness-125 transition">
             EventPro
           </span>
         </Link>
@@ -80,7 +80,7 @@ function Navbar() {
 
               <Link
                 to="/register"
-                className="px-5 py-2 rounded-full bg-gradient-to-r from-yellow-400 via-pink-500 to-red-500 text-black font-bold shadow-lg hover:scale-105 hover:shadow-pink-500/50 transition"
+                className="px-5 py-2 rounded-full bg-linear-to-r from-yellow-400 via-pink-500 to-red-500 text-black font-bold shadow-lg hover:scale-105 hover:shadow-pink-500/50 transition"
               >
                 Register
               </Link>
@@ -92,7 +92,7 @@ function Navbar() {
             <div className="relative">
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="w-11 h-11 rounded-full bg-gradient-to-tr from-yellow-400 to-pink-500 text-black font-bold flex items-center justify-center shadow-lg hover:scale-110 hover:shadow-pink-400/60 transition"
+                className="w-11 h-11 rounded-full bg-linear-to-tr from-yellow-400 to-pink-500 text-black font-bold flex items-center justify-center shadow-lg hover:scale-110 hover:shadow-pink-400/60 transition"
               >
                 {getInitials(user.name)}
               </button>
@@ -112,18 +112,6 @@ function Navbar() {
                   >
                     👤 Profile
                   </button>
-
-                  {user.role === "admin" && (
-                    <button
-                      onClick={() => {
-                        navigate("/admin/users");
-                        setProfileOpen(false);
-                      }}
-                      className="w-full px-4 py-2 text-left hover:bg-gray-100"
-                    >
-                      ⚙️ Admin Panel
-                    </button>
-                  )}
 
                   <button
                     onClick={() => {
@@ -157,12 +145,9 @@ function Navbar() {
             : "max-h-0 opacity-0 overflow-hidden"
         }`}
       >
-        <div className="bg-gradient-to-b from-indigo-800 via-purple-800 to-pink-700 px-5 py-4 flex flex-col gap-4 text-lg text-center">
+        <div className="bg-linear-to-b from-indigo-800 via-purple-800 to-pink-700 px-5 py-4 flex flex-col gap-4 text-lg text-center">
           {user?.role === "user" && (
-            <Link
-              to="/my-bookings"
-              onClick={() => setMenuOpen(false)}
-            >
+            <Link to="/my-bookings" onClick={() => setMenuOpen(false)}>
               My Bookings
             </Link>
           )}

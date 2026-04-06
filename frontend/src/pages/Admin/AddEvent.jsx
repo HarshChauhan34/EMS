@@ -85,11 +85,11 @@ function AddEvent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-black text-white flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-black text-white flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-6xl bg-white/5 backdrop-blur-3xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
         {/* HEADER */}
-        <div className="p-6 md:p-8 border-b border-white/10 bg-gradient-to-r from-pink-500/10 to-indigo-500/10 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-400 to-indigo-400 text-transparent bg-clip-text">
+        <div className="p-6 md:p-8 border-b border-white/10 bg-linear-to-r from-pink-500/10 to-indigo-500/10 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold bg-linear-to-r from-pink-400 to-indigo-400 text-transparent bg-clip-text">
             🚀 Create Event
           </h1>
           <p className="text-gray-400 mt-2">Launch your event like a pro ✨</p>
@@ -195,7 +195,7 @@ function AddEvent() {
             {/* BUTTON */}
             <button
               disabled={loading}
-              className="w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 shadow-lg hover:scale-[1.05] transition disabled:opacity-50"
+              className="w-full py-3 rounded-xl font-semibold bg-linear-to-r from-pink-500 via-purple-500 to-indigo-500 shadow-lg hover:scale-[1.05] transition disabled:opacity-50"
             >
               {loading ? "Uploading..." : "🚀 Create Event"}
             </button>

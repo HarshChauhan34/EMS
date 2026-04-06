@@ -73,7 +73,7 @@ function EventDetails() {
   const totalPrice = seats * event.price;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white px-4 py-8">
+    <div className="min-h-screen bg-linear-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white px-4 py-8">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-8">
         {/* LEFT SIDE */}
         <div className="lg:col-span-2 space-y-6">
@@ -82,10 +82,10 @@ function EventDetails() {
             <img
               src={imageUrl}
               alt="event"
-              className="w-full h-[250px] sm:h-[400px] object-cover transition duration-700 group-hover:scale-110"
+              className="w-full h-62.5 sm:h-100 object-cover transition duration-700 group-hover:scale-110"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
 
             <div className="absolute bottom-4 left-4">
               <h1 className="text-2xl sm:text-4xl font-bold">{event.title}</h1>
@@ -173,7 +173,7 @@ function EventDetails() {
             {user?.role === "admin" ? (
               <button
                 onClick={() => navigate(`/admin/edit-event/${event._id}`)}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold hover:scale-[1.02] transition"
+                className="w-full py-3 rounded-xl bg-linear-to-r from-blue-600 to-indigo-600 text-white font-semibold hover:scale-[1.02] transition"
               >
                 ✏ Edit Event
               </button>
@@ -184,7 +184,7 @@ function EventDetails() {
                 className={`w-full py-3 rounded-xl font-semibold transition ${
                   event.availableSeats === 0
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:scale-[1.03] shadow-lg"
+                    : "bg-linear-to-r from-pink-500 to-purple-600 text-white hover:scale-[1.03] shadow-lg"
                 }`}
               >
                 {event.availableSeats === 0 ? "❌ Sold Out" : "🚀 Book Now"}

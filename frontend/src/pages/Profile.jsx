@@ -44,7 +44,7 @@ function Profile() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white flex items-center justify-center px-4 py-10">
 
       <div className="w-full max-w-5xl">
 
@@ -53,7 +53,7 @@ function Profile() {
 
           {/* AVATAR */}
           <div className="relative">
-            <div className="w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 flex items-center justify-center text-4xl font-bold shadow-2xl ring-4 ring-white/20">
+            <div className="w-28 h-28 md:w-32 md:h-32 rounded-full bg-linear-to-r from-pink-500 via-purple-500 to-indigo-500 flex items-center justify-center text-4xl font-bold shadow-2xl ring-4 ring-white/20">
               {name ? name[0].toUpperCase() : "U"}
             </div>
 
@@ -69,7 +69,7 @@ function Profile() {
 
             <p className="text-gray-300 mt-1">{user.email}</p>
 
-            <span className="inline-block mt-3 px-4 py-1 text-sm rounded-full bg-gradient-to-r from-indigo-500 to-purple-600">
+            <span className="inline-block mt-3 px-4 py-1 text-sm rounded-full bg-linear-to-r from-indigo-500 to-purple-600">
               {user.role.toUpperCase()}
             </span>
           </div>
@@ -128,7 +128,7 @@ function Profile() {
               {!editMode ? (
                 <button
                   onClick={() => setEditMode(true)}
-                  className="bg-gradient-to-r from-blue-500 to-indigo-600 py-2 rounded-xl hover:scale-105 transition shadow-lg"
+                  className="bg-linear-to-r from-blue-500 to-indigo-600 py-2 rounded-xl hover:scale-105 transition shadow-lg"
                 >
                   ✏ Edit Profile
                 </button>
@@ -136,7 +136,7 @@ function Profile() {
                 <>
                   <button
                     onClick={saveProfile}
-                    className="bg-gradient-to-r from-green-500 to-emerald-600 py-2 rounded-xl hover:scale-105 transition shadow-lg"
+                    className="bg-linear-to-r from-green-500 to-emerald-600 py-2 rounded-xl hover:scale-105 transition shadow-lg"
                   >
                     ✔ Save Changes
                   </button>
@@ -154,7 +154,7 @@ function Profile() {
               {user.role === "user" && (
                 <button
                   onClick={() => navigate("/my-bookings")}
-                  className="bg-gradient-to-r from-emerald-500 to-green-600 py-2 rounded-xl hover:scale-105 transition shadow-lg"
+                  className="bg-linear-to-r from-emerald-500 to-green-600 py-2 rounded-xl hover:scale-105 transition shadow-lg"
                 >
                   📅 My Bookings
                 </button>
@@ -163,7 +163,7 @@ function Profile() {
               {user.role === "admin" && (
                 <button
                   onClick={() => navigate("/admin")}
-                  className="bg-gradient-to-r from-purple-500 to-indigo-600 py-2 rounded-xl hover:scale-105 transition shadow-lg"
+                  className="bg-linear-to-r from-purple-500 to-indigo-600 py-2 rounded-xl hover:scale-105 transition shadow-lg"
                 >
                   ⚙ Admin Dashboard
                 </button>
@@ -178,7 +178,7 @@ function Profile() {
 
               <button
                 onClick={logoutHandler}
-                className="bg-gradient-to-r from-red-500 to-pink-600 py-2 rounded-xl hover:scale-105 transition shadow-lg"
+                className="bg-linear-to-r from-red-500 to-pink-600 py-2 rounded-xl hover:scale-105 transition shadow-lg"
               >
                 🚪 Logout
               </button>

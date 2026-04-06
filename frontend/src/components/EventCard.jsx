@@ -71,7 +71,7 @@ function EventCard({ event, refresh }) {
   return (
     <div
       onClick={() => navigate(`/event/${event._id}`)}
-      className="group cursor-pointer relative rounded-3xl overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3"
+      className="group cursor-pointer relative rounded-3xl overflow-hidden bg-linear-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3"
     >
       {/* IMAGE */}
       <div className="relative overflow-hidden">
@@ -86,11 +86,11 @@ function EventCard({ event, refresh }) {
         />
 
         {/* OVERLAY */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
 
         {/* TOP BAR */}
         <div className="absolute top-3 left-3 right-3 flex justify-between items-center">
-          <span className="bg-gradient-to-r from-pink-500 to-purple-600 text-xs px-3 py-1 rounded-full">
+          <span className="bg-linear-to-r from-pink-500 to-purple-600 text-xs px-3 py-1 rounded-full">
             {event.category}
           </span>
 
@@ -139,7 +139,7 @@ function EventCard({ event, refresh }) {
               e.stopPropagation();
               setShowSeat(true);
             }}
-            className="w-full py-2 rounded-xl bg-gradient-to-r from-pink-500 to-indigo-600 font-semibold hover:scale-[1.03] transition"
+            className="w-full py-2 rounded-xl bg-linear-to-r from-pink-500 to-indigo-600 font-semibold hover:scale-[1.03] transition"
           >
             🎟 Book Now
           </button>
@@ -202,7 +202,7 @@ function EventCard({ event, refresh }) {
             <button
               onClick={handleBook}
               disabled={loading}
-              className="w-full py-2 rounded-xl bg-gradient-to-r from-green-400 to-emerald-600 hover:scale-[1.05] transition"
+              className="w-full py-2 rounded-xl bg-linear-to-r from-green-400 to-emerald-600 hover:scale-[1.05] transition"
             >
               {loading ? "Processing..." : "Confirm 🚀"}
             </button>

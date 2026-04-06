@@ -8,11 +8,6 @@ function ManageUsers() {
   const [openUsers, setOpenUsers] = useState([]);
   const [bookings, setBookings] = useState([]);
 
-  useEffect(() => {
-    fetchUsers();
-    fetchBookings();
-  }, []);
-
   const fetchUsers = async () => {
     const res = await getAllUsers();
     const usersOnly = res.data.filter((u) => u.role === "user");
@@ -54,8 +49,13 @@ function ManageUsers() {
     0,
   );
 
+  useEffect(() => {
+    fetchUsers();
+    fetchBookings();
+  }, []);
+  
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white p-4 md:p-8">
+    <div className="min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white p-4 md:p-8">
       {/* HEADER */}
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold">🎛 Admin Dashboard</h1>
@@ -99,7 +99,7 @@ function ManageUsers() {
                 {/* USER CARD */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between bg-white/5 p-4 rounded-xl hover:bg-white/10 transition">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 flex items-center justify-center font-bold">
+                    <div className="w-10 h-10 rounded-full bg-linear-to-r from-pink-500 to-purple-600 flex items-center justify-center font-bold">
                       {getInitial(u.name)}
                     </div>
 
@@ -108,7 +108,7 @@ function ManageUsers() {
 
                   <button
                     onClick={() => handleViewBookings(u._id)}
-                    className="mt-3 md:mt-0 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:scale-105 transition shadow-lg"
+                    className="mt-3 md:mt-0 px-4 py-2 rounded-xl bg-linear-to-r from-indigo-500 to-purple-600 hover:scale-105 transition shadow-lg"
                   >
                     {isOpen ? "Hide Bookings" : "View Bookings"}
                   </button>

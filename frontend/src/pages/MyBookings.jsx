@@ -21,7 +21,7 @@ function MyBookings() {
   const totalSpent = bookings.reduce((sum, b) => sum + (b.totalAmount || 0), 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white px-4 py-8">
+    <div className="min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white px-4 py-8">
       <div className="max-w-6xl mx-auto">
         {/* HEADER */}
         <div className="mb-8">
@@ -78,7 +78,7 @@ function MyBookings() {
                 {b.bookingStatus === "confirmed" && (
                   <button
                     onClick={() => handleCancel(b._id)}
-                    className="text-xs px-3 py-1 rounded-lg bg-gradient-to-r from-red-500 to-pink-600 hover:scale-105 transition"
+                    className="text-xs px-3 py-1 rounded-lg bg-linear-to-r from-red-500 to-pink-600 hover:scale-105 transition"
                   >
                     Cancel
                   </button>

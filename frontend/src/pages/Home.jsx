@@ -30,10 +30,10 @@ function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white px-4 py-8">
+    <div className="min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white px-4 py-8">
       {/* HERO SECTION */}
       <div className="max-w-6xl mx-auto text-center mb-10">
-        <h1 className="text-3xl md:text-5xl font-extrabold mb-4 bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 text-transparent bg-clip-text">
+        <h1 className="text-3xl md:text-5xl font-extrabold mb-4 bg-linear-to-r from-pink-400 via-purple-400 to-indigo-400 text-transparent bg-clip-text">
           Discover Amazing Events 🎉
         </h1>
 
