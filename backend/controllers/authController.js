@@ -4,7 +4,7 @@ import generateToken from "../utils/generateToken.js";
 import sendEmail from "../utils/sendEmail.js";
 
 // ================= REGISTER =================
-export const registerUser = async (req, res) => {
+export const registerUser = async (req, res, next) => {
   try {
     const { name, email, password, role } = req.body;
 
@@ -16,7 +16,6 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    // Password hashing handled in model
     const user = await User.create({
       name,
       email,
@@ -32,18 +31,15 @@ export const registerUser = async (req, res) => {
       token: generateToken(user._id, user.role),
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    next(error); // ✅ FIX
   }
 };
 
 // ================= LOGIN =================
-export const loginUser = async (req, res) => {
+export const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // include password
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
@@ -74,14 +70,12 @@ export const loginUser = async (req, res) => {
       token: generateToken(user._id, user.role),
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    next(error); // ✅ FIX
   }
 };
 
 // ================= UPDATE PROFILE =================
-export const updateProfile = async (req, res) => {
+export const updateProfile = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id).select("+password");
 
@@ -94,7 +88,6 @@ export const updateProfile = async (req, res) => {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
 
-    // password auto-hashed in model
     if (req.body.password) {
       user.password = req.body.password;
     }
@@ -109,16 +102,16 @@ export const updateProfile = async (req, res) => {
       token: generateToken(updatedUser._id, updatedUser.role),
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    next(error); // ✅ FIX
   }
 };
 
 // ================= FORGOT PASSWORD =================
-export const forgotPassword = async (req, res) => {
+export const forgotPassword = async (req, res, next) => {
   try {
-    const email = String(req.body?.email || "").trim();
+    const email = String(req.body?.email || "")
+      .trim()
+      .toLowerCase();
 
     if (!email) {
       return res.status(400).json({
@@ -134,15 +127,11 @@ export const forgotPassword = async (req, res) => {
       return res.status(200).json({ message });
     }
 
-    // generate token using model method
     const resetToken = user.createPasswordResetToken();
-
     await user.save({ validateBeforeSave: false });
 
-    // reset URL (frontend route)
     const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
-    // MJML email template
     const mjmlTemplate = `
       <mjml>
         <mj-body background-color="#f4f4f4">
@@ -152,8 +141,8 @@ export const forgotPassword = async (req, res) => {
                 🔐 Password Reset Request
               </mj-text>
 
-              <mj-text font-size="16px">
-                We received a request to reset your password.
+              <mj-text>
+                Click the button below to reset your password.
               </mj-text>
 
               <mj-button href="${resetURL}" background-color="#6C63FF">
@@ -169,19 +158,16 @@ export const forgotPassword = async (req, res) => {
       </mjml>
     `;
 
-    // send email
     await sendEmail(user.email, "Password Reset", mjmlTemplate);
 
     res.status(200).json({ message });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    next(error); // ✅ FIX
   }
 };
 
 // ================= RESET PASSWORD =================
-export const resetPassword = async (req, res) => {
+export const resetPassword = async (req, res, next) => {
   try {
     const { token, newPassword } = req.body;
 
@@ -191,7 +177,6 @@ export const resetPassword = async (req, res) => {
       });
     }
 
-    // hash token
     const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
     const user = await User.findOne({
@@ -205,9 +190,7 @@ export const resetPassword = async (req, res) => {
       });
     }
 
-    // update password
     user.password = newPassword;
-
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
 
@@ -217,8 +200,6 @@ export const resetPassword = async (req, res) => {
       message: "Password reset successful",
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    next(error); // ✅ FIX
   }
 };
