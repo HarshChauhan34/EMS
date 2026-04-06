@@ -18,7 +18,7 @@ export const registerUser = async (req, res) => {
 
     const user = await User.create({
       name,
-      email,
+      email: email.toLowerCase().trim(), // ✅ normalize
       password,
       role,
     });
@@ -32,7 +32,7 @@ export const registerUser = async (req, res) => {
     });
   } catch (error) {
     console.error("REGISTER ERROR:", error);
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -41,7 +41,9 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({
+      email: email.toLowerCase().trim(),
+    }).select("+password");
 
     if (!user) {
       return res.status(401).json({
@@ -72,7 +74,7 @@ export const loginUser = async (req, res) => {
     });
   } catch (error) {
     console.error("LOGIN ERROR:", error);
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -105,7 +107,7 @@ export const updateProfile = async (req, res) => {
     });
   } catch (error) {
     console.error("UPDATE PROFILE ERROR:", error);
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -126,37 +128,56 @@ export const forgotPassword = async (req, res) => {
 
     const user = await User.findOne({ email });
 
+    // ✅ Don't reveal user existence
     if (!user) {
       return res.status(200).json({ message });
     }
 
+    // ✅ Generate token
     const resetToken = user.createPasswordResetToken();
+
     await user.save({ validateBeforeSave: false });
 
     const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
+    // ✅ MJML template
     const mjmlTemplate = `
       <mjml>
-        <mj-body>
+        <mj-body background-color="#f4f4f4">
           <mj-section>
             <mj-column>
-              <mj-text>Password Reset</mj-text>
-              <mj-button href="${resetURL}">
+              <mj-text font-size="20px" font-weight="bold">
+                🔐 Password Reset
+              </mj-text>
+
+              <mj-text>
+                Click below to reset your password
+              </mj-text>
+
+              <mj-button href="${resetURL}" background-color="#6C63FF">
                 Reset Password
               </mj-button>
+
+              <mj-text font-size="12px" color="#888">
+                This link expires in 10 minutes
+              </mj-text>
             </mj-column>
           </mj-section>
         </mj-body>
       </mjml>
     `;
 
+    console.log("👉 Sending reset email to:", user.email);
+
+    // ❗ CRITICAL: this is where your error happens
     await sendEmail(user.email, "Password Reset", mjmlTemplate);
 
     return res.status(200).json({ message });
   } catch (error) {
-    console.error("FORGOT PASSWORD ERROR:", error);
+    console.error("FORGOT PASSWORD ERROR FULL:", error);
+
     return res.status(500).json({
-      message: error.message || "Email sending failed",
+      message: "Email sending failed",
     });
   }
 };
@@ -196,6 +217,6 @@ export const resetPassword = async (req, res) => {
     });
   } catch (error) {
     console.error("RESET PASSWORD ERROR:", error);
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
