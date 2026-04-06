@@ -1,11 +1,9 @@
 import crypto from "crypto";
-import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
-import { sendEmail } from "../utils/sendEmail.js";
+import sendEmail from "../utils/sendEmail.js";
 
 // ================= REGISTER =================
-
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -18,14 +16,11 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    // ✅ HASH PASSWORD
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
+    // Password hashing handled in model
     const user = await User.create({
       name,
       email,
-      password: hashedPassword,
+      password,
       role,
     });
 
@@ -33,7 +28,6 @@ export const registerUser = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      password: user.password,
       role: user.role,
       token: generateToken(user._id, user.role),
     });
@@ -45,12 +39,12 @@ export const registerUser = async (req, res) => {
 };
 
 // ================= LOGIN =================
-
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    // include password
+    const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
       return res.status(401).json({
@@ -58,29 +52,27 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    // ✅ COMPARE HASH
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await user.matchPassword(password);
 
-    if (isMatch) {
-      if (user.isBlocked) {
-        return res.status(403).json({
-          message: "User is blocked",
-        });
-      }
-
-      res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        role: user.role,
-        token: generateToken(user._id, user.role),
-      });
-    } else {
-      res.status(401).json({
+    if (!isMatch) {
+      return res.status(401).json({
         message: "Invalid email or password",
       });
     }
+
+    if (user.isBlocked) {
+      return res.status(403).json({
+        message: "User is blocked",
+      });
+    }
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token: generateToken(user._id, user.role),
+    });
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -89,14 +81,9 @@ export const loginUser = async (req, res) => {
 };
 
 // ================= UPDATE PROFILE =================
-
 export const updateProfile = async (req, res) => {
   try {
-    const userId = req.user._id;
-
-    const { name, email, password } = req.body;
-
-    const user = await User.findById(userId);
+    const user = await User.findById(req.user._id).select("+password");
 
     if (!user) {
       return res.status(404).json({
@@ -104,14 +91,12 @@ export const updateProfile = async (req, res) => {
       });
     }
 
-    user.name = name || user.name;
-    user.email = email || user.email;
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
 
-    // ✅ HASH if password updated
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-
-      user.password = await bcrypt.hash(password, salt);
+    // password auto-hashed in model
+    if (req.body.password) {
+      user.password = req.body.password;
     }
 
     const updatedUser = await user.save();
@@ -133,51 +118,69 @@ export const updateProfile = async (req, res) => {
 // ================= FORGOT PASSWORD =================
 export const forgotPassword = async (req, res) => {
   try {
-    const { email } = req.body;
+    const email = String(req.body?.email || "").trim();
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Email is required",
+      });
+    }
 
     const message = "If that email exists, we will send you a reset link.";
 
-    // Don't reveal whether the user exists
     const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(200).json({ message });
     }
 
-    const resetToken = crypto.randomBytes(32).toString("hex");
-    const resetTokenHash = crypto
-      .createHash("sha256")
-      .update(resetToken)
-      .digest("hex");
+    // generate token using model method
+    const resetToken = user.createPasswordResetToken();
 
-    user.passwordResetToken = resetTokenHash;
-    user.passwordResetExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+    await user.save({ validateBeforeSave: false });
 
-    await user.save();
+    // reset URL (frontend route)
+    const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-    const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}`;
+    // MJML email template
+    const mjmlTemplate = `
+      <mjml>
+        <mj-body background-color="#f4f4f4">
+          <mj-section>
+            <mj-column>
+              <mj-text font-size="22px" font-weight="bold">
+                🔐 Password Reset Request
+              </mj-text>
 
-    await sendEmail({
-      to: email,
-      subject: "Password reset instructions",
-      html: `
-        <p>You requested a password reset for your EMS account.</p>
-        <p>Click the link below to set a new password. This link is valid for 15 minutes:</p>
-        <p><a href="${resetUrl}">${resetUrl}</a></p>
-        <p>If you did not request this, you can ignore this email.</p>
-      `,
-    });
+              <mj-text font-size="16px">
+                We received a request to reset your password.
+              </mj-text>
 
-    return res.status(200).json({ message });
+              <mj-button href="${resetURL}" background-color="#6C63FF">
+                Reset Password
+              </mj-button>
+
+              <mj-text font-size="14px" color="#888">
+                This link will expire in 10 minutes.
+              </mj-text>
+            </mj-column>
+          </mj-section>
+        </mj-body>
+      </mjml>
+    `;
+
+    // send email
+    await sendEmail(user.email, "Password Reset", mjmlTemplate);
+
+    res.status(200).json({ message });
   } catch (error) {
-    return res.status(500).json({
+    res.status(500).json({
       message: error.message,
     });
   }
 };
 
-// Used when the user has the reset token (typically from email).
+// ================= RESET PASSWORD =================
 export const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
@@ -188,12 +191,13 @@ export const resetPassword = async (req, res) => {
       });
     }
 
+    // hash token
     const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
     const user = await User.findOne({
       passwordResetToken: tokenHash,
-      passwordResetExpires: { $gt: new Date() },
-    });
+      passwordResetExpires: { $gt: Date.now() },
+    }).select("+password");
 
     if (!user) {
       return res.status(400).json({
@@ -201,19 +205,19 @@ export const resetPassword = async (req, res) => {
       });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(newPassword, salt);
+    // update password
+    user.password = newPassword;
 
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
 
     await user.save();
 
-    return res.status(200).json({
+    res.status(200).json({
       message: "Password reset successful",
     });
   } catch (error) {
-    return res.status(500).json({
+    res.status(500).json({
       message: error.message,
     });
   }

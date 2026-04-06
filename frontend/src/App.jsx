@@ -1,8 +1,7 @@
-  import { Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
-import ResetPassword from "./pages/Auth/ResetPassword";
 import Home from "./pages/Home";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AddEvent from "./pages/Admin/AddEvent";
@@ -24,7 +23,6 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/event/:id" element={<EventDetails />} />
         <Route path="/edit-event/:id" element={<EditEvent />} />
         <Route path="/profile" element={<Profile />} />
