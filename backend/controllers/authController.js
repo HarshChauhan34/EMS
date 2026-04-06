@@ -1,7 +1,8 @@
 import crypto from "crypto";
+import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
-import bcrypt from "bcryptjs";
+import { sendEmail } from "../utils/sendEmail.js";
 
 // ================= REGISTER =================
 
@@ -130,7 +131,6 @@ export const updateProfile = async (req, res) => {
 };
 
 // ================= FORGOT PASSWORD =================
-// Note: This project doesn't appear to include an email service, so we log the reset token.
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -155,8 +155,19 @@ export const forgotPassword = async (req, res) => {
 
     await user.save();
 
-    // Dev hint (no email sending implemented)
-    console.log(`Password reset token for ${email}:`, resetToken);
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}`;
+
+    await sendEmail({
+      to: email,
+      subject: "Password reset instructions",
+      html: `
+        <p>You requested a password reset for your EMS account.</p>
+        <p>Click the link below to set a new password. This link is valid for 15 minutes:</p>
+        <p><a href="${resetUrl}">${resetUrl}</a></p>
+        <p>If you did not request this, you can ignore this email.</p>
+      `,
+    });
 
     return res.status(200).json({ message });
   } catch (error) {
