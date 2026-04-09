@@ -16,6 +16,12 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const isStrongPassword = (password) => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/.test(
+      password,
+    );
+  };
+
   // ================= HANDLE INPUT =================
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,8 +41,10 @@ function Register() {
       return;
     }
 
-    if (form.password.length < 6) {
-      alert("Password must be at least 6 characters");
+    if (!isStrongPassword(form.password)) {
+      alert(
+        "Password must include uppercase, lowercase, number, and special character",
+      );
       return;
     }
 
@@ -55,9 +63,7 @@ function Register() {
       navigate("/");
     } catch (error) {
       alert(
-        error.response?.data?.message ||
-        error.message ||
-        "Register failed"
+        error.response?.data?.message || error.message || "Register failed",
       );
     } finally {
       setLoading(false);
@@ -65,8 +71,7 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81]">
-
+    <div className="min-h-screen flex items-center justify-center px-4 bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81]">
       {/* BACKGROUND GLOW */}
       <div className="absolute w-72 h-72 bg-purple-600 rounded-full blur-[120px] opacity-30 top-10 left-10"></div>
       <div className="absolute w-72 h-72 bg-pink-500 rounded-full blur-[120px] opacity-30 bottom-10 right-10"></div>
@@ -78,10 +83,9 @@ function Register() {
         transition={{ duration: 0.5 }}
         className="relative w-full max-w-md backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 text-white"
       >
-
         {/* HEADER */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
             Create Account 🚀
           </h2>
           <p className="text-gray-300 text-sm mt-2">
@@ -91,7 +95,6 @@ function Register() {
 
         {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-5">
-
           {/* NAME */}
           <input
             type="text"
@@ -139,7 +142,7 @@ function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 transition disabled:opacity-50"
+            className="w-full flex justify-center items-center gap-2 bg-linear-to-r from-purple-500 to-pink-500 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 transition disabled:opacity-50"
           >
             {loading ? (
               <>

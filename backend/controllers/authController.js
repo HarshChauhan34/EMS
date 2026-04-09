@@ -25,7 +25,7 @@ export const registerUser = async (req, res) => {
       password,
       role: role || "user",
     });
-    console.log("BODY:", req.body);
+    // console.log("BODY:", req.body);
 
     res.status(201).json({
       _id: user._id,
