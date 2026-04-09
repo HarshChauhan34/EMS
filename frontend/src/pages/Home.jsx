@@ -26,10 +26,11 @@ function Home() {
     fetchEvents();
   }, [fetchEvents, navigate]);
 
-  const filteredEvents = events.filter((e) =>
-    e.title.toLowerCase().includes(search.toLowerCase()) &&
-    e.category.toLowerCase().includes(search.toLowerCase()) &&
-    e.location.toLowerCase().includes(search.toLowerCase())
+  const filteredEvents = events.filter(
+    (e) =>
+      e.title.toLowerCase().includes(search.toLowerCase()) ||
+      e.category.toLowerCase().includes(search.toLowerCase()) ||
+      e.location.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
