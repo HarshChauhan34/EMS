@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../services/api";
 import { bookEvent } from "../services/bookingService";
@@ -17,12 +17,7 @@ function EventDetails() {
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
   const SERVER_URL = API_URL.replace("/api", "");
 
-  // ================= FETCH EVENT =================
-  useEffect(() => {
-    fetchEvent();
-  }, [id]);
-
-  const fetchEvent = async () => {
+  const fetchEvent = useCallback(async () => {
     try {
       setLoading(true);
       const res = await API.get(`/events/${id}`);
@@ -33,7 +28,12 @@ function EventDetails() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  // ================= FETCH EVENT =================
+  useEffect(() => {
+    fetchEvent();
+  }, [fetchEvent]);
 
   // ================= BOOK =================
   const handleBook = async () => {
@@ -73,7 +73,7 @@ function EventDetails() {
   const totalPrice = seats * event.price;
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white px-4 py-8">
+    <div className="theme-page min-h-screen bg-linear-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white px-4 py-8">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-8">
         {/* LEFT SIDE */}
         <div className="lg:col-span-2 space-y-6">

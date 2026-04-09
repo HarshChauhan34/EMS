@@ -1,200 +1,211 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, User, LogOut } from "lucide-react";
 
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // ================= CLICK OUTSIDE =================
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    setUser(storedUser);
-  }, [location]);
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
+  // ================= HIDE NAVBAR =================
   const hideNavbar =
-    location.pathname === "/login" || location.pathname === "/register";
+    ["/login", "/register", "/forgot-password"].includes(location.pathname) ||
+    location.pathname.startsWith("/reset-password/");
 
   if (hideNavbar) return null;
 
   const logoutHandler = () => {
     localStorage.removeItem("user");
-    setUser(null);
     navigate("/");
   };
 
-  const isActive = (path) =>
-    location.pathname === path
-      ? "text-yellow-300 border-b-2 border-yellow-300"
-      : "text-white";
-
-  const getInitials = (name) => {
-    if (!name) return "U";
-    return name.charAt(0).toUpperCase();
-  };
+  const isActive = (path) => location.pathname === path;
+  const getInitials = (name) => name?.charAt(0).toUpperCase() || "U";
 
   return (
-    <nav className="sticky top-0 z-50 shadow-2xl bg-linear-to-r from-indigo-700 via-purple-700 to-pink-600 text-white">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        {/* LOGO */}
-        <Link
-          to="/"
-          className="text-2xl font-extrabold flex items-center gap-2 group"
-        >
-          🎟️
-          <span className="bg-linear-to-r from-yellow-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent group-hover:brightness-125 transition">
-            EventPro
-          </span>
-        </Link>
-
-        {/* DESKTOP MENU */}
-        <div className="hidden md:flex items-center gap-8 text-lg">
-          {user?.role === "user" && (
-            <Link
-              to="/my-bookings"
-              className={`${isActive("/my-bookings")} hover:text-yellow-300 transition duration-300`}
-            >
-              My Bookings
-            </Link>
-          )}
-
-          {user?.role === "admin" && (
-            <Link
-              to="/admin/users"
-              className={`${isActive("/admin/users")} hover:text-yellow-300 transition duration-300`}
-            >
-              Users
-            </Link>
-          )}
-
-          {!user && (
-            <>
-              <Link
-                to="/login"
-                className="px-5 py-2 rounded-full bg-white text-black font-semibold hover:scale-105 hover:bg-gray-200 transition"
-              >
-                Login
-              </Link>
-
-              <Link
-                to="/register"
-                className="px-5 py-2 rounded-full bg-linear-to-r from-yellow-400 via-pink-500 to-red-500 text-black font-bold shadow-lg hover:scale-105 hover:shadow-pink-500/50 transition"
-              >
-                Register
-              </Link>
-            </>
-          )}
-
-          {/* PROFILE */}
-          {user && (
-            <div className="relative">
-              <button
-                onClick={() => setProfileOpen(!profileOpen)}
-                className="w-11 h-11 rounded-full bg-linear-to-tr from-yellow-400 to-pink-500 text-black font-bold flex items-center justify-center shadow-lg hover:scale-110 hover:shadow-pink-400/60 transition"
-              >
-                {getInitials(user.name)}
-              </button>
-
-              {profileOpen && (
-                <div className="absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden shadow-2xl bg-white text-black animate-fadeIn">
-                  <div className="px-4 py-2 border-b font-semibold">
-                    👋 {user.name}
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      navigate("/profile");
-                      setProfileOpen(false);
-                    }}
-                    className="w-full px-4 py-2 text-left hover:bg-gray-100"
-                  >
-                    👤 Profile
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      logoutHandler();
-                      setProfileOpen(false);
-                    }}
-                    className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-100"
-                  >
-                    🚪 Logout
-                  </button>
-                </div>
-              )}
+    <nav className="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/70 dark:bg-black/50 border-b border-gray-200 dark:border-white/10 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex justify-between items-center h-16">
+          {/* LOGO */}
+          <Link to="/" className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg">
+              🎉
             </div>
-          )}
-        </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent">
+              EventPro
+            </span>
+          </Link>
 
-        {/* MOBILE BUTTON */}
-        <button
-          className="md:hidden text-3xl"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          ☰
-        </button>
+          {/* DESKTOP MENU */}
+          <div className="hidden md:flex items-center gap-8 text-gray-700 dark:text-gray-200">
+            {user?.role === "user" && (
+              <NavLink to="/my-bookings" isActive={isActive}>
+                My Bookings
+              </NavLink>
+            )}
+
+            {user?.role === "admin" && (
+              <NavLink to="/admin/users" isActive={isActive}>
+                Users
+              </NavLink>
+            )}
+
+            {!user ? (
+              <div className="flex gap-3">
+                <Link
+                  to="/login"
+                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-white/20 hover:bg-gray-100 dark:hover:bg-white/10 transition"
+                >
+                  Login
+                </Link>
+
+                <Link
+                  to="/register"
+                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-pink-500 text-white shadow-md hover:scale-105 transition"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            ) : (
+              <div ref={dropdownRef} className="relative">
+                {/* PROFILE */}
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold flex items-center justify-center shadow hover:scale-110 transition"
+                >
+                  {getInitials(user.name)}
+                </button>
+
+                {/* DROPDOWN */}
+                <AnimatePresence>
+                  {profileOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 mt-3 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-xl shadow-xl overflow-hidden"
+                    >
+                      <div className="p-3 border-b border-gray-200 dark:border-white/10">
+                        <p className="text-sm font-semibold text-gray-800 dark:text-white">
+                          {user.name}
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() => navigate("/profile")}
+                        className="flex items-center gap-2 w-full px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10 transition"
+                      >
+                        <User size={16} />
+                        Profile
+                      </button>
+
+                      <button
+                        onClick={logoutHandler}
+                        className="flex items-center gap-2 w-full px-4 py-2 text-red-500 hover:bg-red-100 dark:hover:bg-red-500/10 transition"
+                      >
+                        <LogOut size={16} />
+                        Logout
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+          </div>
+
+          {/* MOBILE BUTTON */}
+          <div className="md:hidden">
+            <button onClick={() => setMenuOpen(!menuOpen)}>
+              {menuOpen ? <X /> : <Menu />}
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* MOBILE MENU */}
-      <div
-        className={`md:hidden transition-all duration-500 ${
-          menuOpen
-            ? "max-h-96 opacity-100"
-            : "max-h-0 opacity-0 overflow-hidden"
-        }`}
-      >
-        <div className="bg-linear-to-b from-indigo-800 via-purple-800 to-pink-700 px-5 py-4 flex flex-col gap-4 text-lg text-center">
-          {user?.role === "user" && (
-            <Link to="/my-bookings" onClick={() => setMenuOpen(false)}>
-              My Bookings
-            </Link>
-          )}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="md:hidden bg-white dark:bg-black border-t border-gray-200 dark:border-white/10"
+          >
+            <div className="p-5 flex flex-col gap-4 text-gray-800 dark:text-white text-center">
+              {user?.role === "user" && (
+                <Link to="/my-bookings" onClick={() => setMenuOpen(false)}>
+                  My Bookings
+                </Link>
+              )}
 
-          {user?.role === "admin" && (
-            <Link to="/admin/users" onClick={() => setMenuOpen(false)}>
-              Users
-            </Link>
-          )}
+              {user?.role === "admin" && (
+                <Link to="/admin/users" onClick={() => setMenuOpen(false)}>
+                  Users
+                </Link>
+              )}
 
-          {!user && (
-            <>
-              <Link to="/login" onClick={() => setMenuOpen(false)}>
-                Login
-              </Link>
-
-              <Link to="/register" onClick={() => setMenuOpen(false)}>
-                Register
-              </Link>
-            </>
-          )}
-
-          {user && (
-            <>
-              <button
-                onClick={() => {
-                  navigate("/profile");
-                  setMenuOpen(false);
-                }}
-              >
-                Profile
-              </button>
-
-              <button
-                onClick={() => {
-                  logoutHandler();
-                  setMenuOpen(false);
-                }}
-                className="text-red-300"
-              >
-                Logout
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+              {!user ? (
+                <>
+                  <Link to="/login" onClick={() => setMenuOpen(false)}>
+                    Login
+                  </Link>
+                  <Link to="/register" onClick={() => setMenuOpen(false)}>
+                    Sign Up
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <button onClick={() => navigate("/profile")}>Profile</button>
+                  <button onClick={logoutHandler} className="text-red-500">
+                    Logout
+                  </button>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
+  );
+}
+
+// ================= NAV LINK =================
+function NavLink({ to, children, isActive }) {
+  return (
+    <Link
+      to={to}
+      className={`relative font-medium transition ${
+        isActive(to)
+          ? "text-indigo-500"
+          : "hover:text-indigo-500 text-gray-700 dark:text-gray-200"
+      }`}
+    >
+      {children}
+
+      <span
+        className={`absolute left-0 -bottom-1 h-[2px] bg-gradient-to-r from-indigo-500 to-pink-500 transition-all duration-300 ${
+          isActive(to) ? "w-full" : "w-0 group-hover:w-full"
+        }`}
+      ></span>
+    </Link>
   );
 }
 

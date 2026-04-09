@@ -5,24 +5,19 @@ import { updateProfile } from "../services/userService";
 function Profile() {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() =>
+    JSON.parse(localStorage.getItem("user")),
+  );
   const [editMode, setEditMode] = useState(false);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState(user?.name || "");
+  const [email, setEmail] = useState(user?.email || "");
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-
-    if (!storedUser) {
+    if (!user) {
       navigate("/login");
-      return;
     }
-
-    setUser(storedUser);
-    setName(storedUser.name);
-    setEmail(storedUser.email);
-  }, []);
+  }, [navigate, user]);
 
   const logoutHandler = () => {
     localStorage.removeItem("user");
@@ -36,7 +31,7 @@ function Profile() {
       localStorage.setItem("user", JSON.stringify(res.data));
       setUser(res.data);
       setEditMode(false);
-    } catch (error) {
+    } catch {
       alert("Update failed");
     }
   };
@@ -44,7 +39,7 @@ function Profile() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white flex items-center justify-center px-4 py-10">
+    <div className="theme-page min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white flex items-center justify-center px-4 py-10">
 
       <div className="w-full max-w-5xl">
 

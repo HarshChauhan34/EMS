@@ -85,8 +85,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-console.log("EMAIL_USER:", process.env.EMAIL_USER);
-console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded ✅" : "Missing ❌");
+console.log(
+  "Email service:",
+  process.env.EMAIL_USER && process.env.EMAIL_PASS ? "Configured" : "Not configured",
+);
 
 // ================= SERVER =================
 const PORT = process.env.PORT || 5000;

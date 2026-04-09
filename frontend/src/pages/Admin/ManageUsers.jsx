@@ -8,21 +8,6 @@ function ManageUsers() {
   const [openUsers, setOpenUsers] = useState([]);
   const [bookings, setBookings] = useState([]);
 
-  const fetchUsers = async () => {
-    const res = await getAllUsers();
-    const usersOnly = res.data.filter((u) => u.role === "user");
-    setUsers(usersOnly);
-  };
-
-  const fetchBookings = async () => {
-    try {
-      const res = await getAllBookings();
-      setBookings(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleViewBookings = async (id) => {
     if (openUsers.includes(id)) {
       setOpenUsers(openUsers.filter((u) => u !== id));
@@ -50,12 +35,25 @@ function ManageUsers() {
   );
 
   useEffect(() => {
-    fetchUsers();
-    fetchBookings();
+    const loadUsersData = async () => {
+      try {
+        const [usersRes, bookingsRes] = await Promise.all([
+          getAllUsers(),
+          getAllBookings(),
+        ]);
+        const usersOnly = usersRes.data.filter((u) => u.role === "user");
+        setUsers(usersOnly);
+        setBookings(bookingsRes.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    loadUsersData();
   }, []);
   
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white p-4 md:p-8">
+    <div className="theme-page min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white p-4 md:p-8">
       {/* HEADER */}
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold">🎛 Admin Dashboard</h1>

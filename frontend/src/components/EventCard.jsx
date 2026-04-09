@@ -2,6 +2,7 @@ import { deleteEvent } from "../services/eventService";
 import { useNavigate, useLocation } from "react-router-dom";
 import { bookEvent } from "../services/bookingService";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 function EventCard({ event, refresh }) {
   const navigate = useNavigate();
@@ -18,32 +19,27 @@ function EventCard({ event, refresh }) {
     import.meta.env.VITE_API_URL?.replace("/api", "") ||
     "http://localhost:5000";
 
-  // ✅ Safe image URL (fix double slash issue)
   const imageUrl = event?.image
     ? `${API_URL}${event.image.startsWith("/") ? "" : "/"}${event.image}`
     : "https://via.placeholder.com/400x250?text=No+Image";
 
   const total = seats * (event.price || 0);
 
-  // ================= DELETE =================
   const handleDelete = async (e) => {
     e.stopPropagation();
-
-    const confirmDelete = window.confirm("Are you sure you want to delete?");
-    if (!confirmDelete) return;
+    if (!window.confirm("Are you sure you want to delete?")) return;
 
     try {
       setLoading(true);
       await deleteEvent(event._id);
       refresh && refresh();
-    } catch (error) {
+    } catch {
       alert("Delete failed ❌");
     } finally {
       setLoading(false);
     }
   };
 
-  // ================= BOOK =================
   const handleBook = async (e) => {
     e.stopPropagation();
 
@@ -69,9 +65,10 @@ function EventCard({ event, refresh }) {
   };
 
   return (
-    <div
+    <motion.div
+      whileHover={{ y: -8, scale: 1.02 }}
       onClick={() => navigate(`/event/${event._id}`)}
-      className="group cursor-pointer relative rounded-3xl overflow-hidden bg-linear-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3"
+      className="group cursor-pointer relative rounded-3xl overflow-hidden bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-500"
     >
       {/* IMAGE */}
       <div className="relative overflow-hidden">
@@ -82,15 +79,15 @@ function EventCard({ event, refresh }) {
             (e.target.src =
               "https://via.placeholder.com/400x250?text=Image+Error")
           }
-          className="w-full h-56 object-cover transition duration-700 group-hover:scale-110 group-hover:brightness-75"
+          className="w-full h-60 object-cover transition duration-700 group-hover:scale-110 group-hover:brightness-75"
         />
 
-        {/* OVERLAY */}
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
+        {/* GRADIENT OVERLAY */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
-        {/* TOP BAR */}
-        <div className="absolute top-3 left-3 right-3 flex justify-between items-center">
-          <span className="bg-linear-to-r from-pink-500 to-purple-600 text-xs px-3 py-1 rounded-full">
+        {/* CATEGORY + LIKE */}
+        <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
+          <span className="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-pink-500 to-purple-600 shadow-md">
             {event.category}
           </span>
 
@@ -99,53 +96,57 @@ function EventCard({ event, refresh }) {
               e.stopPropagation();
               setLiked(!liked);
             }}
-            className={`text-xl transition ${
+            className={`text-2xl transition-transform duration-300 ${
               liked ? "text-red-500 scale-125" : "text-white"
             }`}
           >
-            ❤️
+            ♥
           </button>
         </div>
 
         {/* TITLE */}
-        <div className="absolute bottom-4 left-4 right-4 text-white">
-          <h2 className="text-lg font-bold">{event.title}</h2>
+        <div className="absolute bottom-5 left-5 right-5 text-white">
+          <h2 className="text-xl font-bold leading-tight line-clamp-2">
+            {event.title}
+          </h2>
         </div>
 
-        {/* HOVER BAR */}
+        {/* PRICE BAR */}
         <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition duration-500">
-          <div className="bg-black/80 p-3 flex justify-between items-center text-sm">
-            <span>₹ {event.price}</span>
+          <div className="bg-black/80 backdrop-blur-md px-4 py-3 flex justify-between text-sm">
+            <span className="font-semibold text-yellow-300">
+              ₹ {event.price}
+            </span>
             <span className="text-green-400">🎟 {event.availableSeats}</span>
           </div>
         </div>
       </div>
 
       {/* CONTENT */}
-      <div className="p-4 text-white space-y-3">
+      <div className="p-5 text-white space-y-4">
         <p className="text-sm text-gray-300 line-clamp-2">
           {event.description}
         </p>
 
-        <div className="text-xs text-gray-400">
+        <div className="text-xs text-gray-400 space-y-1">
           <p>📅 {new Date(event.date).toLocaleDateString()}</p>
           <p>📍 {event.location}</p>
         </div>
 
-        {/* USER ACTION */}
+        {/* USER BUTTON */}
         {!isAdminPage && !showSeat && (
           <button
             onClick={(e) => {
               e.stopPropagation();
               setShowSeat(true);
             }}
-            className="w-full py-2 rounded-xl bg-linear-to-r from-pink-500 to-indigo-600 font-semibold hover:scale-[1.03] transition"
+            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 font-semibold shadow-md hover:shadow-lg hover:scale-[1.04] transition-all"
           >
             🎟 Book Now
           </button>
         )}
 
-        {/* ADMIN ACTION */}
+        {/* ADMIN */}
         {isAdminPage && (
           <div className="flex gap-2">
             <button
@@ -153,7 +154,7 @@ function EventCard({ event, refresh }) {
                 e.stopPropagation();
                 navigate(`/admin/edit-event/${event._id}`);
               }}
-              className="flex-1 py-2 rounded-xl bg-yellow-500"
+              className="flex-1 py-2 rounded-xl bg-yellow-500 hover:scale-105 transition"
             >
               Edit
             </button>
@@ -161,7 +162,7 @@ function EventCard({ event, refresh }) {
             <button
               onClick={handleDelete}
               disabled={loading}
-              className="flex-1 py-2 rounded-xl bg-red-500"
+              className="flex-1 py-2 rounded-xl bg-red-500 hover:scale-105 transition"
             >
               {loading ? "Deleting..." : "Delete"}
             </button>
@@ -170,19 +171,21 @@ function EventCard({ event, refresh }) {
 
         {/* BOOKING PANEL */}
         {showSeat && !isAdminPage && (
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="mt-3 bg-black/80 p-4 rounded-xl border border-white/20 space-y-3"
+            className="bg-black/70 backdrop-blur-lg p-4 rounded-xl border border-white/20 space-y-4"
           >
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span>Select Seats</span>
-              <span className="text-green-400">₹ {total}</span>
+              <span className="text-green-400 font-semibold">₹ {total}</span>
             </div>
 
-            <div className="flex justify-center gap-4 items-center">
+            <div className="flex justify-center items-center gap-5">
               <button
                 onClick={() => setSeats((prev) => Math.max(1, prev - 1))}
-                className="w-10 h-10 bg-red-500 rounded-full"
+                className="w-10 h-10 rounded-full bg-red-500 hover:scale-110 transition"
               >
                 -
               </button>
@@ -193,7 +196,7 @@ function EventCard({ event, refresh }) {
                 onClick={() =>
                   setSeats((prev) => Math.min(event.availableSeats, prev + 1))
                 }
-                className="w-10 h-10 bg-green-500 rounded-full"
+                className="w-10 h-10 rounded-full bg-green-500 hover:scale-110 transition"
               >
                 +
               </button>
@@ -202,14 +205,14 @@ function EventCard({ event, refresh }) {
             <button
               onClick={handleBook}
               disabled={loading}
-              className="w-full py-2 rounded-xl bg-linear-to-r from-green-400 to-emerald-600 hover:scale-[1.05] transition"
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-green-400 to-emerald-600 font-semibold hover:scale-[1.05] transition"
             >
-              {loading ? "Processing..." : "Confirm 🚀"}
+              {loading ? "Processing..." : "Confirm Booking 🚀"}
             </button>
-          </div>
+          </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 

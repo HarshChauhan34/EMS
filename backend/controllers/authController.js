@@ -6,7 +6,10 @@ import sendEmail from "../utils/sendEmail.js";
 // ================= REGISTER =================
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    let { name, email, password, role } = req.body;
+
+    // ✅ Normalize email
+    email = email.toLowerCase().trim();
 
     const userExists = await User.findOne({ email });
 
@@ -18,12 +21,13 @@ export const registerUser = async (req, res) => {
 
     const user = await User.create({
       name,
-      email: email.toLowerCase().trim(), // ✅ normalize
+      email,
       password,
-      role,
+      role: role || "user",
     });
+    console.log("BODY:", req.body);
 
-    return res.status(201).json({
+    res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -31,8 +35,12 @@ export const registerUser = async (req, res) => {
       token: generateToken(user._id, user.role),
     });
   } catch (error) {
-    console.error("REGISTER ERROR:", error);
-    return res.status(500).json({ message: "Server Error" });
+    console.error("🔥 REGISTER ERROR FULL:", error);
+
+    return res.status(500).json({
+      message: error.message,
+      stack: error.stack, // 👈 TEMP (remove later)
+    });
   }
 };
 
@@ -138,7 +146,15 @@ export const forgotPassword = async (req, res) => {
 
     await user.save({ validateBeforeSave: false });
 
-    const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    let frontendBaseUrl =
+      String(process.env.FRONTEND_URL || req.get("origin") || "").trim() ||
+      "http://localhost:5173";
+    frontendBaseUrl = frontendBaseUrl.replace(/\/+$/, "");
+    if (/^https:\/\/localhost(?::\d+)?$/i.test(frontendBaseUrl)) {
+      frontendBaseUrl = frontendBaseUrl.replace(/^https:/i, "http:");
+    }
+
+    const resetURL = `${frontendBaseUrl}/reset-password/${resetToken}`;
 
     // ✅ MJML template
     const mjmlTemplate = `
@@ -170,9 +186,35 @@ export const forgotPassword = async (req, res) => {
     console.log("👉 Sending reset email to:", user.email);
 
     // ❗ CRITICAL: this is where your error happens
-    await sendEmail(user.email, "Password Reset", mjmlTemplate);
+    const shouldExposeResetLink = process.env.NODE_ENV !== "production";
 
-    return res.status(200).json({ message });
+    try {
+      await sendEmail(user.email, "Password Reset", mjmlTemplate);
+    } catch (emailError) {
+      console.error("FORGOT PASSWORD EMAIL SEND ERROR:", emailError.message);
+
+      // Development fallback so password reset can still be tested locally.
+      if (shouldExposeResetLink) {
+        return res.status(200).json({
+          message:
+            "Email could not be sent, but reset link is available in development.",
+          resetURL,
+        });
+      }
+
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      await user.save({ validateBeforeSave: false });
+
+      return res.status(500).json({
+        message:
+          "Could not send reset email right now. Please verify email settings and try again.",
+      });
+    }
+
+    return res
+      .status(200)
+      .json(shouldExposeResetLink ? { message, resetURL } : { message });
   } catch (error) {
     console.error("FORGOT PASSWORD ERROR FULL:", error);
 

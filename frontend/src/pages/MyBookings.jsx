@@ -1,27 +1,26 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getMyBookings, cancelBooking } from "../services/bookingService";
 
 function MyBookings() {
   const [bookings, setBookings] = useState([]);
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
-
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     const res = await getMyBookings();
     setBookings(res.data.filter((b) => b.bookingStatus !== "cancelled"));
-  };
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchBookings();
+  }, [fetchBookings]);
 
   const handleCancel = async (id) => {
     await cancelBooking(id);
     fetchBookings();
   };
 
-  const totalSpent = bookings.reduce((sum, b) => sum + (b.totalAmount || 0), 0);
-
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white px-4 py-8">
+    <div className="theme-page min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white px-4 py-8">
       <div className="max-w-6xl mx-auto">
         {/* HEADER */}
         <div className="mb-8">

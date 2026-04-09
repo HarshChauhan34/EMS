@@ -1,1 +1,83 @@
 @import "tailwindcss";
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.theme-dark body {
+  background-color: #0b1020;
+  color: #f8fafc;
+}
+
+.theme-light body {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.theme-light .theme-page {
+  color: #111827;
+}
+
+.theme-light .theme-page .text-white {
+  color: #111827 !important;
+}
+
+.theme-light .theme-page .text-gray-300,
+.theme-light .theme-page .text-gray-400,
+.theme-light .theme-page .text-gray-500 {
+  color: #374151 !important;
+}
+
+.theme-light .bg-white\/10,
+.theme-light .bg-white\/5 {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(31, 41, 55, 0.15) !important;
+}
+
+.theme-light .from-\[\#0f172a\],
+.theme-light .from-\[\#0f0c29\] {
+  --tw-gradient-from: #f3f4f6 var(--tw-gradient-from-position) !important;
+}
+
+.theme-light .via-\[\#1e1b4b\],
+.theme-light .via-\[\#302b63\] {
+  --tw-gradient-via: #e5e7eb var(--tw-gradient-via-position) !important;
+}
+
+.theme-light .to-\[\#312e81\],
+.theme-light .to-\[\#24243e\],
+.theme-light .to-black {
+  --tw-gradient-to: #d1d5db var(--tw-gradient-to-position) !important;
+}
+
+.theme-light .theme-navbar {
+  background-image: linear-gradient(to right, #e2e8f0, #dbeafe, #e9d5ff);
+  color: #111827;
+}
+
+.theme-light .theme-navbar a,
+.theme-light .theme-navbar button {
+  color: #111827;
+}
+
+.theme-light .theme-page button[class*="bg-linear-to-r"],
+.theme-light .theme-page a[class*="bg-linear-to-r"],
+.theme-light .theme-page button[class*="bg-indigo-"],
+.theme-light .theme-page button[class*="bg-purple-"],
+.theme-light .theme-page button[class*="bg-blue-"],
+.theme-light .theme-page button[class*="bg-pink-"],
+.theme-light .theme-page button[class*="bg-red-"],
+.theme-light .theme-page button[class*="bg-green-"] {
+  color: #ffffff !important;
+}
+
+.theme-light .theme-page input,
+.theme-light .theme-page textarea {
+  color: #111827;
+}

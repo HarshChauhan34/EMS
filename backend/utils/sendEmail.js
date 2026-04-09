@@ -1,35 +1,40 @@
 import nodemailer from "nodemailer";
 import mjml2html from "mjml";
 
-// ✅ Create transporter ONCE (better performance)
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false, // ✅ fix SSL issues
-  },
-});
+let transporter = null;
 
-// ✅ Optional: verify connection at startup
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ Email server error:", error.message);
-  } else {
-    console.log("✅ Email server ready");
+const normalizedEmailUser = () => String(process.env.EMAIL_USER || "").trim();
+const normalizedEmailPass = () => String(process.env.EMAIL_PASS || "").trim();
+
+const hasEmailCredentials = () =>
+  Boolean(normalizedEmailUser() && normalizedEmailPass());
+
+const getTransporter = () => {
+  if (!hasEmailCredentials()) return null;
+
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: normalizedEmailUser(),
+        pass: normalizedEmailPass(),
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
   }
-});
+
+  return transporter;
+};
 
 const sendEmail = async (to, subject, mjmlContent) => {
   try {
-    // 🔍 Validate ENV (VERY IMPORTANT)
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      throw new Error("Email credentials not configured");
+    const mailTransporter = getTransporter();
+    if (!mailTransporter) {
+      throw new Error("Email service is not configured");
     }
 
-    // ✅ Convert MJML → HTML
     const { html, errors } = mjml2html(mjmlContent);
 
     if (errors && errors.length > 0) {
@@ -39,9 +44,8 @@ const sendEmail = async (to, subject, mjmlContent) => {
 
     console.log("📧 Sending email to:", to);
 
-    // ✅ Send email
-    const info = await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
+    const info = await mailTransporter.sendMail({
+      from: process.env.EMAIL_FROM || normalizedEmailUser(),
       to,
       subject,
       html,

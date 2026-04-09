@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import API from "../../services/api";
 
@@ -22,19 +22,7 @@ function EditEvent() {
   const [preview, setPreview] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ================= FETCH EVENT =================
-  useEffect(() => {
-    fetchEvent();
-
-    return () => {
-      // ✅ Clean blob preview
-      if (preview && preview.startsWith("blob:")) {
-        URL.revokeObjectURL(preview);
-      }
-    };
-  }, []);
-
-  const fetchEvent = async () => {
+  const fetchEvent = useCallback(async () => {
     try {
       const res = await API.get(`/events/${id}`);
       const data = res.data;
@@ -56,7 +44,21 @@ function EditEvent() {
     } catch (error) {
       console.error("Fetch Error:", error);
     }
-  };
+  }, [id]);
+
+  // ================= FETCH EVENT =================
+  useEffect(() => {
+    fetchEvent();
+  }, [fetchEvent]);
+
+  useEffect(() => {
+    return () => {
+      // Clean blob preview URLs to avoid memory leaks
+      if (preview && preview.startsWith("blob:")) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
 
   // ================= HANDLE INPUT =================
   const handleChange = (e) => {
@@ -124,7 +126,7 @@ function EditEvent() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-black text-white flex items-center justify-center px-4 py-10">
+    <div className="theme-page min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-black text-white flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-6xl bg-white/5 backdrop-blur-3xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
         {/* HEADER */}
         <div className="p-6 md:p-8 border-b border-white/10 bg-linear-to-r from-pink-500/10 to-indigo-500/10">

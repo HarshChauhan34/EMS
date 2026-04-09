@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getEvents } from "../services/eventService";
 import EventCard from "../components/EventCard";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,11 @@ function Home() {
 
   const navigate = useNavigate();
 
+  const fetchEvents = useCallback(async () => {
+    const res = await getEvents();
+    setEvents(res.data);
+  }, []);
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -17,20 +22,16 @@ function Home() {
       return;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchEvents();
-  }, []);
-
-  const fetchEvents = async () => {
-    const res = await getEvents();
-    setEvents(res.data);
-  };
+  }, [fetchEvents, navigate]);
 
   const filteredEvents = events.filter((e) =>
     e.title.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white px-4 py-8">
+    <div className="theme-page min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white px-4 py-8">
       {/* HERO SECTION */}
       <div className="max-w-6xl mx-auto text-center mb-10">
         <h1 className="text-3xl md:text-5xl font-extrabold mb-4 bg-linear-to-r from-pink-400 via-purple-400 to-indigo-400 text-transparent bg-clip-text">

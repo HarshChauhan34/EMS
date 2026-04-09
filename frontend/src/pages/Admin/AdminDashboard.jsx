@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getEvents } from "../../services/eventService";
 import EventCard from "../../components/EventCard";
 import { useNavigate } from "react-router-dom";
@@ -12,32 +12,14 @@ function AdminDashboard() {
 
   const navigate = useNavigate();
 
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     try {
       const res = await getEvents();
       setEvents(res.data);
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const fetchUsers = async () => {
-    try {
-      const res = await getAllUsers();
-      setUsers(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchBookings = async () => {
-    try {
-      const res = await getAllBookings();
-      setBookings(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  }, []);
 
   const totalUsers = users.filter((u) => u.role !== "admin").length;
 
@@ -47,13 +29,26 @@ function AdminDashboard() {
   );
   
   useEffect(() => {
-    fetchEvents();
-    fetchUsers();
-    fetchBookings();
+    const loadDashboard = async () => {
+      try {
+        const [eventsRes, usersRes, bookingsRes] = await Promise.all([
+          getEvents(),
+          getAllUsers(),
+          getAllBookings(),
+        ]);
+        setEvents(eventsRes.data);
+        setUsers(usersRes.data);
+        setBookings(bookingsRes.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    loadDashboard();
   }, []);
 
   return (
-    <div className="min-h-screen flex bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white">
+    <div className="theme-page min-h-screen flex bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white">
       {/* SIDEBAR (FIXED) */}
       <div className="w-64 hidden md:flex flex-col p-6 bg-white/10 backdrop-blur-xl border-r border-white/20 fixed left-0 top-0 h-screen">
         <h2 className="text-2xl font-bold mb-10">⚡ Admin</h2>
