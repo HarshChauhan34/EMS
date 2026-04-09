@@ -68,7 +68,7 @@ function AddEvent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-black flex items-center justify-center px-4 py-10 text-white">
+    <div className="min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-black flex items-center justify-center px-4 py-10 text-white">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -77,8 +77,8 @@ function AddEvent() {
       >
         {/* HEADER */}
         <div className="relative p-10 text-center border-b border-white/10">
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-indigo-500/10 blur-2xl" />
-          <h1 className="relative text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 text-transparent bg-clip-text">
+          <div className="absolute inset-0 bg-linear-to-r from-pink-500/10 via-purple-500/10 to-indigo-500/10 blur-2xl" />
+          <h1 className="relative text-4xl md:text-5xl font-extrabold bg-linear-to-r from-pink-400 via-purple-400 to-indigo-400 text-transparent bg-clip-text">
             Create Event
           </h1>
           <p className="relative text-gray-400 mt-3">
@@ -202,7 +202,7 @@ function AddEvent() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               disabled={loading}
-              className="w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 shadow-lg hover:shadow-2xl transition disabled:opacity-50"
+              className="w-full py-3 rounded-xl font-semibold bg-linear-to-r from-pink-500 via-purple-500 to-indigo-500 shadow-lg hover:shadow-2xl transition disabled:opacity-50"
             >
               {loading ? "Creating..." : "Create Event 🚀"}
             </motion.button>

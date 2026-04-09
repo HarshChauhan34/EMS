@@ -87,7 +87,9 @@ app.use((err, req, res, next) => {
 
 console.log(
   "Email service:",
-  process.env.EMAIL_USER && process.env.EMAIL_PASS ? "Configured" : "Not configured",
+  process.env.EMAIL_USER && process.env.EMAIL_PASS
+    ? "Configured"
+    : "Not configured",
 );
 
 // ================= SERVER =================

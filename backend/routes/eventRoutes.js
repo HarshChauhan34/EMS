@@ -37,7 +37,7 @@ router.post(
       next();
     });
   },
-  createEvent
+  createEvent,
 );
 
 // Update event
@@ -53,7 +53,7 @@ router.put(
       next();
     });
   },
-  updateEvent
+  updateEvent,
 );
 
 // Delete event

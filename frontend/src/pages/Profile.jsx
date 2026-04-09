@@ -40,12 +40,9 @@ function Profile() {
 
   return (
     <div className="theme-page min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white flex items-center justify-center px-4 py-10">
-
       <div className="w-full max-w-5xl">
-
         {/* PROFILE HEADER */}
         <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20 flex flex-col md:flex-row items-center gap-6">
-
           {/* AVATAR */}
           <div className="relative">
             <div className="w-28 h-28 md:w-32 md:h-32 rounded-full bg-linear-to-r from-pink-500 via-purple-500 to-indigo-500 flex items-center justify-center text-4xl font-bold shadow-2xl ring-4 ring-white/20">
@@ -58,9 +55,7 @@ function Profile() {
 
           {/* USER INFO */}
           <div className="text-center md:text-left">
-            <h2 className="text-2xl md:text-3xl font-bold">
-              {user.name}
-            </h2>
+            <h2 className="text-2xl md:text-3xl font-bold">{user.name}</h2>
 
             <p className="text-gray-300 mt-1">{user.email}</p>
 
@@ -72,13 +67,9 @@ function Profile() {
 
         {/* MAIN CONTENT */}
         <div className="mt-8 grid md:grid-cols-2 gap-6">
-
           {/* PROFILE FORM */}
           <div className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl shadow-xl border border-white/20">
-
-            <h3 className="text-xl font-semibold mb-5">
-              👤 Profile Info
-            </h3>
+            <h3 className="text-xl font-semibold mb-5">👤 Profile Info</h3>
 
             {/* NAME */}
             <div className="mb-4">
@@ -113,13 +104,9 @@ function Profile() {
 
           {/* ACTION PANEL */}
           <div className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl shadow-xl border border-white/20">
-
-            <h3 className="text-xl font-semibold mb-5">
-              ⚙ Actions
-            </h3>
+            <h3 className="text-xl font-semibold mb-5">⚙ Actions</h3>
 
             <div className="flex flex-col gap-3">
-
               {!editMode ? (
                 <button
                   onClick={() => setEditMode(true)}
@@ -177,7 +164,6 @@ function Profile() {
               >
                 🚪 Logout
               </button>
-
             </div>
           </div>
         </div>

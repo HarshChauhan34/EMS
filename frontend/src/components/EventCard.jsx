@@ -82,12 +82,12 @@ function EventCard({ event, refresh }) {
           className="w-full h-60 object-cover transition duration-700 group-hover:scale-110 group-hover:brightness-75"
         />
 
-        {/* GRADIENT OVERLAY */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+        {/* linear OVERLAY */}
+        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
 
         {/* CATEGORY + LIKE */}
         <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
-          <span className="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-pink-500 to-purple-600 shadow-md">
+          <span className="px-3 py-1 text-xs rounded-full bg-linear-to-r from-pink-500 to-purple-600 shadow-md">
             {event.category}
           </span>
 
@@ -140,7 +140,7 @@ function EventCard({ event, refresh }) {
               e.stopPropagation();
               setShowSeat(true);
             }}
-            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 font-semibold shadow-md hover:shadow-lg hover:scale-[1.04] transition-all"
+            className="w-full py-2.5 rounded-xl bg-linear-to-r from-pink-500 via-purple-500 to-indigo-600 font-semibold shadow-md hover:shadow-lg hover:scale-[1.04] transition-all"
           >
             🎟 Book Now
           </button>
@@ -205,7 +205,7 @@ function EventCard({ event, refresh }) {
             <button
               onClick={handleBook}
               disabled={loading}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-green-400 to-emerald-600 font-semibold hover:scale-[1.05] transition"
+              className="w-full py-2.5 rounded-xl bg-linear-to-r from-green-400 to-emerald-600 font-semibold hover:scale-[1.05] transition"
             >
               {loading ? "Processing..." : "Confirm Booking 🚀"}
             </button>

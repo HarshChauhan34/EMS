@@ -1,10 +1,7 @@
 import { Navigate } from "react-router-dom";
 
 function UserRoute({ children }) {
-
-  const user = JSON.parse(
-    localStorage.getItem("user")
-  );
+  const user = JSON.parse(localStorage.getItem("user"));
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -17,4 +14,4 @@ function UserRoute({ children }) {
   return children;
 }
 
-export default UserRoute;   
+export default UserRoute;

@@ -48,8 +48,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81]">
-
+    <div className="min-h-screen flex items-center justify-center px-4 bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81]">
       {/* BACKGROUND GLOW */}
       <div className="absolute w-72 h-72 bg-purple-600 rounded-full blur-[120px] opacity-30 top-10 left-10"></div>
       <div className="absolute w-72 h-72 bg-pink-500 rounded-full blur-[120px] opacity-30 bottom-10 right-10"></div>
@@ -63,7 +62,7 @@ function Login() {
       >
         {/* HEADER */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
             Welcome Back 👋
           </h2>
           <p className="text-gray-300 text-sm mt-2">
@@ -73,7 +72,6 @@ function Login() {
 
         {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-5">
-
           {/* EMAIL */}
           <div>
             <input
@@ -123,7 +121,7 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 transition disabled:opacity-50"
+            className="w-full flex justify-center items-center gap-2 bg-linear-to-r from-purple-500 to-pink-500 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 transition disabled:opacity-50"
           >
             {loading ? (
               <>

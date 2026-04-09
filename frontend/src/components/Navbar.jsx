@@ -45,10 +45,10 @@ function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* LOGO */}
           <Link to="/" className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg">
+            <div className="p-2 rounded-xl bg-linear-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg">
               🎉
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-linear-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent">
               EventPro
             </span>
           </Link>
@@ -78,7 +78,7 @@ function Navbar() {
 
                 <Link
                   to="/register"
-                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-pink-500 text-white shadow-md hover:scale-105 transition"
+                  className="px-4 py-2 rounded-lg bg-linear-to-r from-indigo-500 to-pink-500 text-white shadow-md hover:scale-105 transition"
                 >
                   Sign Up
                 </Link>
@@ -88,7 +88,7 @@ function Navbar() {
                 {/* PROFILE */}
                 <button
                   onClick={() => setProfileOpen(!profileOpen)}
-                  className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold flex items-center justify-center shadow hover:scale-110 transition"
+                  className="w-10 h-10 rounded-full bg-linear-to-r from-yellow-400 to-orange-500 text-black font-semibold flex items-center justify-center shadow hover:scale-110 transition"
                 >
                   {getInitials(user.name)}
                 </button>
@@ -201,7 +201,7 @@ function NavLink({ to, children, isActive }) {
       {children}
 
       <span
-        className={`absolute left-0 -bottom-1 h-[2px] bg-gradient-to-r from-indigo-500 to-pink-500 transition-all duration-300 ${
+        className={`absolute left-0 -bottom-1 h-[2px] bg-linear-to-r from-indigo-500 to-pink-500 transition-all duration-300 ${
           isActive(to) ? "w-full" : "w-0 group-hover:w-full"
         }`}
       ></span>

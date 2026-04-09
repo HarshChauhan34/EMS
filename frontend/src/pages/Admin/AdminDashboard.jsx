@@ -27,7 +27,7 @@ function AdminDashboard() {
     (total, b) => total + (b.totalAmount || 0),
     0,
   );
-  
+
   useEffect(() => {
     const loadDashboard = async () => {
       try {
