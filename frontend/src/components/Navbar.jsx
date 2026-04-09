@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, User, LogOut } from "lucide-react";
+import { Menu, X, User, LogOut , Ticket} from "lucide-react";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ function Navbar() {
           {/* LOGO */}
           <Link to="/" className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-linear-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg">
-              🎉
+              <Ticket size={20} />
             </div>
             <span className="text-xl font-bold bg-linear-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent">
               EventPro
