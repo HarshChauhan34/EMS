@@ -16,6 +16,12 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      validate: {
+        validator: function (value) {
+          return /^[a-zA-Z0-9._%+-]+@(gmail|yahoo|outlook)\.com$/.test(value);
+        },
+        message: "Only Gmail, Yahoo, Outlook emails are allowed",
+      },
     },
 
     password: {

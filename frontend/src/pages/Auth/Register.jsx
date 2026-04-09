@@ -22,6 +22,10 @@ function Register() {
     );
   };
 
+  const isValidEmail = (email) => {
+    return /^[a-zA-Z0-9._%+-]+@(gmail|yahoo|outlook)\.com$/.test(email);
+  };
+
   // ================= HANDLE INPUT =================
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +42,11 @@ function Register() {
 
     if (!form.name || !form.email || !form.password) {
       alert("Please fill all fields");
+      return;
+    }
+
+    if (!isValidEmail(form.email)) {
+      alert("Enter a valid email (gmail/yahoo/outlook only)");
       return;
     }
 
