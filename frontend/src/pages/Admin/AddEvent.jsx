@@ -13,7 +13,7 @@ function AddEvent() {
     date: "",
     location: "",
     price: "",
-    availableSeats: "",
+    totalSeats: "",
     image: null,
   });
 
@@ -22,7 +22,7 @@ function AddEvent() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (["price", "availableSeats"].includes(name)) {
+    if (["price", "totalSeats"].includes(name)) {
       setForm({ ...form, [name]: value === "" ? "" : Number(value) });
     } else {
       setForm({ ...form, [name]: value });
@@ -106,7 +106,7 @@ function AddEvent() {
               { name: "category", label: "Category" },
               { name: "location", label: "Location" },
               { name: "price", label: "Price", type: "number" },
-              { name: "availableSeats", label: "Seats", type: "number" },
+              { name: "totalSeats", label: "Seats", type: "number" },
             ].map((field) => (
               <motion.div
                 whileFocus={{ scale: 1.02 }}
