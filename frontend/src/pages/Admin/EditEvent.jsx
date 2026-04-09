@@ -156,7 +156,7 @@ function EditEvent() {
               { name: "price", label: "Price", type: "number" },
               {
                 name: "availableSeats",
-                label: "Available Seats",
+                label: "Seats",
                 type: "number",
               },
             ].map((field) => (
