@@ -27,7 +27,9 @@ function Home() {
   }, [fetchEvents, navigate]);
 
   const filteredEvents = events.filter((e) =>
-    e.title.toLowerCase().includes(search.toLowerCase()),
+    e.title.toLowerCase().includes(search.toLowerCase()) &&
+    e.category.toLowerCase().includes(search.toLowerCase()) &&
+    e.location.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
