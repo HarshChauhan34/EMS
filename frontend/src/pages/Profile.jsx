@@ -71,10 +71,10 @@ function Profile() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white px-4 py-6 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-linear-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* TOP PROFILE HERO */}
-        <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/10 p-6 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl sm:p-8 lg:p-10">
+        <div className="relative overflow-hidden rounded-4xl border border-white/10 bg-white/10 p-6 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl sm:p-8 lg:p-10">
           <div className="absolute -left-16 -top-16 h-44 w-44 rounded-full bg-pink-500/20 blur-3xl" />
           <div className="absolute -right-16 top-8 h-52 w-52 rounded-full bg-cyan-500/15 blur-3xl" />
           <div className="absolute bottom-0 left-1/3 h-36 w-36 rounded-full bg-violet-500/20 blur-3xl" />
@@ -89,7 +89,7 @@ function Profile() {
             >
               <div className="relative">
                 <div
-                  className={`flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-r ${roleBadgeStyle} text-4xl font-bold text-white shadow-[0_20px_50px_rgba(0,0,0,0.3)] ring-4 ring-white/15 sm:h-32 sm:w-32 sm:text-5xl`}
+                  className={`flex h-28 w-28 items-center justify-center rounded-full bg-linear-to-r ${roleBadgeStyle} text-4xl font-bold text-white shadow-[0_20px_50px_rgba(0,0,0,0.3)] ring-4 ring-white/15 sm:h-32 sm:w-32 sm:text-5xl`}
                 >
                   {name ? name[0].toUpperCase() : "U"}
                 </div>
@@ -119,7 +119,7 @@ function Profile() {
 
               <div className="mt-4 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
                 <span
-                  className={`inline-flex items-center gap-2 rounded-full bg-gradient-to-r ${roleBadgeStyle} px-4 py-2 text-sm font-semibold text-white shadow-lg`}
+                  className={`inline-flex items-center gap-2 rounded-full bg-linear-to-r ${roleBadgeStyle} px-4 py-2 text-sm font-semibold text-white shadow-lg`}
                 >
                   <ShieldCheck className="h-4 w-4" />
                   {user.role?.toUpperCase()}
@@ -161,7 +161,7 @@ function Profile() {
             className="rounded-[28px] border border-white/10 bg-white/10 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl sm:p-7"
           >
             <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-pink-500 to-violet-600 shadow-lg">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r from-pink-500 to-violet-600 shadow-lg">
                 <Pencil className="h-5 w-5 text-white" />
               </div>
               <div>
@@ -232,7 +232,7 @@ function Profile() {
             className="rounded-[28px] border border-white/10 bg-white/10 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl sm:p-7"
           >
             <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-500 to-indigo-600 shadow-lg">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r from-cyan-500 to-indigo-600 shadow-lg">
                 <LayoutDashboard className="h-5 w-5 text-white" />
               </div>
               <div>
@@ -249,7 +249,7 @@ function Profile() {
               {!editMode ? (
                 <button
                   onClick={() => setEditMode(true)}
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 py-3 font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:scale-[1.02]"
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-blue-500 to-indigo-600 py-3 font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:scale-[1.02]"
                 >
                   <Pencil className="h-4 w-4" />
                   Edit Profile
@@ -259,7 +259,7 @@ function Profile() {
                   <button
                     onClick={saveProfile}
                     disabled={saving}
-                    className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 py-3 font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:scale-[1.02] disabled:opacity-50"
+                    className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-emerald-500 to-green-600 py-3 font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:scale-[1.02] disabled:opacity-50"
                   >
                     <Save className="h-4 w-4" />
                     {saving ? "Saving..." : "Save Changes"}
@@ -282,7 +282,7 @@ function Profile() {
               {user.role === "user" && (
                 <button
                   onClick={() => navigate("/my-bookings")}
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 py-3 font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:scale-[1.02]"
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-emerald-500 to-teal-600 py-3 font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:scale-[1.02]"
                 >
                   <CalendarDays className="h-4 w-4" />
                   My Bookings
@@ -292,7 +292,7 @@ function Profile() {
               {user.role === "admin" && (
                 <button
                   onClick={() => navigate("/admin")}
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-600 py-3 font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.02]"
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-violet-500 to-indigo-600 py-3 font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.02]"
                 >
                   <LayoutDashboard className="h-4 w-4" />
                   Admin Dashboard
@@ -302,7 +302,7 @@ function Profile() {
               {user.role === "organizer" && (
                 <button
                   onClick={() => navigate("/organizer")}
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 py-3 font-semibold text-white shadow-lg shadow-pink-500/20 transition hover:scale-[1.02]"
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-pink-500 to-purple-600 py-3 font-semibold text-white shadow-lg shadow-pink-500/20 transition hover:scale-[1.02]"
                 >
                   <LayoutDashboard className="h-4 w-4" />
                   Organizer Dashboard
@@ -319,7 +319,7 @@ function Profile() {
 
               <button
                 onClick={logoutHandler}
-                className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-rose-500 to-red-600 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 transition hover:scale-[1.02]"
+                className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-rose-500 to-red-600 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 transition hover:scale-[1.02]"
               >
                 <LogOut className="h-4 w-4" />
                 Logout

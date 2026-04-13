@@ -58,27 +58,27 @@ function OrganizerDashboard() {
       title: "My Events",
       value: events.length,
       icon: CalendarDays,
-      gradient: "from-indigo-500 to-blue-600",
+      linear: "from-indigo-500 to-blue-600",
       text: "text-indigo-300",
     },
     {
       title: "Role",
       value: "Organizer",
       icon: ShieldCheck,
-      gradient: "from-pink-500 to-purple-600",
+      linear: "from-pink-500 to-purple-600",
       text: "text-pink-300",
     },
     {
       title: "Status",
       value: "Approved",
       icon: BadgeCheck,
-      gradient: "from-emerald-500 to-green-600",
+      linear: "from-emerald-500 to-green-600",
       text: "text-emerald-300",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-linear-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
         {/* HEADER */}
         <div className="relative mb-8 overflow-hidden rounded-[30px] border border-white/10 bg-white/10 p-6 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl sm:p-8">
@@ -102,7 +102,7 @@ function OrganizerDashboard() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate("/organizer/create-event")}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-pink-500 via-violet-500 to-indigo-600 px-5 py-3 font-semibold text-white shadow-lg shadow-violet-500/20 transition"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-pink-500 via-violet-500 to-indigo-600 px-5 py-3 font-semibold text-white shadow-lg shadow-violet-500/20 transition"
             >
               <Plus className="h-4 w-4" />
               Create Event
@@ -122,23 +122,23 @@ function OrganizerDashboard() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: index * 0.05 }}
                 whileHover={{ y: -6, scale: 1.01 }}
-                className="relative overflow-hidden rounded-[24px] border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
+                className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
               >
                 <div
-                  className={`absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r ${card.gradient}`}
+                  className={`absolute top-0 left-0 h-1.5 w-full bg-linear-to-r ${card.linear}`}
                 />
                 <div className="relative flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-sm text-slate-300">{card.title}</p>
                     <h2
-                      className={`mt-2 text-3xl font-bold ${card.text} break-words`}
+                      className={`mt-2 text-3xl font-bold ${card.text} wrap-break-word`}
                     >
                       {card.value}
                     </h2>
                   </div>
 
                   <div
-                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-r ${card.gradient} shadow-lg`}
+                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-r ${card.linear} shadow-lg`}
                   >
                     <Icon className="h-5 w-5 text-white" />
                   </div>
@@ -164,7 +164,7 @@ function OrganizerDashboard() {
         {/* CONTENT */}
         {loading ? (
           <div className="rounded-[28px] border border-white/10 bg-white/10 px-6 py-16 text-center shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
-            <div className="mx-auto mb-4 h-14 w-14 animate-pulse rounded-2xl bg-gradient-to-r from-fuchsia-500 to-indigo-600" />
+            <div className="mx-auto mb-4 h-14 w-14 animate-pulse rounded-2xl bg-linear-to-r from-fuchsia-500 to-indigo-600" />
             <p className="text-lg font-semibold text-white">
               Loading events...
             </p>
@@ -174,7 +174,7 @@ function OrganizerDashboard() {
           </div>
         ) : events.length === 0 ? (
           <div className="rounded-[28px] border border-dashed border-white/10 bg-white/10 px-6 py-16 text-center shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-r from-pink-500 to-violet-600 shadow-lg">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-r from-pink-500 to-violet-600 shadow-lg">
               <CalendarDays className="h-7 w-7 text-white" />
             </div>
             <h3 className="mt-5 text-2xl font-bold text-white">
@@ -188,7 +188,7 @@ function OrganizerDashboard() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate("/organizer/create-event")}
-              className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-pink-500 via-violet-500 to-indigo-600 px-5 py-3 font-semibold text-white shadow-lg shadow-violet-500/20"
+              className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-pink-500 via-violet-500 to-indigo-600 px-5 py-3 font-semibold text-white shadow-lg shadow-violet-500/20"
             >
               <Plus className="h-4 w-4" />
               Create Event

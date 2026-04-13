@@ -10,12 +10,12 @@ function AdminLayout() {
   const navClass = (path) =>
     `group relative overflow-hidden px-4 py-3 rounded-2xl text-left transition-all duration-300 font-medium ${
       isActive(path)
-        ? "bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/20"
+        ? "bg-linear-to-r from-indigo-500 via-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/20"
         : "text-slate-200 hover:bg-white/10 hover:text-white border border-transparent hover:border-white/10"
     }`;
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white">
+    <div className="min-h-screen flex bg-linear-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white">
       {/* SIDEBAR */}
       <aside className="hidden md:flex fixed left-0 top-0 h-screen w-72 flex-col border-r border-white/10 bg-white/10 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.22)]">
         <div className="relative flex h-full flex-col p-6">
@@ -25,7 +25,7 @@ function AdminLayout() {
           {/* BRAND */}
           <div className="relative mb-10">
             <div className="inline-flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-violet-500 to-pink-500 text-xl shadow-lg">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 via-violet-500 to-pink-500 text-xl shadow-lg">
                 ⚡
               </div>
 
@@ -80,7 +80,7 @@ function AdminLayout() {
       {/* MOBILE TOPBAR */}
       <div className="fixed top-0 left-0 right-0 z-30 flex md:hidden items-center justify-between border-b border-white/10 bg-[#081120]/80 px-4 py-4 backdrop-blur-2xl">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-pink-500 shadow-lg">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 via-violet-500 to-pink-500 shadow-lg">
             ⚡
           </div>
           <div>
@@ -118,7 +118,7 @@ function AdminLayout() {
 
       {/* PAGE CONTENT */}
       <main className="flex-1 p-4 pt-24 md:p-8 md:ml-72 md:pt-8 pb-24 md:pb-8">
-        <div className="min-h-[calc(100vh-8rem)] rounded-[28px] border border-white/10 bg-white/[0.03] p-3 sm:p-4 md:p-0">
+        <div className="min-h-[calc(100vh-8rem)] rounded-[28px] border border-white/10 bg-white/3 p-3 sm:p-4 md:p-0">
           <Outlet />
         </div>
       </main>

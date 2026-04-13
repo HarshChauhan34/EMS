@@ -131,21 +131,21 @@ function ManageOrganizers() {
       title: "Total Organizers",
       value: organizers.length,
       icon: UserCircle2,
-      gradient: "from-indigo-500 to-blue-600",
+      linear: "from-indigo-500 to-blue-600",
       text: "text-indigo-300",
     },
     {
       title: "Approved",
       value: approved,
       icon: BadgeCheck,
-      gradient: "from-emerald-500 to-green-600",
+      linear: "from-emerald-500 to-green-600",
       text: "text-emerald-300",
     },
     {
       title: "Pending",
       value: pending,
       icon: Clock3,
-      gradient: "from-amber-500 to-orange-500",
+      linear: "from-amber-500 to-orange-500",
       text: "text-yellow-300",
     },
   ];
@@ -159,7 +159,7 @@ function ManageOrganizers() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0b1020] via-[#161b33] to-[#1d1a52] text-white p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-linear-to-br from-[#0b1020] via-[#161b33] to-[#1d1a52] text-white p-4 sm:p-6 lg:p-8">
       {/* HEADER */}
       <div className="relative mb-8 overflow-hidden rounded-[28px] border border-white/10 bg-white/10 p-6 sm:p-8 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl">
         <div className="absolute -top-16 -left-10 h-40 w-40 rounded-full bg-fuchsia-500/20 blur-3xl" />
@@ -190,10 +190,10 @@ function ManageOrganizers() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: index * 0.05 }}
               whileHover={{ y: -6, scale: 1.01 }}
-              className="relative overflow-hidden rounded-[24px] border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
+              className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
             >
               <div
-                className={`absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r ${card.gradient}`}
+                className={`absolute top-0 left-0 h-1.5 w-full bg-linear-to-r ${card.linear}`}
               />
               <div className="relative flex items-start justify-between">
                 <div>
@@ -204,7 +204,7 @@ function ManageOrganizers() {
                 </div>
 
                 <div
-                  className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r ${card.gradient} shadow-lg`}
+                  className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r ${card.linear} shadow-lg`}
                 >
                   <Icon className="h-5 w-5 text-white" />
                 </div>
@@ -271,12 +271,12 @@ function ManageOrganizers() {
                   initial={{ opacity: 0, y: 18 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35, delay: index * 0.04 }}
-                  className="rounded-[24px] border border-white/10 bg-white/5 p-4 sm:p-5"
+                  className="rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-5"
                 >
                   {/* ORGANIZER CARD */}
                   <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                     <div className="flex min-w-0 items-center gap-4">
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-r from-pink-500 via-violet-500 to-indigo-600 text-lg font-bold text-white shadow-lg">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-linear-to-r from-pink-500 via-violet-500 to-indigo-600 text-lg font-bold text-white shadow-lg">
                         {getInitial(org.name)}
                       </div>
 
@@ -315,7 +315,7 @@ function ManageOrganizers() {
                     <div className="flex flex-col sm:flex-row gap-3 xl:items-center">
                       <button
                         onClick={() => toggleOpen(org._id)}
-                        className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.02]"
+                        className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-indigo-500 to-purple-600 px-4 py-3 font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.02]"
                       >
                         {isOpen ? (
                           <>
@@ -383,7 +383,7 @@ function ManageOrganizers() {
                             <button
                               onClick={() => handleApprove(org._id)}
                               disabled={isLoading || status === "approved"}
-                              className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 px-4 py-3 font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-emerald-500 to-green-600 px-4 py-3 font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                               <CheckCircle2 className="h-4 w-4" />
                               {isLoading && status !== "approved"
@@ -396,7 +396,7 @@ function ManageOrganizers() {
                             <button
                               onClick={() => handleReject(org._id)}
                               disabled={isLoading}
-                              className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-rose-500 to-red-600 px-4 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 transition hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-rose-500 to-red-600 px-4 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 transition hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                               <XCircle className="h-4 w-4" />
                               {isLoading ? "Processing..." : "Reject"}

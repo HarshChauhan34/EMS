@@ -93,10 +93,6 @@ function AdminDashboard() {
     }
   };
 
-  const totalUsers = useMemo(() => {
-    return users.filter((u) => u.role !== "admin").length;
-  }, [users]);
-
   const revenue = useMemo(() => {
     return bookings.reduce((total, b) => total + (b.totalAmount || 0), 0);
   }, [bookings]);
@@ -115,8 +111,12 @@ function AdminDashboard() {
             getPendingOrganizerRequests(),
           ]);
 
+        const usersOnly = (usersRes.data || []).filter(
+          (u) => u.role === "user",
+        );
+
         setEvents(Array.isArray(eventsRes.data) ? eventsRes.data : []);
-        setUsers(Array.isArray(usersRes.data) ? usersRes.data : []);
+        setUsers(usersOnly);
         setOrganizers(
           Array.isArray(organizersRes.data) ? organizersRes.data : [],
         );
@@ -142,7 +142,7 @@ function AdminDashboard() {
     },
     {
       title: "Users",
-      value: totalUsers,
+      value: users.length,
       icon: Users,
       accent: "from-emerald-500 to-green-600",
       text: "text-emerald-300",
@@ -178,7 +178,7 @@ function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0b1020] via-[#161b33] to-[#1d1a52] text-white p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-linear-to-br from-[#0b1020] via-[#161b33] to-[#1d1a52] text-white p-4 sm:p-6 lg:p-8">
       {/* HEADER */}
       <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-white/10 p-6 sm:p-8 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl mb-8">
         <div className="absolute -top-16 -left-10 h-40 w-40 rounded-full bg-fuchsia-500/20 blur-3xl" />
@@ -209,10 +209,10 @@ function AdminDashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: index * 0.05 }}
               whileHover={{ y: -6, scale: 1.01 }}
-              className="relative overflow-hidden rounded-[24px] border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
+              className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
             >
               <div
-                className={`absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r ${card.accent}`}
+                className={`absolute top-0 left-0 h-1.5 w-full bg-linear-to-r ${card.accent}`}
               />
               <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/5 blur-2xl" />
 
@@ -225,7 +225,7 @@ function AdminDashboard() {
                 </div>
 
                 <div
-                  className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r ${card.accent} shadow-lg`}
+                  className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r ${card.accent} shadow-lg`}
                 >
                   <Icon className="h-5 w-5 text-white" />
                 </div>
@@ -270,14 +270,14 @@ function AdminDashboard() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35, delay: index * 0.05 }}
                   whileHover={{ y: -4 }}
-                  className="relative overflow-hidden rounded-[24px] border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-5 shadow-lg"
+                  className="relative overflow-hidden rounded-3xl border border-white/10 bg-linear-to-br from-white/10 to-white/5 p-5 shadow-lg"
                 >
                   <div className="absolute -top-10 -right-10 h-24 w-24 rounded-full bg-fuchsia-500/10 blur-2xl" />
 
                   <div className="relative flex items-start justify-between gap-4">
                     <div className="min-w-0">
                       <div className="mb-3 flex items-center gap-3">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-r from-pink-500 to-violet-600 text-lg font-bold text-white shadow-lg">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-r from-pink-500 to-violet-600 text-lg font-bold text-white shadow-lg">
                           {org?.name?.charAt(0)?.toUpperCase() || "O"}
                         </div>
 
@@ -309,7 +309,7 @@ function AdminDashboard() {
                     <button
                       onClick={() => handleApprove(org._id)}
                       disabled={isLoading}
-                      className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 px-4 py-3 font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:scale-[1.02] disabled:opacity-50"
+                      className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-emerald-500 to-green-600 px-4 py-3 font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:scale-[1.02] disabled:opacity-50"
                     >
                       <CheckCircle2 className="h-4 w-4" />
                       {isLoading ? "Processing..." : "Approve"}
@@ -318,7 +318,7 @@ function AdminDashboard() {
                     <button
                       onClick={() => handleReject(org._id)}
                       disabled={isLoading}
-                      className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-rose-500 to-red-600 px-4 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 transition hover:scale-[1.02] disabled:opacity-50"
+                      className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-rose-500 to-red-600 px-4 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 transition hover:scale-[1.02] disabled:opacity-50"
                     >
                       <XCircle className="h-4 w-4" />
                       {isLoading ? "Processing..." : "Reject"}
@@ -342,7 +342,7 @@ function AdminDashboard() {
       </div>
 
       {events.length === 0 ? (
-        <div className="rounded-[24px] border border-dashed border-white/10 bg-white/5 p-10 text-center text-slate-300">
+        <div className="rounded-3xl border border-dashed border-white/10 bg-white/5 p-10 text-center text-slate-300">
           No events found.
         </div>
       ) : (

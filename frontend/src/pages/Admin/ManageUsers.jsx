@@ -140,34 +140,34 @@ function ManageUsers() {
       title: "Total Users",
       value: users.length,
       icon: Users,
-      gradient: "from-indigo-500 to-blue-600",
+      linear: "from-indigo-500 to-blue-600",
       text: "text-indigo-300",
     },
     {
       title: "Total Bookings",
       value: bookings.length,
       icon: Ticket,
-      gradient: "from-violet-500 to-fuchsia-600",
+      linear: "from-violet-500 to-fuchsia-600",
       text: "text-violet-300",
     },
     {
       title: "Revenue",
       value: `₹ ${revenue}`,
       icon: IndianRupee,
-      gradient: "from-emerald-500 to-green-600",
+      linear: "from-emerald-500 to-green-600",
       text: "text-emerald-300",
     },
     {
       title: "Total Events",
       value: events.length, // or events.length if you add events state
       icon: CalendarDays,
-      gradient: "from-indigo-500 to-blue-600",
+      linear: "from-indigo-500 to-blue-600",
       text: "text-indigo-300",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0b1020] via-[#161b33] to-[#1d1a52] text-white p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-linear-to-br from-[#0b1020] via-[#161b33] to-[#1d1a52] text-white p-4 sm:p-6 lg:p-8">
       {/* HEADER */}
       <div className="relative mb-8 overflow-hidden rounded-[28px] border border-white/10 bg-white/10 p-6 sm:p-8 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl">
         <div className="absolute -top-16 -left-10 h-40 w-40 rounded-full bg-fuchsia-500/20 blur-3xl" />
@@ -198,10 +198,10 @@ function ManageUsers() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: index * 0.05 }}
               whileHover={{ y: -6, scale: 1.01 }}
-              className="relative overflow-hidden rounded-[24px] border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
+              className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
             >
               <div
-                className={`absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r ${card.gradient}`}
+                className={`absolute top-0 left-0 h-1.5 w-full bg-linear-to-r ${card.linear}`}
               />
               <div className="relative flex items-start justify-between">
                 <div>
@@ -212,7 +212,7 @@ function ManageUsers() {
                 </div>
 
                 <div
-                  className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r ${card.gradient} shadow-lg`}
+                  className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r ${card.linear} shadow-lg`}
                 >
                   <Icon className="h-5 w-5 text-white" />
                 </div>
@@ -232,7 +232,7 @@ function ManageUsers() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 w-full lg:w-[360px]">
+          <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 w-full lg:w-90">
             <Search className="h-4.5 w-4.5 text-slate-400 shrink-0" />
             <input
               type="text"
@@ -262,12 +262,12 @@ function ManageUsers() {
                   initial={{ opacity: 0, y: 18 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35, delay: index * 0.04 }}
-                  className="rounded-[24px] border border-white/10 bg-white/5 p-4 sm:p-5"
+                  className="rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-5"
                 >
                   {/* USER CARD */}
                   <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                     <div className="flex min-w-0 items-center gap-4">
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-r from-pink-500 via-violet-500 to-indigo-600 text-lg font-bold text-white shadow-lg">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-linear-to-r from-pink-500 via-violet-500 to-indigo-600 text-lg font-bold text-white shadow-lg">
                         {getInitial(u.name)}
                       </div>
 
@@ -285,7 +285,7 @@ function ManageUsers() {
                     <div className="flex flex-col sm:flex-row gap-3 xl:items-center">
                       <button
                         onClick={() => handleViewBookings(u._id)}
-                        className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.02] disabled:opacity-50"
+                        className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-indigo-500 to-purple-600 px-4 py-3 font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.02] disabled:opacity-50"
                         disabled={isLoading || isDeleting}
                       >
                         {isLoading ? (
@@ -305,7 +305,7 @@ function ManageUsers() {
 
                       <button
                         onClick={() => handleDeleteUser(u._id, u.name)}
-                        className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-rose-500 to-red-600 px-4 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 transition hover:scale-[1.02] disabled:opacity-50"
+                        className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-rose-500 to-red-600 px-4 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 transition hover:scale-[1.02] disabled:opacity-50"
                         disabled={isDeleting || isLoading}
                       >
                         <Trash2 className="h-4 w-4" />

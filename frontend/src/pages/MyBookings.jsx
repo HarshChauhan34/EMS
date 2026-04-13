@@ -80,7 +80,7 @@ function MyBookings() {
   }, [bookings]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white px-4 py-6 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-linear-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* HEADER */}
         <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-white/10 px-5 py-8 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl sm:px-8 sm:py-10 mb-8">
@@ -112,7 +112,7 @@ function MyBookings() {
         {/* LOADING */}
         {loading && (
           <div className="rounded-[28px] border border-white/10 bg-white/10 px-6 py-16 text-center shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
-            <div className="mx-auto mb-4 h-14 w-14 animate-pulse rounded-2xl bg-gradient-to-r from-fuchsia-500 to-indigo-600" />
+            <div className="mx-auto mb-4 h-14 w-14 animate-pulse rounded-2xl bg-linear-to-r from-fuchsia-500 to-indigo-600" />
             <p className="text-lg font-semibold text-white">
               Loading bookings...
             </p>
@@ -125,7 +125,7 @@ function MyBookings() {
         {/* EMPTY STATE */}
         {!loading && bookings.length === 0 && (
           <div className="rounded-[28px] border border-dashed border-white/10 bg-white/10 px-6 py-16 text-center shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-r from-pink-500 to-violet-600 shadow-lg">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-r from-pink-500 to-violet-600 shadow-lg">
               <Ticket className="h-7 w-7 text-white" />
             </div>
 
@@ -152,7 +152,7 @@ function MyBookings() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35, delay: index * 0.04 }}
                   whileHover={{ y: -6, scale: 1.01 }}
-                  className="relative flex min-h-[320px] flex-col justify-between overflow-hidden rounded-[28px] border border-white/10 bg-white/10 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.18)] backdrop-blur-2xl"
+                  className="relative flex min-h-80 flex-col justify-between overflow-hidden rounded-[28px] border border-white/10 bg-white/10 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.18)] backdrop-blur-2xl"
                 >
                   <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-fuchsia-500/10 blur-2xl" />
                   <div className="absolute -left-10 -bottom-10 h-24 w-24 rounded-full bg-cyan-500/10 blur-2xl" />
@@ -232,7 +232,7 @@ function MyBookings() {
                       <button
                         onClick={() => handleCancel(b._id)}
                         disabled={isCancelling}
-                        className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-rose-500 to-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-rose-500/20 transition hover:scale-[1.02] disabled:opacity-50"
+                        className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-rose-500 to-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-rose-500/20 transition hover:scale-[1.02] disabled:opacity-50"
                       >
                         <XCircle className="h-4 w-4" />
                         {isCancelling ? "Cancelling..." : "Cancel"}

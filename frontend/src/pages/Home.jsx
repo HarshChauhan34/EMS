@@ -70,37 +70,37 @@ function Home() {
       title: "Live Events",
       value: events.length,
       icon: CalendarDays,
-      gradient: "from-indigo-500 to-blue-600",
+      linear: "from-indigo-500 to-blue-600",
       text: "text-indigo-300",
     },
     {
       title: "Categories",
       value: uniqueCategories,
       icon: Sparkles,
-      gradient: "from-pink-500 to-rose-600",
+      linear: "from-pink-500 to-rose-600",
       text: "text-pink-300",
     },
     {
       title: "Locations",
       value: uniqueLocations,
       icon: MapPin,
-      gradient: "from-emerald-500 to-green-600",
+      linear: "from-emerald-500 to-green-600",
       text: "text-emerald-300",
     },
     {
       title: "Easy Booking",
       value: "24/7",
       icon: Ticket,
-      gradient: "from-violet-500 to-fuchsia-600",
+      linear: "from-violet-500 to-fuchsia-600",
       text: "text-violet-300",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white px-4 py-6 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-linear-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* HERO */}
-        <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/10 px-5 py-10 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl sm:px-8 sm:py-14 lg:px-12 lg:py-16">
+        <div className="relative overflow-hidden rounded-4xl border border-white/10 bg-white/10 px-5 py-10 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl sm:px-8 sm:py-14 lg:px-12 lg:py-16">
           <div className="absolute -left-16 -top-16 h-44 w-44 rounded-full bg-pink-500/20 blur-3xl" />
           <div className="absolute -right-16 top-10 h-52 w-52 rounded-full bg-cyan-500/15 blur-3xl" />
           <div className="absolute bottom-0 left-1/3 h-40 w-40 rounded-full bg-violet-500/20 blur-3xl" />
@@ -114,7 +114,7 @@ function Home() {
 
               <h1 className="max-w-3xl text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
                 Discover
-                <span className="bg-gradient-to-r from-pink-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-pink-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent">
                   {" "}
                   Amazing Events{" "}
                 </span>
@@ -134,7 +134,7 @@ function Home() {
                       .getElementById("events-section")
                       ?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 via-violet-500 to-indigo-600 px-6 py-3.5 font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.02]"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-fuchsia-500 via-violet-500 to-indigo-600 px-6 py-3.5 font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.02]"
                 >
                   Explore Events
                   <ArrowRight className="h-4 w-4" />
@@ -150,7 +150,7 @@ function Home() {
             <div className="relative">
               <div className="rounded-[28px] border border-white/10 bg-white/10 p-5 shadow-2xl backdrop-blur-2xl sm:p-6">
                 <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-pink-500 to-violet-600 shadow-lg">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r from-pink-500 to-violet-600 shadow-lg">
                     <Search className="h-5 w-5 text-white" />
                   </div>
 
@@ -191,10 +191,10 @@ function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: index * 0.05 }}
                 whileHover={{ y: -6, scale: 1.01 }}
-                className="relative overflow-hidden rounded-[24px] border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
+                className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
               >
                 <div
-                  className={`absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r ${stat.gradient}`}
+                  className={`absolute top-0 left-0 h-1.5 w-full bg-linear-to-r ${stat.linear}`}
                 />
                 <div className="relative flex items-start justify-between">
                   <div>
@@ -205,7 +205,7 @@ function Home() {
                   </div>
 
                   <div
-                    className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r ${stat.gradient} shadow-lg`}
+                    className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r ${stat.linear} shadow-lg`}
                   >
                     <Icon className="h-5 w-5 text-white" />
                   </div>
@@ -232,8 +232,8 @@ function Home() {
           </div>
 
           {filteredEvents.length === 0 ? (
-            <div className="rounded-[24px] border border-dashed border-white/10 bg-white/5 px-6 py-14 text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-r from-pink-500 to-violet-600 shadow-lg">
+            <div className="rounded-3xl border border-dashed border-white/10 bg-white/5 px-6 py-14 text-center">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-r from-pink-500 to-violet-600 shadow-lg">
                 <Search className="h-6 w-6 text-white" />
               </div>
               <h3 className="mt-4 text-xl font-bold text-white">

@@ -95,7 +95,7 @@ function EventCard({ event, refresh }) {
       whileHover={{ y: -10, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 220, damping: 18 }}
       onClick={() => navigate(`/event/${event._id}`)}
-      className="group relative flex h-[560px] cursor-pointer flex-col overflow-hidden rounded-[28px] border border-white/15 bg-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.25)] backdrop-blur-2xl transition-all duration-500 hover:border-white/25 hover:shadow-[0_30px_80px_rgba(99,102,241,0.22)]"
+      className="group relative flex h-140 cursor-pointer flex-col overflow-hidden rounded-[28px] border border-white/15 bg-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.25)] backdrop-blur-2xl transition-all duration-500 hover:border-white/25 hover:shadow-[0_30px_80px_rgba(99,102,241,0.22)]"
     >
       {/* decorative glow */}
       <div className="pointer-events-none absolute -left-16 -top-16 h-36 w-36 rounded-full bg-pink-500/20 blur-3xl" />
@@ -113,10 +113,10 @@ function EventCard({ event, refresh }) {
           className="h-64 w-full object-cover transition duration-700 group-hover:scale-110 group-hover:brightness-75"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0b1020] via-[#0b1020]/30 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-[#0b1020] via-[#0b1020]/30 to-transparent" />
 
         <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4 sm:p-5">
-          <span className="max-w-[75%] truncate rounded-full border border-white/20 bg-gradient-to-r from-fuchsia-500/90 via-pink-500/90 to-purple-600/90 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white shadow-lg backdrop-blur-md">
+          <span className="max-w-[75%] truncate rounded-full border border-white/20 bg-linear-to-r from-fuchsia-500/90 via-pink-500/90 to-purple-600/90 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white shadow-lg backdrop-blur-md">
             {event?.category || "Event"}
           </span>
 
@@ -150,7 +150,7 @@ function EventCard({ event, refresh }) {
             </span>
           </div>
 
-          <h2 className="min-h-[60px] text-xl font-bold leading-tight text-white sm:text-2xl line-clamp-2">
+          <h2 className="min-h-15 text-xl font-bold leading-tight text-white sm:text-2xl line-clamp-2">
             {event?.title || "Untitled Event"}
           </h2>
         </div>
@@ -158,17 +158,17 @@ function EventCard({ event, refresh }) {
 
       {/* content */}
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <p className="min-h-[48px] text-sm leading-6 text-slate-300 line-clamp-2">
+        <p className="min-h-12 text-sm leading-6 text-slate-300 line-clamp-2">
           {event?.description || "No description available for this event."}
         </p>
 
         <div className="mt-4 grid gap-3">
-          <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-3.5 py-3">
+          <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/4 px-3.5 py-3">
             <CalendarDays className="mt-0.5 h-4.5 w-4.5 text-violet-300 shrink-0" />
             <span className="text-sm text-slate-200">{formattedDate}</span>
           </div>
 
-          <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-3.5 py-3">
+          <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/4 px-3.5 py-3">
             <MapPin className="mt-0.5 h-4.5 w-4.5 text-pink-300 shrink-0" />
             <span className="text-sm text-slate-200 line-clamp-1">
               {event?.location || "Location not available"}
@@ -176,7 +176,7 @@ function EventCard({ event, refresh }) {
           </div>
 
           {event?.organizerName && (
-            <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-3.5 py-3">
+            <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/4 px-3.5 py-3">
               <UserCircle2 className="mt-0.5 h-4.5 w-4.5 text-cyan-300 shrink-0" />
               <span className="text-sm text-slate-200 line-clamp-1">
                 {event.organizerName}
@@ -195,7 +195,7 @@ function EventCard({ event, refresh }) {
                 e.stopPropagation();
                 setShowSeat(true);
               }}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 via-violet-500 to-indigo-600 px-4 py-3 font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:shadow-xl hover:shadow-violet-500/20"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-fuchsia-500 via-violet-500 to-indigo-600 px-4 py-3 font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:shadow-xl hover:shadow-violet-500/20"
             >
               <Ticket className="h-4.5 w-4.5" />
               Book Now
@@ -217,7 +217,7 @@ function EventCard({ event, refresh }) {
                   whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => navigate(`/organizer/edit-event/${event._id}`)}
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-sky-500 to-indigo-600 px-4 py-3 font-semibold text-white shadow-lg shadow-sky-500/20"
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-sky-500 to-indigo-600 px-4 py-3 font-semibold text-white shadow-lg shadow-sky-500/20"
                 >
                   <Pencil className="h-4 w-4" />
                   Edit
@@ -228,7 +228,7 @@ function EventCard({ event, refresh }) {
                   whileTap={{ scale: 0.97 }}
                   onClick={handleDelete}
                   disabled={loading}
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-rose-500 to-red-600 px-4 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 disabled:opacity-50"
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-rose-500 to-red-600 px-4 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 disabled:opacity-50"
                 >
                   <Trash2 className="h-4 w-4" />
                   {loading ? "Deleting..." : "Delete"}
@@ -252,7 +252,7 @@ function EventCard({ event, refresh }) {
                   whileTap={{ scale: 0.98 }}
                   onClick={handleDelete}
                   disabled={loading}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-rose-500 to-red-600 px-4 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 disabled:opacity-50"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-rose-500 to-red-600 px-4 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 disabled:opacity-50"
                 >
                   <Trash2 className="h-4 w-4" />
                   {loading ? "Deleting..." : "Delete"}
@@ -270,7 +270,7 @@ function EventCard({ event, refresh }) {
                 exit={{ opacity: 0, y: 14, scale: 0.97 }}
                 transition={{ duration: 0.25 }}
                 onClick={(e) => e.stopPropagation()}
-                className="rounded-2xl border border-white/15 bg-gradient-to-br from-slate-950/80 via-slate-900/75 to-indigo-950/75 p-4 shadow-xl backdrop-blur-xl"
+                className="rounded-2xl border border-white/15 bg-linear-to-br from-slate-950/80 via-slate-900/75 to-indigo-950/75 p-4 shadow-xl backdrop-blur-xl"
               >
                 <div className="mb-4 flex items-center justify-between">
                   <span className="text-sm font-medium text-slate-300">
@@ -285,12 +285,12 @@ function EventCard({ event, refresh }) {
                   <motion.button
                     whileTap={{ scale: 0.92 }}
                     onClick={() => setSeats((prev) => Math.max(1, prev - 1))}
-                    className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-r from-rose-500 to-red-600 text-lg font-bold text-white shadow-lg"
+                    className="flex h-11 w-11 items-center justify-center rounded-full bg-linear-to-r from-rose-500 to-red-600 text-lg font-bold text-white shadow-lg"
                   >
                     -
                   </motion.button>
 
-                  <div className="min-w-[72px] rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-center text-xl font-bold text-white">
+                  <div className="min-w-18 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-center text-xl font-bold text-white">
                     {seats}
                   </div>
 
@@ -301,7 +301,7 @@ function EventCard({ event, refresh }) {
                         Math.min(event.availableSeats, prev + 1),
                       )
                     }
-                    className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 to-green-600 text-lg font-bold text-white shadow-lg"
+                    className="flex h-11 w-11 items-center justify-center rounded-full bg-linear-to-r from-emerald-500 to-green-600 text-lg font-bold text-white shadow-lg"
                   >
                     +
                   </motion.button>
@@ -312,7 +312,7 @@ function EventCard({ event, refresh }) {
                   whileTap={{ scale: 0.98 }}
                   onClick={handleBook}
                   disabled={loading}
-                  className="w-full rounded-2xl bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 px-4 py-3 font-semibold text-white shadow-lg shadow-emerald-500/20 transition disabled:opacity-50"
+                  className="w-full rounded-2xl bg-linear-to-r from-emerald-400 via-green-500 to-teal-600 px-4 py-3 font-semibold text-white shadow-lg shadow-emerald-500/20 transition disabled:opacity-50"
                 >
                   {loading ? "Processing..." : "Confirm Booking"}
                 </motion.button>

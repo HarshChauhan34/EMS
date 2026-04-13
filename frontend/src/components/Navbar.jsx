@@ -48,18 +48,18 @@ function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#081120]/70 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-[72px] items-center justify-between">
+        <div className="flex h-18 items-center justify-between">
           {/* LOGO */}
           <Link to={getHomeRoute()} className="group flex items-center gap-3">
             <div className="relative">
               <div className="absolute inset-0 rounded-2xl bg-fuchsia-500/30 blur-lg transition duration-300 group-hover:bg-fuchsia-500/40" />
-              <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-violet-500 to-pink-500 text-white shadow-lg">
+              <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 via-violet-500 to-pink-500 text-white shadow-lg">
                 <Ticket size={20} />
               </div>
             </div>
 
             <div className="flex flex-col leading-none">
-              <span className="bg-gradient-to-r from-cyan-300 via-indigo-300 to-pink-300 bg-clip-text text-xl font-extrabold tracking-tight text-transparent">
+              <span className="bg-linear-to-r from-cyan-300 via-indigo-300 to-pink-300 bg-clip-text text-xl font-extrabold tracking-tight text-transparent">
                 EventPro
               </span>
               <span className="hidden text-[10px] uppercase tracking-[0.25em] text-slate-400 sm:block">
@@ -93,7 +93,7 @@ function Navbar() {
 
                 <Link
                   to="/register"
-                  className="rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.03]"
+                  className="rounded-xl bg-linear-to-r from-indigo-500 via-violet-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.03]"
                 >
                   Sign Up
                 </Link>
@@ -102,7 +102,7 @@ function Navbar() {
               <div ref={dropdownRef} className="relative">
                 <button
                   onClick={() => setProfileOpen(!profileOpen)}
-                  className="group flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-pink-500 text-sm font-bold text-black shadow-lg transition hover:scale-105"
+                  className="group flex h-11 w-11 items-center justify-center rounded-full bg-linear-to-r from-amber-400 via-orange-400 to-pink-500 text-sm font-bold text-black shadow-lg transition hover:scale-105"
                 >
                   {getInitials(user.name)}
                 </button>
@@ -189,7 +189,7 @@ function Navbar() {
                     <Link
                       to="/register"
                       onClick={() => setMenuOpen(false)}
-                      className="rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-pink-500 px-4 py-3 text-center font-semibold text-white shadow-lg"
+                      className="rounded-xl bg-linear-to-r from-indigo-500 via-violet-500 to-pink-500 px-4 py-3 text-center font-semibold text-white shadow-lg"
                     >
                       Sign Up
                     </Link>
@@ -218,7 +218,7 @@ function Navbar() {
 
                     <button
                       onClick={logoutHandler}
-                      className="rounded-xl bg-gradient-to-r from-rose-500 to-red-600 px-4 py-3 font-medium text-white shadow-lg"
+                      className="rounded-xl bg-linear-to-r from-rose-500 to-red-600 px-4 py-3 font-medium text-white shadow-lg"
                     >
                       Logout
                     </button>
@@ -255,7 +255,7 @@ function Navbar() {
 
                     <button
                       onClick={logoutHandler}
-                      className="rounded-xl bg-gradient-to-r from-rose-500 to-red-600 px-4 py-3 font-medium text-white shadow-lg"
+                      className="rounded-xl bg-linear-to-r from-rose-500 to-red-600 px-4 py-3 font-medium text-white shadow-lg"
                     >
                       Logout
                     </button>
@@ -276,7 +276,7 @@ function Navbar() {
 
                     <button
                       onClick={logoutHandler}
-                      className="rounded-xl bg-gradient-to-r from-rose-500 to-red-600 px-4 py-3 font-medium text-white shadow-lg"
+                      className="rounded-xl bg-linear-to-r from-rose-500 to-red-600 px-4 py-3 font-medium text-white shadow-lg"
                     >
                       Logout
                     </button>
