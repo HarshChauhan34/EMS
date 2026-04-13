@@ -76,11 +76,11 @@ function Navbar() {
               </NavLink>
             )}
 
-            {user?.role === "admin" && (
+            {/* {user?.role === "admin" && (
               <NavLink to="/admin/users" isActive={isActive}>
                 Users
               </NavLink>
-            )}
+            )} */}
 
             {!user ? (
               <div className="flex items-center gap-3">
