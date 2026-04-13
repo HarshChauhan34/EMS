@@ -1,5 +1,5 @@
 import Event from "../models/Event.js";
-import fs from "fs";
+import { cloudinary } from "../middleware/cloudinaryUpload.js";
 
 // ================= CREATE EVENT =================
 export const createEvent = async (req, res) => {
@@ -25,7 +25,8 @@ export const createEvent = async (req, res) => {
       price: Number(price) || 0,
       totalSeats: totalSeatsNumber,
       availableSeats: totalSeatsNumber,
-      image: req.file ? `/uploads/${req.file.filename}` : "",
+      image: req.file ? req.file.secure_url : "",
+      imagePublicId: req.file ? req.file.public_id : "",
       createdBy: req.user._id,
       organizerName: req.user.name,
     });
@@ -135,14 +136,20 @@ export const updateEvent = async (req, res) => {
     });
 
     if (req.file) {
-      if (event.image) {
-        const oldPath = `.${event.image}`;
-        if (fs.existsSync(oldPath)) {
-          fs.unlinkSync(oldPath);
+      // ✅ Delete old image from Cloudinary if it exists
+      if (event.imagePublicId) {
+        try {
+          await cloudinary.uploader.destroy(event.imagePublicId);
+          console.log("✅ Old image deleted from Cloudinary");
+        } catch (deleteError) {
+          console.error("⚠️ Could not delete old image:", deleteError.message);
+          // Continue with upload even if deletion fails
         }
       }
 
-      event.image = `/uploads/${req.file.filename}`;
+      // ✅ Use new uploaded image
+      event.image = req.file.secure_url;
+      event.imagePublicId = req.file.public_id;
     }
 
     event.organizerName = req.user.name;
@@ -182,10 +189,13 @@ export const deleteEvent = async (req, res) => {
       });
     }
 
-    if (event.image) {
-      const filePath = `.${event.image}`;
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
+    if (event.imagePublicId) {
+      try {
+        await cloudinary.uploader.destroy(event.imagePublicId);
+        console.log("✅ Event image deleted from Cloudinary");
+      } catch (deleteError) {
+        console.error("⚠️ Could not delete image from Cloudinary:", deleteError.message);
+        // Continue with event deletion even if image deletion fails
       }
     }
 

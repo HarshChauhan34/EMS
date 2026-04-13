@@ -91,11 +91,15 @@ function EventDetails() {
   };
 
   const imageUrl = useMemo(() => {
-    if (!event) return "/placeholder.jpg";
+    if (!event?.image) return "/placeholder.jpg";
 
-    return event.image
-      ? `${SERVER_URL}${event.image.startsWith("/") ? "" : "/"}${event.image}`
-      : "/placeholder.jpg";
+    // Handle Cloudinary URLs (already full HTTPS URLs)
+    if (event.image.startsWith("http")) {
+      return event.image;
+    }
+
+    // Handle local storage URLs
+    return `${SERVER_URL}${event.image.startsWith("/") ? "" : "/"}${event.image}`;
   }, [event, SERVER_URL]);
 
   const totalPrice = (event?.price || 0) * seats;

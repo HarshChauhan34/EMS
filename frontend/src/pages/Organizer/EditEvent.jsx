@@ -41,7 +41,8 @@ function EditEvent() {
       });
 
       if (data.image) {
-        setPreview(`${BASE_URL}${data.image}`);
+        // Handle both Cloudinary URLs and local URLs
+        setPreview(data.image.startsWith("http") ? data.image : `${BASE_URL}${data.image}`);
       }
     } catch (error) {
       console.error("Fetch Error:", error);

@@ -32,9 +32,15 @@ function EventCard({ event, refresh }) {
     "http://localhost:5000";
 
   const imageUrl = useMemo(() => {
-    return event?.image
-      ? `${API_URL}${event.image.startsWith("/") ? "" : "/"}${event.image}`
-      : "https://via.placeholder.com/600x400?text=No+Image";
+    if (!event?.image) {
+      return "https://via.placeholder.com/600x400?text=No+Image";
+    }
+    // Handle Cloudinary URLs (already full HTTPS URLs)
+    if (event.image.startsWith("http")) {
+      return event.image;
+    }
+    // Handle local storage URLs
+    return `${API_URL}${event.image.startsWith("/") ? "" : "/"}${event.image}`;
   }, [API_URL, event?.image]);
 
   const total = seats * (event.price || 0);
