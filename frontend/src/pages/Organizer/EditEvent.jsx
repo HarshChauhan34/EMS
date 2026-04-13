@@ -16,6 +16,7 @@ function EditEvent() {
     date: "",
     location: "",
     price: "",
+    totalSeats: "",
     availableSeats: "",
   });
 
@@ -32,50 +33,51 @@ function EditEvent() {
         title: data.title || "",
         description: data.description || "",
         category: data.category || "",
-        date: data.date || "",
+        date: data.date ? data.date.substring(0, 10) : "",
         location: data.location || "",
         price: data.price || "",
+        totalSeats: data.totalSeats || "",
         availableSeats: data.availableSeats || "",
       });
 
-      // ✅ FIXED: correct image URL
       if (data.image) {
-        setPreview(`${BASE_URL}/${data.image}`);
+        setPreview(`${BASE_URL}${data.image}`);
       }
     } catch (error) {
       console.error("Fetch Error:", error);
+      alert(error?.response?.data?.message || "Failed to load event");
+      navigate("/organizer");
     }
-  }, [id]);
+  }, [id, navigate]);
 
-  // ================= FETCH EVENT =================
   useEffect(() => {
     fetchEvent();
   }, [fetchEvent]);
 
   useEffect(() => {
     return () => {
-      // Clean blob preview URLs to avoid memory leaks
       if (preview && preview.startsWith("blob:")) {
         URL.revokeObjectURL(preview);
       }
     };
   }, [preview]);
 
-  // ================= HANDLE INPUT =================
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (["price", "availableSeats"].includes(name)) {
-      setForm({
-        ...form,
+    if (["price", "totalSeats", "availableSeats"].includes(name)) {
+      setForm((prev) => ({
+        ...prev,
         [name]: value === "" ? "" : Number(value),
-      });
+      }));
     } else {
-      setForm({ ...form, [name]: value });
+      setForm((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
   };
 
-  // ================= HANDLE IMAGE =================
   const handleImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -85,7 +87,11 @@ function EditEvent() {
       return;
     }
 
-    // ✅ Clean old preview
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Max 2MB image allowed");
+      return;
+    }
+
     if (preview && preview.startsWith("blob:")) {
       URL.revokeObjectURL(preview);
     }
@@ -94,7 +100,6 @@ function EditEvent() {
     setPreview(URL.createObjectURL(file));
   };
 
-  // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -116,11 +121,11 @@ function EditEvent() {
         },
       });
 
-      alert("Event updated successfully 🚀");
-      navigate("/admin");
+      alert("Event updated successfully");
+      navigate("/organizer");
     } catch (error) {
       console.error("Update Error:", error);
-      alert(error?.response?.data?.message || "Update failed ❌");
+      alert(error?.response?.data?.message || "Update failed");
     } finally {
       setLoading(false);
     }
@@ -129,13 +134,12 @@ function EditEvent() {
   return (
     <div className="theme-page min-h-screen bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-black text-white flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-6xl bg-white/5 backdrop-blur-3xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
-        {/* HEADER */}
         <div className="p-6 md:p-8 border-b border-white/10 bg-linear-to-r from-pink-500/10 to-indigo-500/10">
           <h1 className="text-3xl md:text-4xl font-bold bg-linear-to-r from-pink-400 to-indigo-400 text-transparent bg-clip-text">
             ✏ Edit Event
           </h1>
           <p className="text-gray-400 mt-2 text-sm">
-            Make your event look amazing ✨
+            Update your event details
           </p>
         </div>
 
@@ -154,9 +158,10 @@ function EditEvent() {
               { name: "category", label: "Category" },
               { name: "location", label: "Location" },
               { name: "price", label: "Price", type: "number" },
+              { name: "totalSeats", label: "Total Seats", type: "number" },
               {
                 name: "availableSeats",
-                label: "Seats",
+                label: "Available Seats",
                 type: "number",
               },
             ].map((field) => (
@@ -171,8 +176,8 @@ function EditEvent() {
                   className="peer w-full px-4 pt-5 pb-2 rounded-xl bg-white/5 border border-white/20 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500 outline-none transition"
                 />
                 <label
-                  className="absolute left-4 top-2 text-sm text-gray-400 
-                  peer-placeholder-shown:top-4 peer-placeholder-shown:text-base 
+                  className="absolute left-4 top-2 text-sm text-gray-400
+                  peer-placeholder-shown:top-4 peer-placeholder-shown:text-base
                   peer-focus:top-2 peer-focus:text-sm transition-all"
                 >
                   {field.label}
@@ -183,8 +188,9 @@ function EditEvent() {
             <input
               type="date"
               name="date"
-              value={form.date ? form.date.substring(0, 10) : ""}
+              value={form.date}
               onChange={handleChange}
+              required
               className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 focus:ring-2 focus:ring-purple-500 outline-none"
             />
           </div>
@@ -195,7 +201,6 @@ function EditEvent() {
               🖼 Media & Description
             </h2>
 
-            {/* IMAGE UPLOAD */}
             <div className="relative group border-2 border-dashed border-white/20 rounded-xl p-6 text-center hover:border-indigo-400 transition cursor-pointer">
               <input
                 type="file"
@@ -208,7 +213,6 @@ function EditEvent() {
               </p>
             </div>
 
-            {/* PREVIEW */}
             {preview && (
               <div className="overflow-hidden rounded-xl">
                 <img
@@ -219,26 +223,25 @@ function EditEvent() {
               </div>
             )}
 
-            {/* DESCRIPTION */}
             <div className="relative">
               <textarea
                 name="description"
                 value={form.description}
                 onChange={handleChange}
                 rows={5}
+                required
                 placeholder=" "
                 className="peer w-full px-4 pt-5 pb-2 rounded-xl bg-white/5 border border-white/20 focus:ring-2 focus:ring-pink-500 outline-none"
               />
               <label
-                className="absolute left-4 top-2 text-sm text-gray-400 
-                peer-placeholder-shown:top-4 peer-placeholder-shown:text-base 
+                className="absolute left-4 top-2 text-sm text-gray-400
+                peer-placeholder-shown:top-4 peer-placeholder-shown:text-base
                 peer-focus:top-2 peer-focus:text-sm transition-all"
               >
                 Description
               </label>
             </div>
 
-            {/* BUTTONS */}
             <div className="flex gap-4">
               <button
                 type="submit"
@@ -250,7 +253,7 @@ function EditEvent() {
 
               <button
                 type="button"
-                onClick={() => navigate("/admin")}
+                onClick={() => navigate("/organizer")}
                 className="flex-1 py-3 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 transition"
               >
                 Cancel

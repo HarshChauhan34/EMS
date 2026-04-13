@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, User, LogOut , Ticket} from "lucide-react";
+import { Menu, X, User, LogOut, Ticket } from "lucide-react";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -13,18 +13,17 @@ function Navbar() {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-  // ================= CLICK OUTSIDE =================
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setProfileOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ================= HIDE NAVBAR =================
   const hideNavbar =
     ["/login", "/register", "/forgot-password"].includes(location.pathname) ||
     location.pathname.startsWith("/reset-password/");
@@ -36,25 +35,41 @@ function Navbar() {
     navigate("/");
   };
 
+  const getHomeRoute = () => {
+    if (!user) return "/";
+    if (user.role === "admin") return "/admin";
+    if (user.role === "organizer") return "/organizer";
+    return "/";
+  };
+
   const isActive = (path) => location.pathname === path;
   const getInitials = (name) => name?.charAt(0).toUpperCase() || "U";
 
   return (
-    <nav className="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/70 dark:bg-black/50 border-b border-gray-200 dark:border-white/10 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
+    <nav className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#081120]/70 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-[72px] items-center justify-between">
           {/* LOGO */}
-          <Link to="/" className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-linear-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg">
-              <Ticket size={20} />
+          <Link to={getHomeRoute()} className="group flex items-center gap-3">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-2xl bg-fuchsia-500/30 blur-lg transition duration-300 group-hover:bg-fuchsia-500/40" />
+              <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-violet-500 to-pink-500 text-white shadow-lg">
+                <Ticket size={20} />
+              </div>
             </div>
-            <span className="text-xl font-bold bg-linear-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent">
-              EventPro
-            </span>
+
+            <div className="flex flex-col leading-none">
+              <span className="bg-gradient-to-r from-cyan-300 via-indigo-300 to-pink-300 bg-clip-text text-xl font-extrabold tracking-tight text-transparent">
+                EventPro
+              </span>
+              <span className="hidden text-[10px] uppercase tracking-[0.25em] text-slate-400 sm:block">
+                Event Platform
+              </span>
+            </div>
           </Link>
 
           {/* DESKTOP MENU */}
-          <div className="hidden md:flex items-center gap-8 text-gray-700 dark:text-gray-200">
+          <div className="hidden md:flex items-center gap-3 lg:gap-5 text-slate-200">
             {user?.role === "user" && (
               <NavLink to="/my-bookings" isActive={isActive}>
                 My Bookings
@@ -68,62 +83,68 @@ function Navbar() {
             )}
 
             {!user ? (
-              <div className="flex gap-3">
+              <div className="flex items-center gap-3">
                 <Link
                   to="/login"
-                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-white/20 hover:bg-gray-100 dark:hover:bg-white/10 transition"
+                  className="rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
                 >
                   Login
                 </Link>
 
                 <Link
                   to="/register"
-                  className="px-4 py-2 rounded-lg bg-linear-to-r from-indigo-500 to-pink-500 text-white shadow-md hover:scale-105 transition"
+                  className="rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.03]"
                 >
                   Sign Up
                 </Link>
               </div>
             ) : (
               <div ref={dropdownRef} className="relative">
-                {/* PROFILE */}
                 <button
                   onClick={() => setProfileOpen(!profileOpen)}
-                  className="w-10 h-10 rounded-full bg-linear-to-r from-yellow-400 to-orange-500 text-black font-semibold flex items-center justify-center shadow hover:scale-110 transition"
+                  className="group flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-pink-500 text-sm font-bold text-black shadow-lg transition hover:scale-105"
                 >
                   {getInitials(user.name)}
                 </button>
 
-                {/* DROPDOWN */}
                 <AnimatePresence>
                   {profileOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      initial={{ opacity: 0, y: 10, scale: 0.96 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.96 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute right-0 mt-3 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-xl shadow-xl overflow-hidden"
+                      className="absolute right-0 mt-3 w-64 overflow-hidden rounded-2xl border border-white/10 bg-[#0b1224]/95 shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur-2xl"
                     >
-                      <div className="p-3 border-b border-gray-200 dark:border-white/10">
-                        <p className="text-sm font-semibold text-gray-800 dark:text-white">
+                      <div className="border-b border-white/10 bg-white/5 p-4">
+                        <p className="truncate text-sm font-semibold text-white">
                           {user.name}
+                        </p>
+                        <p className="mt-1 truncate text-xs capitalize text-slate-400">
+                          {user.role}
                         </p>
                       </div>
 
-                      <button
-                        onClick={() => navigate("/profile")}
-                        className="flex items-center gap-2 w-full px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10 transition"
-                      >
-                        <User size={16} />
-                        Profile
-                      </button>
+                      <div className="p-2">
+                        <button
+                          onClick={() => {
+                            setProfileOpen(false);
+                            navigate("/profile");
+                          }}
+                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-200 transition hover:bg-white/10"
+                        >
+                          <User size={16} />
+                          Profile
+                        </button>
 
-                      <button
-                        onClick={logoutHandler}
-                        className="flex items-center gap-2 w-full px-4 py-2 text-red-500 hover:bg-red-100 dark:hover:bg-red-500/10 transition"
-                      >
-                        <LogOut size={16} />
-                        Logout
-                      </button>
+                        <button
+                          onClick={logoutHandler}
+                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-red-400 transition hover:bg-red-500/10"
+                        >
+                          <LogOut size={16} />
+                          Logout
+                        </button>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -133,8 +154,11 @@ function Navbar() {
 
           {/* MOBILE BUTTON */}
           <div className="md:hidden">
-            <button onClick={() => setMenuOpen(!menuOpen)}>
-              {menuOpen ? <X /> : <Menu />}
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white transition hover:bg-white/10"
+            >
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
@@ -144,41 +168,121 @@ function Navbar() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -14 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="md:hidden bg-white dark:bg-black border-t border-gray-200 dark:border-white/10"
+            exit={{ opacity: 0, y: -14 }}
+            transition={{ duration: 0.22 }}
+            className="md:hidden border-t border-white/10 bg-[#0b1224]/95 backdrop-blur-2xl"
           >
-            <div className="p-5 flex flex-col gap-4 text-gray-800 dark:text-white text-center">
-              {user?.role === "user" && (
-                <Link to="/my-bookings" onClick={() => setMenuOpen(false)}>
-                  My Bookings
-                </Link>
-              )}
+            <div className="mx-auto max-w-7xl px-4 py-5">
+              <div className="flex flex-col gap-3">
+                {!user && (
+                  <>
+                    <Link
+                      to="/login"
+                      onClick={() => setMenuOpen(false)}
+                      className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center text-white transition hover:bg-white/10"
+                    >
+                      Login
+                    </Link>
 
-              {user?.role === "admin" && (
-                <Link to="/admin/users" onClick={() => setMenuOpen(false)}>
-                  Users
-                </Link>
-              )}
+                    <Link
+                      to="/register"
+                      onClick={() => setMenuOpen(false)}
+                      className="rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-pink-500 px-4 py-3 text-center font-semibold text-white shadow-lg"
+                    >
+                      Sign Up
+                    </Link>
+                  </>
+                )}
 
-              {!user ? (
-                <>
-                  <Link to="/login" onClick={() => setMenuOpen(false)}>
-                    Login
-                  </Link>
-                  <Link to="/register" onClick={() => setMenuOpen(false)}>
-                    Sign Up
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <button onClick={() => navigate("/profile")}>Profile</button>
-                  <button onClick={logoutHandler} className="text-red-500">
-                    Logout
-                  </button>
-                </>
-              )}
+                {user?.role === "user" && (
+                  <>
+                    <Link
+                      to="/my-bookings"
+                      onClick={() => setMenuOpen(false)}
+                      className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center text-white transition hover:bg-white/10"
+                    >
+                      My Bookings
+                    </Link>
+
+                    <button
+                      onClick={() => {
+                        setMenuOpen(false);
+                        navigate("/profile");
+                      }}
+                      className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white transition hover:bg-white/10"
+                    >
+                      Profile
+                    </button>
+
+                    <button
+                      onClick={logoutHandler}
+                      className="rounded-xl bg-gradient-to-r from-rose-500 to-red-600 px-4 py-3 font-medium text-white shadow-lg"
+                    >
+                      Logout
+                    </button>
+                  </>
+                )}
+
+                {user?.role === "admin" && (
+                  <>
+                    <Link
+                      to="/admin/users"
+                      onClick={() => setMenuOpen(false)}
+                      className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center text-white transition hover:bg-white/10"
+                    >
+                      Users
+                    </Link>
+
+                    <Link
+                      to="/admin/organizers"
+                      onClick={() => setMenuOpen(false)}
+                      className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center text-white transition hover:bg-white/10"
+                    >
+                      Organizers
+                    </Link>
+
+                    <button
+                      onClick={() => {
+                        setMenuOpen(false);
+                        navigate("/profile");
+                      }}
+                      className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white transition hover:bg-white/10"
+                    >
+                      Profile
+                    </button>
+
+                    <button
+                      onClick={logoutHandler}
+                      className="rounded-xl bg-gradient-to-r from-rose-500 to-red-600 px-4 py-3 font-medium text-white shadow-lg"
+                    >
+                      Logout
+                    </button>
+                  </>
+                )}
+
+                {user?.role === "organizer" && (
+                  <>
+                    <button
+                      onClick={() => {
+                        setMenuOpen(false);
+                        navigate("/profile");
+                      }}
+                      className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white transition hover:bg-white/10"
+                    >
+                      Profile
+                    </button>
+
+                    <button
+                      onClick={logoutHandler}
+                      className="rounded-xl bg-gradient-to-r from-rose-500 to-red-600 px-4 py-3 font-medium text-white shadow-lg"
+                    >
+                      Logout
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </motion.div>
         )}
@@ -187,24 +291,17 @@ function Navbar() {
   );
 }
 
-// ================= NAV LINK =================
 function NavLink({ to, children, isActive }) {
   return (
     <Link
       to={to}
-      className={`relative font-medium transition ${
+      className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
         isActive(to)
-          ? "text-indigo-500"
-          : "hover:text-indigo-500 text-gray-700 dark:text-gray-200"
+          ? "bg-indigo-500/15 text-indigo-300 border border-indigo-400/20"
+          : "text-slate-200 hover:bg-white/5 hover:text-white"
       }`}
     >
       {children}
-
-      <span
-        className={`absolute left-0 -bottom-1 h-[2px] bg-linear-to-r from-indigo-500 to-pink-500 transition-all duration-300 ${
-          isActive(to) ? "w-full" : "w-0 group-hover:w-full"
-        }`}
-      ></span>
     </Link>
   );
 }

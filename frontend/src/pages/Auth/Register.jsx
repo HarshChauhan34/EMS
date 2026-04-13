@@ -11,6 +11,7 @@ function Register() {
     name: "",
     email: "",
     password: "",
+    role: "user",
   });
 
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.name || !form.email || !form.password) {
+    if (!form.name || !form.email || !form.password || !form.role) {
       alert("Please fill all fields");
       return;
     }
@@ -61,15 +62,27 @@ function Register() {
       setLoading(true);
 
       const res = await API.post("/auth/register", {
-        ...form,
-        role: "user",
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        role: form.role,
       });
 
-      localStorage.setItem("user", JSON.stringify(res.data));
+      // ✅ Normal user login directly
+      if (form.role === "user") {
+        localStorage.setItem("user", JSON.stringify(res.data));
+        alert("✅ Account created successfully");
+        navigate("/");
+        return;
+      }
 
-      alert("✅ Account created successfully");
+      // ✅ Organizer waits for admin approval
+      alert(
+        res.data?.message ||
+          "Organizer registration request submitted. Please wait for admin approval.",
+      );
 
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       alert(
         error.response?.data?.message || error.message || "Register failed",
@@ -81,30 +94,25 @@ function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81]">
-      {/* BACKGROUND GLOW */}
       <div className="absolute w-72 h-72 bg-purple-600 rounded-full blur-[120px] opacity-30 top-10 left-10"></div>
       <div className="absolute w-72 h-72 bg-pink-500 rounded-full blur-[120px] opacity-30 bottom-10 right-10"></div>
 
-      {/* CARD */}
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5 }}
         className="relative w-full max-w-md backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 text-white"
       >
-        {/* HEADER */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
             Create Account 🚀
           </h2>
           <p className="text-gray-300 text-sm mt-2">
-            Join us and start your journey
+            Register as user or organizer
           </p>
         </div>
 
-        {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* NAME */}
           <input
             type="text"
             name="name"
@@ -115,7 +123,6 @@ function Register() {
             className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 outline-none transition"
           />
 
-          {/* EMAIL */}
           <input
             type="email"
             name="email"
@@ -126,7 +133,6 @@ function Register() {
             className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 outline-none transition"
           />
 
-          {/* PASSWORD */}
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -147,7 +153,27 @@ function Register() {
             </button>
           </div>
 
-          {/* BUTTON */}
+          {/* ROLE */}
+          <select
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-purple-500 outline-none transition"
+          >
+            <option value="user" className="text-black">
+              User
+            </option>
+            <option value="organizer" className="text-black">
+              Organizer
+            </option>
+          </select>
+
+          {form.role === "organizer" && (
+            <div className="bg-yellow-500/10 border border-yellow-400/30 rounded-xl p-3 text-sm text-yellow-200">
+              Organizer account needs admin approval before login.
+            </div>
+          )}
+
           <button
             type="submit"
             disabled={loading}
@@ -164,7 +190,6 @@ function Register() {
           </button>
         </form>
 
-        {/* FOOTER */}
         <p className="text-center text-gray-300 mt-6 text-sm">
           Already have an account?{" "}
           <Link

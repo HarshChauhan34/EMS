@@ -18,14 +18,23 @@ import MyBookings from "./pages/MyBookings";
 
 // Admin Pages
 import AdminDashboard from "./pages/Admin/AdminDashboard";
-import AddEvent from "./pages/Admin/AddEvent";
-import EditEvent from "./pages/Admin/EditEvent";
 import ManageUsers from "./pages/Admin/ManageUsers";
+import ManageOrganizers from "./pages/Admin/ManageOrganizers";
+
+// Organizer Pages
+import OrganizerDashboard from "./pages/Organizer/OrganizerDashboard";
+import CreateEvent from "./pages/Organizer/CreateEvent";
+import EditEvent from "./pages/Organizer/EditEvent";
 
 // Protected Routes
 import AdminRoute from "./routes/AdminRoute";
+import OrganizerRoute from "./routes/OrganizerRoute";
 import UserRoute from "./routes/UserRoute";
 import ProtectedRoute from "./routes/ProtectedRoute";
+
+//Layouts
+import AdminLayout from "./layouts/AdminLayout";
+import OrganizerLayout from "./layouts/OrganizerLayout";
 
 function App() {
   const [theme, setTheme] = useState(() => {
@@ -58,7 +67,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/event/:id" element={<EventDetails />} />
 
-        {/* Auth */}
+        {/* ================= AUTH ================= */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -88,37 +97,28 @@ function App() {
           path="/admin"
           element={
             <AdminRoute>
-              <AdminDashboard />
+              <AdminLayout />
             </AdminRoute>
           }
-        />
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<ManageUsers />} />
+          <Route path="organizers" element={<ManageOrganizers />} />
+        </Route>
 
+        {/* ================= ORGANIZER ================= */}
         <Route
-          path="/admin/add-event"
+          path="/organizer"
           element={
-            <AdminRoute>
-              <AddEvent />
-            </AdminRoute>
+            <OrganizerRoute>
+              <OrganizerLayout />
+            </OrganizerRoute>
           }
-        />
-
-        <Route
-          path="/admin/edit-event/:id"
-          element={
-            <AdminRoute>
-              <EditEvent />
-            </AdminRoute>
-          }
-        />
-
-        <Route
-          path="/admin/users"
-          element={
-            <AdminRoute>
-              <ManageUsers />
-            </AdminRoute>
-          }
-        />
+        >
+          <Route index element={<OrganizerDashboard />} />
+          <Route path="create-event" element={<CreateEvent />} />
+          <Route path="edit-event/:id" element={<EditEvent />} />
+        </Route>
 
         {/* ================= 404 PAGE ================= */}
         <Route

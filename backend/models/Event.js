@@ -43,7 +43,6 @@ const eventSchema = new mongoose.Schema(
       required: true,
     },
 
-    // ✅ NEW IMAGE FIELD
     image: {
       type: String,
       default: "",
@@ -52,6 +51,13 @@ const eventSchema = new mongoose.Schema(
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
+    },
+
+    // ✅ NEW: store organizer name (for UI)
+    organizerName: {
+      type: String,
+      default: "",
     },
   },
   {

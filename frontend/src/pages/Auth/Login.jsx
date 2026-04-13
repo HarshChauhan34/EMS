@@ -39,7 +39,13 @@ function Login() {
 
       localStorage.setItem("user", JSON.stringify(res.data));
 
-      navigate(res.data?.role === "admin" ? "/admin" : "/");
+      if (res.data?.role === "admin") {
+        navigate("/admin");
+      } else if (res.data?.role === "organizer") {
+        navigate("/organizer");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       alert(error.response?.data?.message || "Login failed");
     } finally {
@@ -49,18 +55,15 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81]">
-      {/* BACKGROUND GLOW */}
       <div className="absolute w-72 h-72 bg-purple-600 rounded-full blur-[120px] opacity-30 top-10 left-10"></div>
       <div className="absolute w-72 h-72 bg-pink-500 rounded-full blur-[120px] opacity-30 bottom-10 right-10"></div>
 
-      {/* CARD */}
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5 }}
         className="relative w-full max-w-md backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 text-white"
       >
-        {/* HEADER */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
             Welcome Back 👋
@@ -70,9 +73,7 @@ function Login() {
           </p>
         </div>
 
-        {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* EMAIL */}
           <div>
             <input
               type="email"
@@ -85,7 +86,6 @@ function Login() {
             />
           </div>
 
-          {/* PASSWORD */}
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -106,7 +106,6 @@ function Login() {
             </button>
           </div>
 
-          {/* FORGOT PASSWORD */}
           <div className="text-right -mt-2">
             <button
               type="button"
@@ -117,7 +116,6 @@ function Login() {
             </button>
           </div>
 
-          {/* LOGIN BUTTON */}
           <button
             type="submit"
             disabled={loading}
@@ -134,7 +132,6 @@ function Login() {
           </button>
         </form>
 
-        {/* FOOTER */}
         <p className="text-center text-gray-300 mt-6 text-sm">
           Don’t have an account?{" "}
           <Link

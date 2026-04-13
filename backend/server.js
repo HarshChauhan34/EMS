@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
 
 import connectDB from "./config/db.js";
 
@@ -27,7 +28,6 @@ const allowedOrigins = ["http://localhost:5173", "https://ems-4.vercel.app"];
 app.use(
   cors({
     origin: (origin, callback) => {
-      // allow Postman / mobile apps
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
@@ -45,8 +45,16 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ================= STATIC =================
-app.use("/uploads", express.static("uploads"));
+// ================= STATIC FILES =================
+// Helps frontend load uploaded images properly
+app.use(
+  "/uploads",
+  express.static(path.resolve("uploads"), {
+    setHeaders: (res) => {
+      res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    },
+  }),
+);
 
 // ================= ROUTES =================
 app.use("/api/auth", authRoutes);
@@ -68,7 +76,7 @@ app.get("/api/protected", protect, (req, res) => {
 });
 
 // ================= 404 =================
-app.use((req, res, next) => {
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     message: "Route not found",

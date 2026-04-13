@@ -30,7 +30,6 @@ const userSchema = new mongoose.Schema(
       minlength: [6, "Password must be at least 6 characters"],
       validate: {
         validator: function (value) {
-          // Strong password regex
           return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/.test(
             value,
           );
@@ -38,7 +37,7 @@ const userSchema = new mongoose.Schema(
         message:
           "Password must contain uppercase, lowercase, number and special character",
       },
-      select: false, // Exclude password from queries by default
+      select: false,
     },
 
     passwordResetToken: {
@@ -53,8 +52,19 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["admin", "user"],
+      enum: ["admin", "user", "organizer"],
       default: "user",
+    },
+
+    organizerRequestStatus: {
+      type: String,
+      enum: ["none", "pending", "approved", "rejected"],
+      default: "none",
+    },
+
+    isApprovedOrganizer: {
+      type: Boolean,
+      default: false,
     },
 
     isBlocked: {
@@ -65,9 +75,8 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// ================= HASH PASSWORD (FIXED) =================
+// ================= HASH PASSWORD =================
 userSchema.pre("save", async function () {
-  // Only hash if password is modified
   if (!this.isModified("password")) return;
 
   const salt = await bcrypt.genSalt(10);
@@ -80,7 +89,7 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
     throw new Error("Password not selected");
   }
 
-  return await bcrypt.compare(enteredPassword, this.password);
+  return bcrypt.compare(enteredPassword, this.password);
 };
 
 // ================= CREATE RESET TOKEN =================
@@ -92,7 +101,7 @@ userSchema.methods.createPasswordResetToken = function () {
     .update(resetToken)
     .digest("hex");
 
-  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
   return resetToken;
 };
@@ -100,7 +109,6 @@ userSchema.methods.createPasswordResetToken = function () {
 // ================= AUTO DELETE EXPIRED TOKENS =================
 userSchema.index({ passwordResetExpires: 1 }, { expireAfterSeconds: 0 });
 
-// ================= EXPORT =================
 const User = mongoose.model("User", userSchema);
 
 export default User;

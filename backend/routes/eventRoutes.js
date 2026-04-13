@@ -1,5 +1,4 @@
 import express from "express";
-
 import {
   createEvent,
   getAllEvents,
@@ -7,28 +6,24 @@ import {
   updateEvent,
   deleteEvent,
 } from "../controllers/eventController.js";
-
 import { protect } from "../middleware/authMiddleware.js";
-import { adminOnly } from "../middleware/roleMiddleware.js";
+import {
+  organizerOnly,
+  adminOrOrganizer,
+} from "../middleware/roleMiddleware.js";
 import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
 // ================= PUBLIC ROUTES =================
-
-// Get all events
 router.get("/", getAllEvents);
-
-// Get single event
 router.get("/:id", getEventById);
 
-// ================= ADMIN ROUTES =================
-
-// Create event
+// ================= ORGANIZER ROUTES =================
 router.post(
   "/",
   protect,
-  adminOnly,
+  organizerOnly,
   (req, res, next) => {
     upload.single("image")(req, res, function (err) {
       if (err) {
@@ -40,11 +35,10 @@ router.post(
   createEvent,
 );
 
-// Update event
 router.put(
   "/:id",
   protect,
-  adminOnly,
+  organizerOnly,
   (req, res, next) => {
     upload.single("image")(req, res, function (err) {
       if (err) {
@@ -56,7 +50,7 @@ router.put(
   updateEvent,
 );
 
-// Delete event
-router.delete("/:id", protect, adminOnly, deleteEvent);
+// ================= ADMIN OR ORGANIZER =================
+router.delete("/:id", protect, adminOrOrganizer, deleteEvent);
 
 export default router;

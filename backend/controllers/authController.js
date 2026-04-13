@@ -8,8 +8,8 @@ export const registerUser = async (req, res) => {
   try {
     let { name, email, password, role } = req.body;
 
-    // ✅ Normalize email
     email = email.toLowerCase().trim();
+    role = role || "user";
 
     const userExists = await User.findOne({ email });
 
@@ -19,27 +19,49 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    const user = await User.create({
+    let userData = {
       name,
       email,
       password,
-      role: role || "user",
-    });
-    // console.log("BODY:", req.body);
+      role: "user",
+    };
 
-    res.status(201).json({
+    // ✅ If organizer registers, keep request pending until admin approves
+    if (role === "organizer") {
+      userData.role = "organizer";
+      userData.organizerRequestStatus = "pending";
+      userData.isApprovedOrganizer = false;
+    }
+
+    const user = await User.create(userData);
+
+    // ✅ Normal user can login immediately
+    if (user.role === "user") {
+      return res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        token: generateToken(user._id, user.role),
+      });
+    }
+
+    // ✅ Organizer registration response
+    return res.status(201).json({
+      message:
+        "Organizer registration request submitted successfully. Please wait for admin approval.",
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
-      token: generateToken(user._id, user.role),
+      organizerRequestStatus: user.organizerRequestStatus,
+      isApprovedOrganizer: user.isApprovedOrganizer,
     });
   } catch (error) {
-    console.error("🔥 REGISTER ERROR FULL:", error);
+    console.error("REGISTER ERROR:", error);
 
     return res.status(500).json({
       message: error.message,
-      stack: error.stack, // 👈 TEMP (remove later)
     });
   }
 };
@@ -73,11 +95,34 @@ export const loginUser = async (req, res) => {
       });
     }
 
+    // ✅ Organizer login only after admin approval
+    if (user.role === "organizer") {
+      if (user.organizerRequestStatus === "pending") {
+        return res.status(403).json({
+          message: "Your organizer account is pending admin approval",
+        });
+      }
+
+      if (user.organizerRequestStatus === "rejected") {
+        return res.status(403).json({
+          message: "Your organizer request was rejected by admin",
+        });
+      }
+
+      if (!user.isApprovedOrganizer) {
+        return res.status(403).json({
+          message: "Organizer account is not approved yet",
+        });
+      }
+    }
+
     return res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
+      organizerRequestStatus: user.organizerRequestStatus,
+      isApprovedOrganizer: user.isApprovedOrganizer,
       token: generateToken(user._id, user.role),
     });
   } catch (error) {
@@ -98,7 +143,9 @@ export const updateProfile = async (req, res) => {
     }
 
     user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
+    user.email = req.body.email
+      ? req.body.email.toLowerCase().trim()
+      : user.email;
 
     if (req.body.password) {
       user.password = req.body.password;
@@ -111,6 +158,8 @@ export const updateProfile = async (req, res) => {
       name: updatedUser.name,
       email: updatedUser.email,
       role: updatedUser.role,
+      organizerRequestStatus: updatedUser.organizerRequestStatus,
+      isApprovedOrganizer: updatedUser.isApprovedOrganizer,
       token: generateToken(updatedUser._id, updatedUser.role),
     });
   } catch (error) {
@@ -136,12 +185,10 @@ export const forgotPassword = async (req, res) => {
 
     const user = await User.findOne({ email });
 
-    // ✅ Don't reveal user existence
     if (!user) {
       return res.status(200).json({ message });
     }
 
-    // ✅ Generate token
     const resetToken = user.createPasswordResetToken();
 
     await user.save({ validateBeforeSave: false });
@@ -150,13 +197,13 @@ export const forgotPassword = async (req, res) => {
       String(process.env.FRONTEND_URL || req.get("origin") || "").trim() ||
       "http://localhost:5173";
     frontendBaseUrl = frontendBaseUrl.replace(/\/+$/, "");
+
     if (/^https:\/\/localhost(?::\d+)?$/i.test(frontendBaseUrl)) {
       frontendBaseUrl = frontendBaseUrl.replace(/^https:/i, "http:");
     }
 
     const resetURL = `${frontendBaseUrl}/reset-password/${resetToken}`;
 
-    // ✅ MJML template
     const mjmlTemplate = `
       <mjml>
         <mj-body background-color="#f4f4f4">
@@ -183,9 +230,6 @@ export const forgotPassword = async (req, res) => {
       </mjml>
     `;
 
-    console.log("👉 Sending reset email to:", user.email);
-
-    // ❗ CRITICAL: this is where your error happens
     const shouldExposeResetLink = process.env.NODE_ENV !== "production";
 
     try {
@@ -193,7 +237,6 @@ export const forgotPassword = async (req, res) => {
     } catch (emailError) {
       console.error("FORGOT PASSWORD EMAIL SEND ERROR:", emailError.message);
 
-      // Development fallback so password reset can still be tested locally.
       if (shouldExposeResetLink) {
         return res.status(200).json({
           message:
@@ -216,7 +259,7 @@ export const forgotPassword = async (req, res) => {
       .status(200)
       .json(shouldExposeResetLink ? { message, resetURL } : { message });
   } catch (error) {
-    console.error("FORGOT PASSWORD ERROR FULL:", error);
+    console.error("FORGOT PASSWORD ERROR:", error);
 
     return res.status(500).json({
       message: "Email sending failed",

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createEvent } from "../../services/eventService";
 import { motion } from "framer-motion";
 
-function AddEvent() {
+function CreateEvent() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -22,10 +22,17 @@ function AddEvent() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     if (["price", "totalSeats"].includes(name)) {
-      setForm({ ...form, [name]: value === "" ? "" : Number(value) });
+      setForm((prev) => ({
+        ...prev,
+        [name]: value === "" ? "" : Number(value),
+      }));
     } else {
-      setForm({ ...form, [name]: value });
+      setForm((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
   };
 
@@ -33,35 +40,52 @@ function AddEvent() {
     const file = e.target.files[0];
 
     if (!file) {
+      if (preview) URL.revokeObjectURL(preview);
       setPreview(null);
-      setForm({ ...form, image: null });
+      setForm((prev) => ({ ...prev, image: null }));
       return;
     }
 
-    if (!file.type.startsWith("image/")) return alert("Only image allowed");
-    if (file.size > 2 * 1024 * 1024) return alert("Max 2MB allowed");
+    if (!file.type.startsWith("image/")) {
+      alert("Only image file is allowed");
+      return;
+    }
 
-    setForm({ ...form, image: file });
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Max 2MB image allowed");
+      return;
+    }
+
     if (preview) URL.revokeObjectURL(preview);
+
+    setForm((prev) => ({ ...prev, image: file }));
     setPreview(URL.createObjectURL(file));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.image) return alert("Upload image");
 
-    setLoading(true);
+    if (!form.image) {
+      alert("Please upload event image");
+      return;
+    }
 
     try {
+      setLoading(true);
+
       const formData = new FormData();
-      Object.entries(form).forEach(([k, v]) => {
-        if (v !== null && v !== "") formData.append(k, v);
+      Object.entries(form).forEach(([key, value]) => {
+        if (value !== null && value !== "") {
+          formData.append(key, value);
+        }
       });
 
       await createEvent(formData);
-      navigate("/admin");
-    } catch {
-      alert("Error ❌");
+
+      alert("Event created successfully");
+      navigate("/organizer");
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to create event");
     } finally {
       setLoading(false);
     }
@@ -75,14 +99,13 @@ function AddEvent() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-7xl bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] overflow-hidden"
       >
-        {/* HEADER */}
         <div className="relative p-10 text-center border-b border-white/10">
           <div className="absolute inset-0 bg-linear-to-r from-pink-500/10 via-purple-500/10 to-indigo-500/10 blur-2xl" />
           <h1 className="relative text-4xl md:text-5xl font-extrabold bg-linear-to-r from-pink-400 via-purple-400 to-indigo-400 text-transparent bg-clip-text">
-            Create Event
+            Organizer Create Event
           </h1>
           <p className="relative text-gray-400 mt-3">
-            Professional event creation dashboard ✨
+            Add and manage your own events
           </p>
         </div>
 
@@ -108,11 +131,7 @@ function AddEvent() {
               { name: "price", label: "Price", type: "number" },
               { name: "totalSeats", label: "Seats", type: "number" },
             ].map((field) => (
-              <motion.div
-                whileFocus={{ scale: 1.02 }}
-                key={field.name}
-                className="relative"
-              >
+              <div key={field.name} className="relative">
                 <input
                   type={field.type || "text"}
                   name={field.name}
@@ -125,7 +144,7 @@ function AddEvent() {
                 <label className="absolute left-4 top-2 text-sm text-gray-400 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-sm transition-all">
                   {field.label}
                 </label>
-              </motion.div>
+              </div>
             ))}
 
             <input
@@ -149,12 +168,7 @@ function AddEvent() {
               Media & Description
             </h2>
 
-            {/* UPLOAD */}
-            <motion.div
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="relative group border-2 border-dashed border-white/20 rounded-xl p-10 text-center hover:border-indigo-400 transition cursor-pointer"
-            >
+            <div className="relative group border-2 border-dashed border-white/20 rounded-xl p-10 text-center hover:border-indigo-400 transition cursor-pointer">
               <input
                 type="file"
                 accept="image/*"
@@ -164,9 +178,8 @@ function AddEvent() {
               <p className="text-gray-400 group-hover:text-indigo-400 transition">
                 Drag & Drop or Click to Upload
               </p>
-            </motion.div>
+            </div>
 
-            {/* PREVIEW */}
             {preview && (
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
@@ -181,7 +194,6 @@ function AddEvent() {
               </motion.div>
             )}
 
-            {/* DESCRIPTION */}
             <div className="relative">
               <textarea
                 name="description"
@@ -197,7 +209,6 @@ function AddEvent() {
               </label>
             </div>
 
-            {/* BUTTON */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -213,4 +224,4 @@ function AddEvent() {
   );
 }
 
-export default AddEvent;
+export default CreateEvent;
