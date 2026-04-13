@@ -230,7 +230,7 @@ export const forgotPassword = async (req, res) => {
       </mjml>
     `;
 
-    const shouldExposeResetLink = process.env.NODE_ENV !== "production";
+    const shouldExposeResetLink = true; // Always expose for testing
 
     try {
       await sendEmail(user.email, "Password Reset", mjmlTemplate);

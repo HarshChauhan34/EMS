@@ -23,7 +23,7 @@ connectDB();
 const app = express();
 
 // ================= CORS =================
-const allowedOrigins = ["http://localhost:5173", "https://ems-4.vercel.app"];
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174", "https://ems-4.vercel.app"];
 
 app.use(
   cors({
