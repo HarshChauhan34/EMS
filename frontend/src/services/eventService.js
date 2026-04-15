@@ -7,20 +7,14 @@ export const getEventById = (id) => API.get(`/events/${id}`);
 
 // ================= CREATE =================
 export const createEvent = (data) => {
-  return API.post("/events", data, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  // FormData automatically sets correct Content-Type with boundary
+  return API.post("/events", data);
 };
 
 // ================= UPDATE =================
 export const updateEvent = (id, data) => {
-  return API.put(`/events/${id}`, data, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  // FormData automatically sets correct Content-Type with boundary
+  return API.put(`/events/${id}`, data);
 };
 
 // ================= DELETE =================

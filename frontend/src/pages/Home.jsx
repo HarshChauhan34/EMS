@@ -3,6 +3,7 @@ import { getEvents } from "../services/eventService";
 import EventCard from "../components/EventCard";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { getStoredUser } from "../utils/authStorage";
 import {
   Search,
   CalendarDays,
@@ -29,7 +30,7 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = getStoredUser();
 
     if (user?.role === "admin") {
       navigate("/admin");

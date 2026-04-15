@@ -30,19 +30,23 @@ function EditEvent() {
       const data = res.data;
 
       setForm({
-        title: data.title || "",
-        description: data.description || "",
-        category: data.category || "",
-        date: data.date ? data.date.substring(0, 10) : "",
-        location: data.location || "",
-        price: data.price || "",
-        totalSeats: data.totalSeats || "",
-        availableSeats: data.availableSeats || "",
+        title: data?.title ?? "",
+        description: data?.description ?? "",
+        category: data?.category ?? "",
+        date: data?.date ? new Date(data.date).toISOString().split("T")[0] : "",
+        location: data?.location ?? "",
+        price: data?.price ?? "",
+        totalSeats: data?.totalSeats ?? "",
+        availableSeats: data?.availableSeats ?? "",
       });
 
-      if (data.image) {
-        // Handle both Cloudinary URLs and local URLs
-        setPreview(data.image.startsWith("http") ? data.image : `${BASE_URL}${data.image}`);
+      if (data?.image) {
+        const imageUrl = data.image.startsWith("http")
+          ? data.image
+          : `${BASE_URL}${data.image}`;
+        setPreview(imageUrl);
+      } else {
+        setPreview("");
       }
     } catch (error) {
       console.error("Fetch Error:", error);
@@ -71,25 +75,28 @@ function EditEvent() {
         ...prev,
         [name]: value === "" ? "" : Number(value),
       }));
-    } else {
-      setForm((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      return;
     }
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleImage = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      alert("Only image files allowed");
+      alert("Only image files are allowed");
+      e.target.value = "";
       return;
     }
 
     if (file.size > 2 * 1024 * 1024) {
       alert("Max 2MB image allowed");
+      e.target.value = "";
       return;
     }
 
@@ -97,8 +104,9 @@ function EditEvent() {
       URL.revokeObjectURL(preview);
     }
 
+    const objectUrl = URL.createObjectURL(file);
     setImage(file);
-    setPreview(URL.createObjectURL(file));
+    setPreview(objectUrl);
   };
 
   const handleSubmit = async (e) => {
@@ -108,13 +116,24 @@ function EditEvent() {
     try {
       const formData = new FormData();
 
-      Object.entries(form).forEach(([key, value]) => {
-        if (value !== "" && value !== null) {
-          formData.append(key, value);
-        }
-      });
+      formData.append("title", form.title.trim());
+      formData.append("description", form.description.trim());
+      formData.append("category", form.category.trim());
+      formData.append("date", form.date);
+      formData.append("location", form.location.trim());
+      formData.append("price", form.price === "" ? 0 : form.price);
+      formData.append(
+        "totalSeats",
+        form.totalSeats === "" ? 0 : form.totalSeats,
+      );
+      formData.append(
+        "availableSeats",
+        form.availableSeats === "" ? 0 : form.availableSeats,
+      );
 
-      if (image) formData.append("image", image);
+      if (image) {
+        formData.append("image", image);
+      }
 
       await API.put(`/events/${id}`, formData, {
         headers: {
@@ -148,7 +167,6 @@ function EditEvent() {
           onSubmit={handleSubmit}
           className="p-6 md:p-10 grid md:grid-cols-2 gap-10"
         >
-          {/* LEFT */}
           <div className="space-y-6">
             <h2 className="text-lg font-semibold text-indigo-300">
               📌 Event Details
@@ -196,7 +214,6 @@ function EditEvent() {
             />
           </div>
 
-          {/* RIGHT */}
           <div className="space-y-6">
             <h2 className="text-lg font-semibold text-pink-300">
               🖼 Media & Description
@@ -215,11 +232,14 @@ function EditEvent() {
             </div>
 
             {preview && (
-              <div className="overflow-hidden rounded-xl">
+              <div className="overflow-hidden rounded-xl border border-white/10">
                 <img
                   src={preview}
-                  alt="preview"
-                  className="w-full h-56 object-cover hover:scale-110 transition"
+                  alt="Event Preview"
+                  className="w-full h-56 object-cover"
+                  onError={(e) => {
+                    e.target.style.display = "none";
+                  }}
                 />
               </div>
             )}

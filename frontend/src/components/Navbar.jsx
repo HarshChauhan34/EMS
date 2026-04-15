@@ -2,6 +2,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User, LogOut, Ticket } from "lucide-react";
+import { getStoredUser } from "../utils/authStorage";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ function Navbar() {
   const [profileOpen, setProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getStoredUser();
 
   useEffect(() => {
     const handleClickOutside = (e) => {

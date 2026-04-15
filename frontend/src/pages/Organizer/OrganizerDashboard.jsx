@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getEvents } from "../../services/eventService";
 import { motion } from "framer-motion";
 import EventCard from "../../components/EventCard";
+import { getStoredUser } from "../../utils/authStorage";
 import {
   CalendarDays,
   ShieldCheck,
@@ -16,7 +17,7 @@ function OrganizerDashboard() {
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getStoredUser();
 
   const fetchEvents = useCallback(async () => {
     try {

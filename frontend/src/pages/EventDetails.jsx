@@ -4,6 +4,7 @@ import API from "../services/api";
 import { bookEvent } from "../services/bookingService";
 import { deleteEvent } from "../services/eventService";
 import { motion } from "framer-motion";
+import { getStoredUser } from "../utils/authStorage";
 import {
   CalendarDays,
   MapPin,
@@ -26,7 +27,7 @@ function EventDetails() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getStoredUser();
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
   const SERVER_URL = API_URL.replace("/api", "");

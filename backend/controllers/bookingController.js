@@ -3,7 +3,16 @@ import Event from "../models/Event.js";
 
 export const createBooking = async (req, res) => {
   try {
-    const { eventId, seats } = req.body;
+    if (req.user.role !== "user") {
+      return res.status(403).json({ message: "Only users can create booking" });
+    }
+
+    const { eventId } = req.body;
+    const seats = Number(req.body.seats);
+
+    if (!Number.isInteger(seats) || seats <= 0) {
+      return res.status(400).json({ message: "Seats must be a positive integer" });
+    }
 
     const event = await Event.findById(eventId);
 
@@ -78,8 +87,10 @@ export const cancelBooking = async (req, res) => {
     await booking.save();
 
     const event = await Event.findById(booking.event);
-    event.availableSeats += booking.seatsBooked;
-    await event.save();
+    if (event) {
+      event.availableSeats += booking.seatsBooked;
+      await event.save();
+    }
 
     res.json({ message: "Booking cancelled successfully" });
   } catch (error) {

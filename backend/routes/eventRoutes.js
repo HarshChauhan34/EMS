@@ -11,7 +11,7 @@ import {
   organizerOnly,
   adminOrOrganizer,
 } from "../middleware/roleMiddleware.js";
-import upload from "../middleware/cloudinaryUpload.js";
+import { uploadEventImage } from "../middleware/cloudinaryUpload.js";
 
 const router = express.Router();
 
@@ -20,35 +20,9 @@ router.get("/", getAllEvents);
 router.get("/:id", getEventById);
 
 // ================= ORGANIZER ROUTES =================
-router.post(
-  "/",
-  protect,
-  organizerOnly,
-  (req, res, next) => {
-    upload.single("image")(req, res, function (err) {
-      if (err) {
-        return res.status(400).json({ message: err.message });
-      }
-      next();
-    });
-  },
-  createEvent,
-);
+router.post("/", protect, organizerOnly, uploadEventImage, createEvent);
 
-router.put(
-  "/:id",
-  protect,
-  organizerOnly,
-  (req, res, next) => {
-    upload.single("image")(req, res, function (err) {
-      if (err) {
-        return res.status(400).json({ message: err.message });
-      }
-      next();
-    });
-  },
-  updateEvent,
-);
+router.put("/:id", protect, organizerOnly, uploadEventImage, updateEvent);
 
 // ================= ADMIN OR ORGANIZER =================
 router.delete("/:id", protect, adminOrOrganizer, deleteEvent);

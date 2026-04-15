@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { updateProfile } from "../services/userService";
 import { motion } from "framer-motion";
+import { getStoredUser } from "../utils/authStorage";
 import {
   UserCircle2,
   Mail,
@@ -21,7 +22,7 @@ function Profile() {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(() =>
-    JSON.parse(localStorage.getItem("user")),
+    getStoredUser(),
   );
   const [editMode, setEditMode] = useState(false);
   const [saving, setSaving] = useState(false);

@@ -1,10 +1,12 @@
 import Event from "../models/Event.js";
-import { cloudinary } from "../middleware/cloudinaryUpload.js";
+import {
+  cloudinary,
+  getUploadedImageData,
+} from "../middleware/cloudinaryUpload.js";
 
 // ================= CREATE EVENT =================
 export const createEvent = async (req, res) => {
   try {
-    // ✅ Only approved organizer can create event
     if (req.user.role !== "organizer" || !req.user.isApprovedOrganizer) {
       return res.status(403).json({
         message: "Only approved organizers can create events",
@@ -14,7 +16,20 @@ export const createEvent = async (req, res) => {
     const { title, description, category, date, location, price, totalSeats } =
       req.body;
 
-    const totalSeatsNumber = Number(totalSeats) || 0;
+    const priceNumber = Number(price);
+    const totalSeatsNumber = Number(totalSeats);
+
+    if (!Number.isFinite(priceNumber) || priceNumber < 0) {
+      return res.status(400).json({ message: "Price must be a valid number" });
+    }
+
+    if (!Number.isInteger(totalSeatsNumber) || totalSeatsNumber <= 0) {
+      return res.status(400).json({
+        message: "Total seats must be a positive integer",
+      });
+    }
+
+    const { imageUrl, imagePublicId } = getUploadedImageData(req.file);
 
     const event = await Event.create({
       title,
@@ -22,11 +37,11 @@ export const createEvent = async (req, res) => {
       category,
       date,
       location,
-      price: Number(price) || 0,
+      price: priceNumber,
       totalSeats: totalSeatsNumber,
       availableSeats: totalSeatsNumber,
-      image: req.file ? req.file.secure_url : "",
-      imagePublicId: req.file ? req.file.public_id : "",
+      image: imageUrl,
+      imagePublicId,
       createdBy: req.user._id,
       organizerName: req.user.name,
     });
@@ -94,7 +109,6 @@ export const getEventById = async (req, res) => {
 // ================= UPDATE EVENT =================
 export const updateEvent = async (req, res) => {
   try {
-    // ✅ Only approved organizer can update
     if (req.user.role !== "organizer" || !req.user.isApprovedOrganizer) {
       return res.status(403).json({
         message: "Only approved organizers can update events",
@@ -107,7 +121,6 @@ export const updateEvent = async (req, res) => {
       return res.status(404).json({ message: "Event not found" });
     }
 
-    // ✅ Organizer can update only own event
     if (event.createdBy.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         message: "You can update only your own events",
@@ -135,21 +148,40 @@ export const updateEvent = async (req, res) => {
       }
     });
 
+    if (!Number.isFinite(event.price) || event.price < 0) {
+      return res.status(400).json({ message: "Price must be a valid number" });
+    }
+
+    if (!Number.isInteger(event.totalSeats) || event.totalSeats <= 0) {
+      return res.status(400).json({
+        message: "Total seats must be a positive integer",
+      });
+    }
+
+    if (!Number.isInteger(event.availableSeats) || event.availableSeats < 0) {
+      return res.status(400).json({
+        message: "Available seats must be zero or a positive integer",
+      });
+    }
+
+    if (event.availableSeats > event.totalSeats) {
+      return res.status(400).json({
+        message: "Available seats cannot be greater than total seats",
+      });
+    }
+
     if (req.file) {
-      // ✅ Delete old image from Cloudinary if it exists
       if (event.imagePublicId) {
         try {
           await cloudinary.uploader.destroy(event.imagePublicId);
-          console.log("✅ Old image deleted from Cloudinary");
         } catch (deleteError) {
-          console.error("⚠️ Could not delete old image:", deleteError.message);
-          // Continue with upload even if deletion fails
+          console.error("Could not delete old image:", deleteError.message);
         }
       }
 
-      // ✅ Use new uploaded image
-      event.image = req.file.secure_url;
-      event.imagePublicId = req.file.public_id;
+      const { imageUrl, imagePublicId } = getUploadedImageData(req.file);
+      event.image = imageUrl;
+      event.imagePublicId = imagePublicId;
     }
 
     event.organizerName = req.user.name;
@@ -172,8 +204,6 @@ export const deleteEvent = async (req, res) => {
       return res.status(404).json({ message: "Event not found" });
     }
 
-    // ✅ Organizer can delete only own event
-    // ✅ Admin can delete any event
     if (
       req.user.role === "organizer" &&
       event.createdBy.toString() !== req.user._id.toString()
@@ -192,10 +222,11 @@ export const deleteEvent = async (req, res) => {
     if (event.imagePublicId) {
       try {
         await cloudinary.uploader.destroy(event.imagePublicId);
-        console.log("✅ Event image deleted from Cloudinary");
       } catch (deleteError) {
-        console.error("⚠️ Could not delete image from Cloudinary:", deleteError.message);
-        // Continue with event deletion even if image deletion fails
+        console.error(
+          "Could not delete image from Cloudinary:",
+          deleteError.message,
+        );
       }
     }
 

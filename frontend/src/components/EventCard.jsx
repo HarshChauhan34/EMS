@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { bookEvent } from "../services/bookingService";
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getStoredUser } from "../utils/authStorage";
 import {
   CalendarDays,
   MapPin,
@@ -21,7 +22,7 @@ function EventCard({ event, refresh }) {
   const [liked, setLiked] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getStoredUser();
 
   const isAdmin = user?.role === "admin";
   const isOrganizer = user?.role === "organizer";
