@@ -1,9 +1,9 @@
 import axios from "axios";
 import { getStoredUser } from "../utils/authStorage";
 
-// const isLocalhost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
-
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+export const BASE_URL = (
+  import.meta.env.VITE_API_URL || "https://ems-4-dflv.onrender.com/api"
+).replace(/\/+$/, "");
 
 const API = axios.create({
   baseURL: BASE_URL,

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import API from "../../services/api";
+import API, { BASE_URL } from "../../services/api";
 import { motion } from "framer-motion";
 import { Mail, Loader2, ArrowLeft, CheckCircle } from "lucide-react";
 
@@ -38,10 +38,19 @@ function ForgotPassword() {
 
       setResetLink(res.data?.resetURL || "");
     } catch (error) {
-      const backendMessage =
-        error.response?.data?.message ||
-        "Could not reach forgot-password service. Please verify backend is running on port 5000.";
-      alert(backendMessage);
+      const backendMessage = error.response?.data?.message;
+      const networkMessage = `Could not reach forgot-password service at ${BASE_URL}. Please check deployed API env/config and redeploy.`;
+
+      const finalMessage = backendMessage || networkMessage;
+
+      console.error("Forgot password request failed:", {
+        baseUrl: BASE_URL,
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+
+      alert(finalMessage);
     } finally {
       setLoading(false);
     }
