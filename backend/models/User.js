@@ -106,8 +106,8 @@ userSchema.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 
-// ================= AUTO DELETE EXPIRED TOKENS =================
-userSchema.index({ passwordResetExpires: 1 }, { expireAfterSeconds: 0 });
+// Helpful for reset lookups without deleting user records
+userSchema.index({ passwordResetToken: 1, passwordResetExpires: 1 });
 
 const User = mongoose.model("User", userSchema);
 

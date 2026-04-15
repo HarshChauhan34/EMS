@@ -38,7 +38,10 @@ function ForgotPassword() {
 
       setResetLink(res.data?.resetURL || "");
     } catch (error) {
-      alert(error.response?.data?.message || "Something went wrong");
+      const backendMessage =
+        error.response?.data?.message ||
+        "Could not reach forgot-password service. Please verify backend is running on port 5000.";
+      alert(backendMessage);
     } finally {
       setLoading(false);
     }
