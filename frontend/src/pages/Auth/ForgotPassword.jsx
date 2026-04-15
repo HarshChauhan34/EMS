@@ -12,6 +12,9 @@ function ForgotPassword() {
   const [message, setMessage] = useState("");
   const [resetLink, setResetLink] = useState("");
 
+  const requestForgotPassword = (cleanEmail) =>
+    API.post("/auth/forgot-password", { email: cleanEmail });
+
   // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,9 +31,25 @@ function ForgotPassword() {
       setMessage("");
       setResetLink("");
 
-      const res = await API.post("/auth/forgot-password", {
-        email: cleanEmail,
-      });
+      let res;
+
+      try {
+        res = await requestForgotPassword(cleanEmail);
+      } catch (firstError) {
+        const shouldRetry =
+          !firstError.response &&
+          (firstError.code === "ECONNABORTED" ||
+            String(firstError.message || "")
+              .toLowerCase()
+              .includes("network"));
+
+        if (!shouldRetry) {
+          throw firstError;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        res = await requestForgotPassword(cleanEmail);
+      }
 
       setMessage(
         res.data?.message || "If that email exists, we have sent a reset link.",
@@ -39,7 +58,7 @@ function ForgotPassword() {
       setResetLink(res.data?.resetURL || "");
     } catch (error) {
       const backendMessage = error.response?.data?.message;
-      const networkMessage = `Could not reach forgot-password service at ${BASE_URL}. Please check deployed API env/config and redeploy.`;
+      const networkMessage = `Could not reach forgot-password service at ${BASE_URL}. Server may be waking up. Please try again in 30 seconds.`;
 
       const finalMessage = backendMessage || networkMessage;
 
