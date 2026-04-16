@@ -83,7 +83,7 @@ function Navbar() {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-fuchsia-400/65 to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-cyan-300/50 to-transparent" />
 
-      <div className="relative mx-auto flex min-h-19 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="relative flex min-h-19 w-full items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link
           to={getHomeRoute()}
           className="group flex shrink-0 items-center py-1"
@@ -201,7 +201,7 @@ function Navbar() {
             transition={{ duration: 0.2 }}
             className="border-t border-white/10 bg-slate-950/94 backdrop-blur-2xl md:hidden"
           >
-            <div className="mx-auto max-w-7xl px-4 py-4">
+            <div className="w-full px-4 py-4">
               <div className="space-y-3 rounded-3xl border border-white/10 bg-white/6 p-4 shadow-[0_12px_40px_rgba(2,6,23,0.35)]">
                 {user && (
                   <div className="mb-1 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/8 p-3">

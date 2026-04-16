@@ -153,7 +153,7 @@ function EditEvent() {
 
   return (
     <div className="site-shell text-white flex items-center justify-center px-4 py-10">
-      <div className="glass-panel w-full max-w-6xl rounded-3xl overflow-hidden">
+      <div className="glass-panel w-full rounded-3xl overflow-hidden">
         <div className="p-6 md:p-8 border-b border-white/10 bg-linear-to-r from-pink-500/10 to-indigo-500/10">
           <h1 className="text-3xl md:text-4xl font-bold bg-linear-to-r from-pink-400 to-indigo-400 text-transparent bg-clip-text">
             ✏ Edit Event

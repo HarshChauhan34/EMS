@@ -81,7 +81,7 @@ function MyBookings() {
 
   return (
     <div className="site-shell text-white px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+      <div className="w-full">
         {/* HEADER */}
         <div className="glass-panel relative overflow-hidden rounded-[30px] px-5 py-8 sm:px-8 sm:py-10 mb-8">
           <div className="absolute -top-16 -left-10 h-40 w-40 rounded-full bg-pink-500/20 blur-3xl" />

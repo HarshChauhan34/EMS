@@ -97,7 +97,7 @@ function CreateEvent() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="glass-panel w-full max-w-7xl rounded-3xl overflow-hidden"
+        className="glass-panel w-full rounded-3xl overflow-hidden"
       >
         <div className="relative p-10 text-center border-b border-white/10">
           <div className="absolute inset-0 bg-linear-to-r from-pink-500/10 via-purple-500/10 to-indigo-500/10 blur-2xl" />

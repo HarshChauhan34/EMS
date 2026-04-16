@@ -99,7 +99,7 @@ function Home() {
 
   return (
     <div className="site-shell text-white px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+      <div className="w-full">
         {/* HERO */}
         <div className="glass-panel relative overflow-hidden rounded-4xl px-5 py-10 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
           <div className="absolute -left-16 -top-16 h-44 w-44 rounded-full bg-pink-500/20 blur-3xl" />

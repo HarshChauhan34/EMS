@@ -80,7 +80,7 @@ function OrganizerDashboard() {
 
   return (
     <div className="site-shell text-white p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-7xl">
+      <div className="w-full">
         {/* HEADER */}
         <div className="glass-panel relative mb-8 overflow-hidden rounded-[30px] p-6 sm:p-8">
           <div className="absolute -top-16 -left-10 h-40 w-40 rounded-full bg-pink-500/20 blur-3xl" />

@@ -73,7 +73,7 @@ function Profile() {
 
   return (
     <div className="site-shell text-white px-4 py-6 sm:px-6 lg:px-8 tex">
-      <div className="mx-auto max-w-7xl">
+      <div className="w-full">
         {/* TOP PROFILE HERO */}
         <div className="glass-panel relative overflow-hidden rounded-4xl p-6 sm:p-8 lg:p-10">
           <div className="absolute -left-16 -top-16 h-44 w-44 rounded-full bg-pink-500/20 blur-3xl" />
