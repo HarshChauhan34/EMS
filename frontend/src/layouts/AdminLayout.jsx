@@ -15,9 +15,9 @@ function AdminLayout() {
     }`;
 
   return (
-    <div className="min-h-screen flex bg-linear-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white">
+    <div className="site-shell min-h-screen flex text-white">
       {/* SIDEBAR */}
-      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-72 flex-col border-r border-white/10 bg-white/10 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.22)]">
+      <aside className="glass-panel hidden md:flex fixed left-0 top-0 h-screen w-72 flex-col border-r border-white/10 rounded-none">
         <div className="relative flex h-full flex-col p-6">
           <div className="absolute -top-10 -left-10 h-32 w-32 rounded-full bg-pink-500/20 blur-3xl" />
           <div className="absolute bottom-10 -right-10 h-40 w-40 rounded-full bg-cyan-500/10 blur-3xl" />
@@ -78,7 +78,7 @@ function AdminLayout() {
       </aside>
 
       {/* MOBILE TOPBAR */}
-      <div className="fixed top-0 left-0 right-0 z-30 flex md:hidden items-center justify-between border-b border-white/10 bg-[#081120]/80 px-4 py-4 backdrop-blur-2xl">
+      <div className="glass-panel fixed top-0 left-0 right-0 z-30 flex md:hidden items-center justify-between border-b border-white/10 rounded-none px-4 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 via-violet-500 to-pink-500 shadow-lg">
             ⚡
@@ -93,26 +93,26 @@ function AdminLayout() {
       </div>
 
       {/* MOBILE NAV */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 grid md:hidden grid-cols-3 gap-2 border-t border-white/10 bg-[#081120]/85 p-3 backdrop-blur-2xl">
+      <div className="glass-panel fixed bottom-0 left-0 right-0 z-30 grid md:hidden grid-cols-3 gap-2 border-t border-white/10 rounded-none p-3">
         <button
           onClick={() => navigate("/admin")}
           className={`${navClass("/admin")} px-3 py-2 text-center text-sm`}
         >
-          🎛
+          🎛 Dashboard
         </button>
 
         <button
           onClick={() => navigate("/admin/users")}
           className={`${navClass("/admin/users")} px-3 py-2 text-center text-sm`}
         >
-          👥
+          👥 Users
         </button>
 
         <button
           onClick={() => navigate("/admin/organizers")}
           className={`${navClass("/admin/organizers")} px-3 py-2 text-center text-sm`}
         >
-          🧑‍💼
+          🧑‍💼Organizers
         </button>
       </div>
 

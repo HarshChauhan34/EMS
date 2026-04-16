@@ -76,17 +76,17 @@ function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-linear-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81]">
+    <div className="auth-shell">
       {/* BACKGROUND GLOW */}
-      <div className="absolute w-72 h-72 bg-purple-600 rounded-full blur-[120px] opacity-30 top-10 left-10"></div>
-      <div className="absolute w-72 h-72 bg-pink-500 rounded-full blur-[120px] opacity-30 bottom-10 right-10"></div>
+      <div className="absolute h-72 w-72 rounded-full bg-purple-600 opacity-30 blur-[120px] top-10 left-10" />
+      <div className="absolute h-72 w-72 rounded-full bg-pink-500 opacity-30 blur-[120px] bottom-10 right-10" />
 
       {/* CARD */}
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="relative w-full max-w-md backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 text-white"
+        className="auth-card relative text-white"
       >
         {/* HEADER */}
         <div className="text-center mb-8">
@@ -114,14 +114,14 @@ function ForgotPassword() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 outline-none transition"
+            className="auth-input"
           />
 
           {/* BUTTON */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center items-center gap-2 bg-linear-to-r from-purple-500 to-pink-500 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 transition disabled:opacity-50"
+            className="btn-primary flex w-full items-center justify-center gap-2 py-3 disabled:opacity-50"
           >
             {loading ? (
               <>
@@ -164,7 +164,7 @@ function ForgotPassword() {
         {/* BACK BUTTON */}
         <button
           onClick={() => navigate("/login")}
-          className="w-full mt-5 flex justify-center items-center gap-2 bg-white/10 border border-white/20 py-3 rounded-xl hover:bg-white/20 transition"
+          className="btn-secondary mt-5 flex w-full items-center justify-center gap-2 py-3"
         >
           <ArrowLeft size={18} />
           Back to Login

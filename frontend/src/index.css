@@ -1,85 +1,186 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap");
 @import "tailwindcss";
 
-html,
-body,
-#root {
-  min-height: 100%;
+@layer base {
+  :root {
+    --bg-deep: #070c1a;
+    --bg-mid: #131c35;
+    --bg-soft: #1d2a52;
+    --txt-main: #e7ecff;
+    --txt-soft: #a9b6d3;
+    --line-soft: rgba(226, 232, 255, 0.14);
+    --glass-strong: rgba(255, 255, 255, 0.1);
+    --glass-soft: rgba(255, 255, 255, 0.06);
+    --brand-a: #ec4899;
+    --brand-b: #8b5cf6;
+    --brand-c: #06b6d4;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    margin: 0;
+    font-family: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+      sans-serif;
+    background:
+      radial-gradient(
+        45rem 30rem at 10% 5%,
+        color-mix(in oklab, var(--brand-a) 22%, transparent),
+        transparent
+      ),
+      radial-gradient(
+        45rem 30rem at 90% 0%,
+        color-mix(in oklab, var(--brand-c) 18%, transparent),
+        transparent
+      ),
+      linear-gradient(135deg, var(--bg-deep), var(--bg-mid) 45%, var(--bg-soft));
+    color: var(--txt-main);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Sora", "Manrope", ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--brand-b) 40%, transparent);
+    color: white;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #070c1a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #7c3aed, #db2777);
+    border-radius: 999px;
+  }
 }
 
-body {
-  transition:
-    background-color 0.25s ease,
-    color 0.25s ease;
-}
+@layer components {
+  .site-shell {
+    min-height: 100vh;
+    background:
+      radial-gradient(
+        34rem 24rem at -10% -5%,
+        color-mix(in oklab, var(--brand-a) 20%, transparent),
+        transparent
+      ),
+      radial-gradient(
+        38rem 25rem at 110% 0%,
+        color-mix(in oklab, var(--brand-c) 18%, transparent),
+        transparent
+      ),
+      linear-gradient(135deg, var(--bg-deep), var(--bg-mid) 46%, var(--bg-soft));
+  }
 
-.theme-dark body {
-  background-color: #0b1020;
-  color: #f8fafc;
-}
+  .glass-panel {
+    border: 1px solid var(--line-soft);
+    background: linear-gradient(
+      145deg,
+      color-mix(in oklab, var(--glass-strong) 78%, transparent),
+      color-mix(in oklab, var(--glass-soft) 86%, transparent)
+    );
+    box-shadow:
+      0 22px 60px rgba(8, 12, 28, 0.38),
+      inset 0 1px 0 rgba(255, 255, 255, 0.09);
+    backdrop-filter: blur(20px);
+  }
 
-.theme-light body {
-  background-color: #f3f4f6;
-  color: #111827;
-}
+  .auth-shell {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background:
+      radial-gradient(
+        26rem 22rem at 0% 0%,
+        color-mix(in oklab, var(--brand-b) 35%, transparent),
+        transparent
+      ),
+      radial-gradient(
+        30rem 24rem at 100% 100%,
+        color-mix(in oklab, var(--brand-a) 30%, transparent),
+        transparent
+      ),
+      linear-gradient(145deg, #0b1024, #1b1f43, #31275e);
+  }
 
-.theme-light .theme-page {
-  color: #111827;
-}
+  .auth-card {
+    width: 100%;
+    max-width: 28rem;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    border: 1px solid var(--line-soft);
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.14),
+      rgba(255, 255, 255, 0.07)
+    );
+    box-shadow: 0 24px 70px rgba(7, 10, 23, 0.48);
+    backdrop-filter: blur(18px);
+  }
 
-.theme-light .theme-page .text-white {
-  color: #111827 !important;
-}
+  .auth-input {
+    width: 100%;
+    border-radius: 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(10, 15, 32, 0.44);
+    color: white;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+  }
 
-.theme-light .theme-page .text-gray-300,
-.theme-light .theme-page .text-gray-400,
-.theme-light .theme-page .text-gray-500 {
-  color: #374151 !important;
-}
+  .auth-input::placeholder {
+    color: #9ca3af;
+  }
 
-.theme-light .bg-white\/10,
-.theme-light .bg-white\/5 {
-  background-color: rgba(255, 255, 255, 0.88) !important;
-  border-color: rgba(31, 41, 55, 0.15) !important;
-}
+  .auth-input:focus {
+    outline: none;
+    border-color: rgba(139, 92, 246, 0.7);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+    background: rgba(10, 15, 32, 0.62);
+  }
 
-.theme-light .from-\[\#0f172a\],
-.theme-light .from-\[\#0f0c29\] {
-  --tw-gradient-from: #f3f4f6 var(--tw-gradient-from-position) !important;
-}
+  .btn-primary {
+    border-radius: 0.8rem;
+    background-image: linear-gradient(95deg, #d946ef, #7c3aed, #2563eb);
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 14px 34px rgba(76, 29, 149, 0.32);
+    transition: all 0.2s ease;
+  }
 
-.theme-light .via-\[\#1e1b4b\],
-.theme-light .via-\[\#302b63\] {
-  --tw-gradient-via: #e5e7eb var(--tw-gradient-via-position) !important;
-}
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 38px rgba(76, 29, 149, 0.4);
+  }
 
-.theme-light .to-\[\#312e81\],
-.theme-light .to-\[\#24243e\],
-.theme-light .to-black {
-  --tw-gradient-to: #d1d5db var(--tw-gradient-to-position) !important;
-}
+  .btn-secondary {
+    border-radius: 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: #e5e7eb;
+    transition: all 0.2s ease;
+  }
 
-.theme-light .theme-navbar {
-  background-image: linear-gradient(to right, #e2e8f0, #dbeafe, #e9d5ff);
-  color: #111827;
-}
-
-.theme-light .theme-navbar a,
-.theme-light .theme-navbar button {
-  color: #111827;
-}
-
-.theme-light .theme-page button[class*="bg-linear-to-r"],
-.theme-light .theme-page a[class*="bg-linear-to-r"],
-.theme-light .theme-page button[class*="bg-indigo-"],
-.theme-light .theme-page button[class*="bg-purple-"],
-.theme-light .theme-page button[class*="bg-blue-"],
-.theme-light .theme-page button[class*="bg-pink-"],
-.theme-light .theme-page button[class*="bg-red-"],
-.theme-light .theme-page button[class*="bg-green-"] {
-  color: #ffffff !important;
-}
-
-.theme-light .theme-page input,
-.theme-light .theme-page textarea {
-  color: #111827;
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
 }

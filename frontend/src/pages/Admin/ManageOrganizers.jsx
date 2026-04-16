@@ -30,12 +30,7 @@ function ManageOrganizers() {
     try {
       const res = await getAllOrganizers();
       const safeData = Array.isArray(res.data) ? res.data : [];
-
-      const filteredOrganizers = safeData.filter(
-        (org) => org.organizerRequestStatus !== "rejected",
-      );
-
-      setOrganizers(filteredOrganizers);
+      setOrganizers(safeData);
     } catch (error) {
       console.log(error);
       alert(error.response?.data?.message || "Failed to load organizers");
@@ -88,8 +83,17 @@ function ManageOrganizers() {
       setLoadingId(id);
       await rejectOrganizer(id);
 
-      setOrganizers((prev) => prev.filter((org) => org._id !== id));
-      setOpenIds((prev) => prev.filter((item) => item !== id));
+      setOrganizers((prev) =>
+        prev.map((org) =>
+          org._id === id
+            ? {
+                ...org,
+                organizerRequestStatus: "rejected",
+                isApprovedOrganizer: false,
+              }
+            : org,
+        ),
+      );
 
       alert("Organizer rejected successfully");
     } catch (error) {
@@ -154,14 +158,17 @@ function ManageOrganizers() {
     if (status === "approved") {
       return "border border-emerald-400/20 bg-emerald-400/10 text-emerald-300";
     }
+    if (status === "rejected") {
+      return "border border-rose-400/20 bg-rose-400/10 text-rose-300";
+    }
 
     return "border border-yellow-400/20 bg-yellow-400/10 text-yellow-300";
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#0b1020] via-[#161b33] to-[#1d1a52] text-white p-4 sm:p-6 lg:p-8">
+    <div className="site-shell text-white p-4 sm:p-6 lg:p-8">
       {/* HEADER */}
-      <div className="relative mb-8 overflow-hidden rounded-[28px] border border-white/10 bg-white/10 p-6 sm:p-8 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl">
+      <div className="glass-panel relative mb-8 overflow-hidden rounded-[28px] p-6 sm:p-8">
         <div className="absolute -top-16 -left-10 h-40 w-40 rounded-full bg-fuchsia-500/20 blur-3xl" />
         <div className="absolute -bottom-16 -right-10 h-48 w-48 rounded-full bg-cyan-500/20 blur-3xl" />
 
@@ -190,7 +197,7 @@ function ManageOrganizers() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: index * 0.05 }}
               whileHover={{ y: -6, scale: 1.01 }}
-              className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
+              className="glass-panel relative overflow-hidden rounded-3xl p-5"
             >
               <div
                 className={`absolute top-0 left-0 h-1.5 w-full bg-linear-to-r ${card.linear}`}
@@ -215,7 +222,7 @@ function ManageOrganizers() {
       </div>
 
       {/* SEARCH + FILTER + LIST */}
-      <div className="rounded-[28px] border border-white/10 bg-white/10 p-5 sm:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
+      <div className="glass-panel rounded-[28px] p-5 sm:p-6">
         <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <div>
             <h2 className="text-2xl font-semibold">Organizers</h2>
@@ -249,6 +256,9 @@ function ManageOrganizers() {
               </option>
               <option value="pending" className="bg-slate-900">
                 Pending
+              </option>
+              <option value="rejected" className="bg-slate-900">
+                Rejected
               </option>
             </select>
           </div>
@@ -298,6 +308,8 @@ function ManageOrganizers() {
                           >
                             {status === "approved" ? (
                               <CheckCircle2 className="h-3.5 w-3.5" />
+                            ) : status === "rejected" ? (
+                              <XCircle className="h-3.5 w-3.5" />
                             ) : (
                               <Clock3 className="h-3.5 w-3.5" />
                             )}

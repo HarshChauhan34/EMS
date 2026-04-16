@@ -80,10 +80,10 @@ function MyBookings() {
   }, [bookings]);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white px-4 py-6 sm:px-6 lg:px-8">
+    <div className="site-shell text-white px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* HEADER */}
-        <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-white/10 px-5 py-8 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl sm:px-8 sm:py-10 mb-8">
+        <div className="glass-panel relative overflow-hidden rounded-[30px] px-5 py-8 sm:px-8 sm:py-10 mb-8">
           <div className="absolute -top-16 -left-10 h-40 w-40 rounded-full bg-pink-500/20 blur-3xl" />
           <div className="absolute -bottom-16 -right-10 h-48 w-48 rounded-full bg-cyan-500/20 blur-3xl" />
 
@@ -111,7 +111,7 @@ function MyBookings() {
 
         {/* LOADING */}
         {loading && (
-          <div className="rounded-[28px] border border-white/10 bg-white/10 px-6 py-16 text-center shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
+          <div className="glass-panel rounded-[28px] px-6 py-16 text-center">
             <div className="mx-auto mb-4 h-14 w-14 animate-pulse rounded-2xl bg-linear-to-r from-fuchsia-500 to-indigo-600" />
             <p className="text-lg font-semibold text-white">
               Loading bookings...
@@ -124,7 +124,7 @@ function MyBookings() {
 
         {/* EMPTY STATE */}
         {!loading && bookings.length === 0 && (
-          <div className="rounded-[28px] border border-dashed border-white/10 bg-white/10 px-6 py-16 text-center shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
+          <div className="glass-panel rounded-[28px] border-dashed px-6 py-16 text-center">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-r from-pink-500 to-violet-600 shadow-lg">
               <Ticket className="h-7 w-7 text-white" />
             </div>
@@ -152,7 +152,7 @@ function MyBookings() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35, delay: index * 0.04 }}
                   whileHover={{ y: -6, scale: 1.01 }}
-                  className="relative flex min-h-80 flex-col justify-between overflow-hidden rounded-[28px] border border-white/10 bg-white/10 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.18)] backdrop-blur-2xl"
+                  className="glass-panel relative flex min-h-80 flex-col justify-between overflow-hidden rounded-[28px] p-5"
                 >
                   <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-fuchsia-500/10 blur-2xl" />
                   <div className="absolute -left-10 -bottom-10 h-24 w-24 rounded-full bg-cyan-500/10 blur-2xl" />

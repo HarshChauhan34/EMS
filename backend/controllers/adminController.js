@@ -104,7 +104,7 @@ export const approveOrganizer = async (req, res) => {
 // ================= REJECT ORGANIZER =================
 export const rejectOrganizer = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id).select("-password");
 
     if (!user) {
       return res.status(404).json({
@@ -118,25 +118,14 @@ export const rejectOrganizer = async (req, res) => {
       });
     }
 
-    // find organizer events
-    const organizerEvents = await Event.find({ createdBy: user._id }).select(
-      "_id",
-    );
-    const eventIds = organizerEvents.map((event) => event._id);
+    user.organizerRequestStatus = "rejected";
+    user.isApprovedOrganizer = false;
 
-    // delete all bookings related to organizer events
-    if (eventIds.length > 0) {
-      await Booking.deleteMany({ event: { $in: eventIds } });
-    }
-
-    // delete organizer events
-    await Event.deleteMany({ createdBy: user._id });
-
-    // delete organizer user account
-    await user.deleteOne();
+    await user.save();
 
     return res.json({
-      message: "Organizer rejected and removed successfully",
+      message: "Organizer request rejected successfully",
+      user,
     });
   } catch (error) {
     console.error("REJECT ORGANIZER ERROR:", error);

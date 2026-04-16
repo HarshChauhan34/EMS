@@ -72,10 +72,10 @@ function Profile() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white px-4 py-6 sm:px-6 lg:px-8">
+    <div className="site-shell text-white px-4 py-6 sm:px-6 lg:px-8 tex">
       <div className="mx-auto max-w-7xl">
         {/* TOP PROFILE HERO */}
-        <div className="relative overflow-hidden rounded-4xl border border-white/10 bg-white/10 p-6 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl sm:p-8 lg:p-10">
+        <div className="glass-panel relative overflow-hidden rounded-4xl p-6 sm:p-8 lg:p-10">
           <div className="absolute -left-16 -top-16 h-44 w-44 rounded-full bg-pink-500/20 blur-3xl" />
           <div className="absolute -right-16 top-8 h-52 w-52 rounded-full bg-cyan-500/15 blur-3xl" />
           <div className="absolute bottom-0 left-1/3 h-36 w-36 rounded-full bg-violet-500/20 blur-3xl" />
@@ -159,7 +159,7 @@ function Profile() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35 }}
-            className="rounded-[28px] border border-white/10 bg-white/10 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl sm:p-7"
+            className="glass-panel rounded-[28px] p-6 sm:p-7"
           >
             <div className="mb-6 flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r from-pink-500 to-violet-600 shadow-lg">
@@ -230,7 +230,7 @@ function Profile() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: 0.05 }}
-            className="rounded-[28px] border border-white/10 bg-white/10 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl sm:p-7"
+            className="glass-panel rounded-[28px] p-6 sm:p-7"
           >
             <div className="mb-6 flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r from-cyan-500 to-indigo-600 shadow-lg">
@@ -310,13 +310,7 @@ function Profile() {
                 </button>
               )}
 
-              <button
-                onClick={() => navigate("/")}
-                className="flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 py-3 font-semibold text-white transition hover:bg-white/15"
-              >
-                <Home className="h-4 w-4" />
-                Home
-              </button>
+              
 
               <button
                 onClick={logoutHandler}

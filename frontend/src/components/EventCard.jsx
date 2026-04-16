@@ -102,7 +102,7 @@ function EventCard({ event, refresh }) {
       whileHover={{ y: -10, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 220, damping: 18 }}
       onClick={() => navigate(`/event/${event._id}`)}
-      className="group relative flex h-140 cursor-pointer flex-col overflow-hidden rounded-[28px] border border-white/15 bg-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.25)] backdrop-blur-2xl transition-all duration-500 hover:border-white/25 hover:shadow-[0_30px_80px_rgba(99,102,241,0.22)]"
+      className="glass-panel group relative flex min-h-[34rem] cursor-pointer flex-col overflow-hidden rounded-[28px] transition-all duration-500 hover:border-white/25 hover:shadow-[0_30px_80px_rgba(99,102,241,0.22)] sm:min-h-[35rem]"
     >
       {/* decorative glow */}
       <div className="pointer-events-none absolute -left-16 -top-16 h-36 w-36 rounded-full bg-pink-500/20 blur-3xl" />

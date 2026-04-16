@@ -143,8 +143,8 @@ function EventDetails() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-[#081120] via-[#151a35] to-[#24195c] flex items-center justify-center px-4">
-        <div className="rounded-[28px] border border-white/10 bg-white/10 px-8 py-12 text-center text-white shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
+      <div className="site-shell flex items-center justify-center px-4">
+        <div className="glass-panel rounded-[28px] px-8 py-12 text-center text-white">
           <div className="mx-auto mb-4 h-14 w-14 animate-pulse rounded-2xl bg-linear-to-r from-fuchsia-500 to-indigo-600" />
           <p className="text-xl font-semibold">Loading event...</p>
           <p className="mt-2 text-sm text-slate-300">
@@ -157,7 +157,7 @@ function EventDetails() {
 
   if (!event) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-[#081120] via-[#151a35] to-[#24195c] flex items-center justify-center px-4">
+      <div className="site-shell flex items-center justify-center px-4">
         <div className="rounded-[28px] border border-red-400/20 bg-red-500/10 px-8 py-12 text-center text-red-300 shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
           <p className="text-2xl font-bold">Event not found</p>
           <button
@@ -172,7 +172,7 @@ function EventDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white px-4 py-6 sm:px-6 lg:px-8">
+    <div className="site-shell text-white px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* top actions */}
         <div className="mb-6 flex items-center justify-between gap-3">
@@ -198,7 +198,7 @@ function EventDetails() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
-              className="relative overflow-hidden rounded-4xl border border-white/10 bg-white/10 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl"
+              className="glass-panel relative overflow-hidden rounded-4xl"
             >
               <div className="relative group">
                 <img
@@ -249,7 +249,7 @@ function EventDetails() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.05 }}
-              className="rounded-[28px] border border-white/10 bg-white/10 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl sm:p-7"
+              className="glass-panel rounded-[28px] p-6 sm:p-7"
             >
               <div className="mb-5 flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r from-pink-500 to-violet-600 shadow-lg">
@@ -290,7 +290,7 @@ function EventDetails() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: index * 0.05 }}
                     whileHover={{ y: -6, scale: 1.01 }}
-                    className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
+                    className="glass-panel relative overflow-hidden rounded-3xl p-5"
                   >
                     <div
                       className={`absolute top-0 left-0 h-1.5 w-full bg-linear-to-r ${card.linear}`}
@@ -322,7 +322,7 @@ function EventDetails() {
             transition={{ duration: 0.35, delay: 0.08 }}
             className="h-fit xl:sticky xl:top-24"
           >
-            <div className="overflow-hidden rounded-[28px] border border-white/10 bg-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.22)] backdrop-blur-2xl">
+            <div className="glass-panel overflow-hidden rounded-[28px]">
               <div className="bg-linear-to-r from-fuchsia-500 via-violet-500 to-indigo-600 px-6 py-5">
                 <h2 className="text-2xl font-bold text-white">Event Actions</h2>
                 <p className="mt-1 text-sm text-white/80">

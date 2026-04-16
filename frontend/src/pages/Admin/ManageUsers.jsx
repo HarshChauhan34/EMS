@@ -167,9 +167,9 @@ function ManageUsers() {
   ];
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#0b1020] via-[#161b33] to-[#1d1a52] text-white p-4 sm:p-6 lg:p-8">
+    <div className="site-shell text-white p-4 sm:p-6 lg:p-8">
       {/* HEADER */}
-      <div className="relative mb-8 overflow-hidden rounded-[28px] border border-white/10 bg-white/10 p-6 sm:p-8 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl">
+      <div className="glass-panel relative mb-8 overflow-hidden rounded-[28px] p-6 sm:p-8">
         <div className="absolute -top-16 -left-10 h-40 w-40 rounded-full bg-fuchsia-500/20 blur-3xl" />
         <div className="absolute -bottom-16 -right-10 h-48 w-48 rounded-full bg-cyan-500/20 blur-3xl" />
 
@@ -198,7 +198,7 @@ function ManageUsers() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: index * 0.05 }}
               whileHover={{ y: -6, scale: 1.01 }}
-              className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
+              className="glass-panel relative overflow-hidden rounded-3xl p-5"
             >
               <div
                 className={`absolute top-0 left-0 h-1.5 w-full bg-linear-to-r ${card.linear}`}
@@ -223,7 +223,7 @@ function ManageUsers() {
       </div>
 
       {/* SEARCH + LIST */}
-      <div className="rounded-[28px] border border-white/10 bg-white/10 p-5 sm:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
+      <div className="glass-panel rounded-[28px] p-5 sm:p-6">
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h2 className="text-2xl font-semibold">Users</h2>

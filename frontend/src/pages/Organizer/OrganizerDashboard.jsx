@@ -79,10 +79,10 @@ function OrganizerDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#081120] via-[#151a35] to-[#24195c] text-white p-4 sm:p-6 lg:p-8">
+    <div className="site-shell text-white p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
         {/* HEADER */}
-        <div className="relative mb-8 overflow-hidden rounded-[30px] border border-white/10 bg-white/10 p-6 shadow-[0_20px_70px_rgba(0,0,0,0.25)] backdrop-blur-2xl sm:p-8">
+        <div className="glass-panel relative mb-8 overflow-hidden rounded-[30px] p-6 sm:p-8">
           <div className="absolute -top-16 -left-10 h-40 w-40 rounded-full bg-pink-500/20 blur-3xl" />
           <div className="absolute -bottom-16 -right-10 h-48 w-48 rounded-full bg-cyan-500/20 blur-3xl" />
 
@@ -123,7 +123,7 @@ function OrganizerDashboard() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: index * 0.05 }}
                 whileHover={{ y: -6, scale: 1.01 }}
-                className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg backdrop-blur-2xl"
+                className="glass-panel relative overflow-hidden rounded-3xl p-5"
               >
                 <div
                   className={`absolute top-0 left-0 h-1.5 w-full bg-linear-to-r ${card.linear}`}
@@ -164,7 +164,7 @@ function OrganizerDashboard() {
 
         {/* CONTENT */}
         {loading ? (
-          <div className="rounded-[28px] border border-white/10 bg-white/10 px-6 py-16 text-center shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
+          <div className="glass-panel rounded-[28px] px-6 py-16 text-center">
             <div className="mx-auto mb-4 h-14 w-14 animate-pulse rounded-2xl bg-linear-to-r from-fuchsia-500 to-indigo-600" />
             <p className="text-lg font-semibold text-white">
               Loading events...
@@ -174,7 +174,7 @@ function OrganizerDashboard() {
             </p>
           </div>
         ) : events.length === 0 ? (
-          <div className="rounded-[28px] border border-dashed border-white/10 bg-white/10 px-6 py-16 text-center shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-2xl">
+          <div className="glass-panel rounded-[28px] border-dashed px-6 py-16 text-center">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-r from-pink-500 to-violet-600 shadow-lg">
               <CalendarDays className="h-7 w-7 text-white" />
             </div>

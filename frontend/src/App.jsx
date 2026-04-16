@@ -1,5 +1,4 @@
-import { Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
 // Auth Pages
@@ -37,30 +36,12 @@ import AdminLayout from "./layouts/AdminLayout";
 import OrganizerLayout from "./layouts/OrganizerLayout";
 
 function App() {
-  const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "light" || savedTheme === "dark") return savedTheme;
-
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  });
-
-  useEffect(() => {
-    document.documentElement.classList.remove("theme-light", "theme-dark");
-    document.documentElement.classList.add(
-      theme === "light" ? "theme-light" : "theme-dark",
-    );
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
-  };
+  const { pathname } = useLocation();
+  const hideNavbar = pathname === "/login" || pathname === "/register";
 
   return (
-    <div className="min-h-screen">
-      <Navbar theme={theme} onToggleTheme={toggleTheme} />
+    <div className="site-shell">
+      {!hideNavbar && <Navbar />}
 
       <Routes>
         {/* ================= PUBLIC ================= */}
