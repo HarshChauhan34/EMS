@@ -1,82 +1,118 @@
-# EMS — Event Management System
+# EMS (Event Management System)
 
-Full-stack web application for discovering events, booking seats, and managing events as an administrator. The project follows a classic **MERN-style** layout: a **React** SPA talks to a **Node.js** REST API backed by **MongoDB**.
+Full-stack MERN-style project with role-based workflows:
 
-## Features
+- `user`: browse and book events
+- `organizer`: create/manage own events (after admin approval)
+- `admin`: manage users, organizers, bookings, and events
 
-### For users
+Frontend is a React + Vite SPA, backend is an Express API with MongoDB.
 
-- **Account**: Register and log in; JWT stored in `localStorage` and sent on API requests.
-- **Events**: Browse events on the home page and open event details (title, description, category, date, location, price, seats).
-- **Bookings**: Book seats for an event; view **My Bookings**; cancel bookings when supported by the API.
-- **Profile**: Update profile (authenticated).
+## Project analysis
 
-### For administrators
+### Architecture summary
 
-- **Dashboard**: Aggregated stats (users, events, bookings, revenue from confirmed bookings).
-- **Events**: Create, edit, and delete events; optional image upload (JPEG/PNG, stored under `backend/uploads` and served at `/uploads`).
-- **Users & bookings**: List users (non-admin), expand to see a user’s confirmed bookings; overview of all bookings for reporting.
+- Frontend: `frontend/` (React 19, React Router 7, Tailwind CSS 4, Axios, Framer Motion)
+- Backend: `backend/` (Express 5, Mongoose 9, JWT auth, bcrypt, Nodemailer, Cloudinary upload)
+- Database: MongoDB
+- Auth: JWT in `Authorization: Bearer <token>`
+- Storage: user session in `localStorage` (`user` object with token and role)
 
-> **First admin account**: Registration from the UI always creates a `user`. To get an admin, create a user in MongoDB and set `role` to `"admin"`, or call `POST /api/auth/register` with `role: "admin"` during setup (treat this as a deployment concern in production).
+### Core business flow
 
-## Tech stack
+1. User or organizer registers.
+2. Organizer registration is stored as `pending` and cannot login until admin approval.
+3. Approved organizer creates events (with image upload).
+4. User books seats; available seats are reduced.
+5. User can cancel booking; seats are restored.
+6. Admin can approve/reject organizers and delete users (with related cleanup).
 
-| Layer    | Technologies |
-|----------|----------------|
-| Frontend | React 19, React Router 7, Vite 8, Tailwind CSS 4, Axios |
-| Backend  | Express 5, Mongoose 9, JWT (`jsonwebtoken`), bcryptjs, Multer (disk storage), CORS |
-| Database | MongoDB (via `MONGO_URI`) |
+### Roles and permissions
 
-## Repository layout
+- Public:
+  - List events
+  - Event details
+  - Register/login
+  - Forgot/reset password
+- User:
+  - Book event
+  - View/cancel own bookings
+  - Update profile
+- Organizer (approved only):
+  - Create/update own events
+  - Delete own events
+  - View organizer dashboard
+- Admin:
+  - View all users/bookings/events/organizers
+  - Approve/reject organizer requests
+  - Delete users (with bookings/events cleanup)
+  - Delete any event
 
-```
+## Repository structure
+
+```text
 EMS/
-├── backend/          # Express API (server.js)
-│   ├── config/       # DB connection
-│   ├── controllers/
-│   ├── middleware/   # auth, admin role, uploads
-│   ├── models/       # User, Event, Booking
-│   ├── routes/
-│   └── uploads/      # Event images (created at runtime)
-├── frontend/         # Vite + React app
-│   └── src/
-│       ├── pages/
-│       ├── components/
-│       ├── services/ # Axios API client
-│       └── routes/   # AdminRoute, etc.
+├── backend/
+│   ├── config/          # DB connection
+│   ├── controllers/     # Business logic
+│   ├── middleware/      # Auth, roles, upload adapters
+│   ├── models/          # User, Event, Booking schemas
+│   ├── routes/          # API route modules
+│   ├── utils/           # JWT + email helpers
+│   └── server.js        # App bootstrap
+├── frontend/
+│   ├── src/
+│   │   ├── pages/       # Auth, public, user, organizer, admin pages
+│   │   ├── components/  # Reusable UI (Navbar, EventCard)
+│   │   ├── services/    # Axios client and API service wrappers
+│   │   ├── routes/      # Route guards by role
+│   │   └── layouts/     # Admin/Organizer shell layouts
+│   └── vercel.json      # SPA rewrite rule
 └── README.md
 ```
 
-## Prerequisites
+## Tech stack
 
-- [Node.js](https://nodejs.org/) (LTS recommended)
-- A MongoDB instance (e.g. [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) or local MongoDB)
+| Layer | Stack |
+|---|---|
+| Frontend | React 19, Vite 8, React Router 7, Tailwind CSS 4, Axios, Framer Motion |
+| Backend | Node.js, Express 5, Mongoose 9, JWT, bcryptjs, Multer, Cloudinary, Nodemailer, MJML |
+| Database | MongoDB |
 
 ## Environment variables
 
-### Backend (`backend/.env`)
-
-Create `backend/.env` (do not commit real secrets):
+Create `backend/.env`:
 
 ```env
-MONGO_URI=mongodb+srv://USER:PASSWORD@cluster.example.mongodb.net/dbname
-JWT_SECRET=your_long_random_secret
+MONGO_URI=mongodb+srv://<user>:<pass>@<cluster>/<db>
+JWT_SECRET=replace_with_secure_secret
 PORT=5000
+
+# optional but recommended
+FRONTEND_URL=http://localhost:5173
+EXPOSE_RESET_LINK=true
+EMAIL_USER=your_gmail_address
+EMAIL_PASS=your_gmail_app_password
+EMAIL_FROM=your_sender_email
+
+# required if organizer uploads event images
+CLOUDINARY_CLOUD_NAME=...
+CLOUDINARY_API_KEY=...
+CLOUDINARY_API_SECRET=...
 ```
 
-### Frontend (`frontend/.env`)
-
-Optional; defaults to `http://localhost:5000/api` if unset:
+Create `frontend/.env`:
 
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
-For production, point `VITE_API_URL` at your deployed API (must include the `/api` path suffix used by this client).
+Important: frontend default fallback in code is a deployed API URL (`https://ems-4-dflv.onrender.com/api`).  
+For local dev, set `VITE_API_URL` explicitly.
 
-## Local development
+## Local setup
 
-### 1. Backend
+### 1) Backend
 
 ```bash
 cd backend
@@ -84,11 +120,9 @@ npm install
 npm start
 ```
 
-API listens on `PORT` (default **5000**). Health check: `GET http://localhost:5000/`.
+Runs on `http://localhost:5000` (or `PORT`).
 
-Ensure `backend/uploads` exists if you use event image uploads (Multer uses `uploads/` as destination).
-
-### 2. Frontend
+### 2) Frontend
 
 ```bash
 cd frontend
@@ -96,46 +130,79 @@ npm install
 npm run dev
 ```
 
-Dev server defaults to **http://localhost:5173** (Vite). The API allows this origin in CORS (`backend/server.js`).
-
-### 3. CORS
-
-Allowed origins are configured in `backend/server.js` (e.g. `http://localhost:5173` and a deployed Vercel URL). If you use another frontend URL, add it to `allowedOrigins` there.
+Runs on Vite dev server (typically `http://localhost:5173`).
 
 ## API overview
 
-Base path: `/api` (axios `baseURL` should end with `/api`).
+Base path: `/api`
 
-| Method & path | Access | Description |
-|---------------|--------|-------------|
-| `POST /api/auth/register` | Public | Register |
-| `POST /api/auth/login` | Public | Login |
-| `PUT /api/auth/profile` | User (JWT) | Update profile |
-| `GET /api/events` | Public | List events |
-| `GET /api/events/:id` | Public | Event by ID |
-| `POST /api/events` | Admin + JWT | Create event (multipart: `image`) |
-| `PUT /api/events/:id` | Admin + JWT | Update event (optional `image`) |
-| `DELETE /api/events/:id` | Admin + JWT | Delete event |
-| `POST /api/bookings` | User + JWT | Create booking |
-| `GET /api/bookings/my` | User + JWT | Current user’s bookings |
-| `GET /api/bookings` | Admin + JWT | All bookings |
-| `PUT /api/bookings/cancel/:id` | User + JWT | Cancel booking |
-| `GET /api/dashboard` | Admin + JWT | Dashboard stats |
-| `GET /api/admin/users` | Admin + JWT | All users |
-| `GET /api/admin/users/:id/bookings` | Admin + JWT | Bookings for a user |
+### Auth
 
-Send `Authorization: Bearer <token>` for protected routes.
+- `POST /auth/register`
+- `POST /auth/login`
+- `POST /auth/forgot-password`
+- `POST /auth/reset-password`
+- `PUT /auth/profile` (protected)
+- `GET /auth/me` (protected)
 
-## Frontend production build
+### Events
 
-```bash
-cd frontend
-npm run build
-npm run preview   # optional local preview of dist/
-```
+- `GET /events` (public; organizer effectively sees own events when authenticated)
+- `GET /events/:id`
+- `POST /events` (approved organizer only; multipart `image`)
+- `PUT /events/:id` (approved organizer only; own event)
+- `DELETE /events/:id` (admin or approved organizer; organizer only own event)
 
-The app includes `frontend/vercel.json` with SPA rewrites so client-side routes work on static hosts.
+### Bookings
 
-## License
+- `POST /bookings` (user only)
+- `GET /bookings/my` (user)
+- `GET /bookings` (admin)
+- `PUT /bookings/cancel/:id` (booking owner)
 
-ISC (backend `package.json`). Add or align a root license if you publish the repo.
+### Admin
+
+- `GET /admin/users`
+- `DELETE /admin/users/:id`
+- `GET /admin/users/:id/bookings`
+- `GET /admin/organizers`
+- `GET /admin/organizers/pending`
+- `PUT /admin/organizers/:id/approve`
+- `PUT /admin/organizers/:id/reject`
+
+### Dashboard
+
+- `GET /dashboard` (admin)
+
+## Frontend routes
+
+- Public: `/`, `/event/:id`, `/login`, `/register`, `/forgot-password`, `/reset-password/:token`
+- User: `/my-bookings`, `/profile`
+- Admin: `/admin`, `/admin/users`, `/admin/organizers`
+- Organizer: `/organizer`, `/organizer/create-event`, `/organizer/edit-event/:id`
+
+## Data models (high level)
+
+- `User`: name, email, password, role, organizer approval status, block flag, password reset fields
+- `Event`: title, description, category, date, location, price, seats, image, createdBy, organizerName
+- `Booking`: user, event, seatsBooked, totalAmount, paymentStatus, bookingStatus
+
+## Deployment notes
+
+- Frontend includes `frontend/vercel.json` SPA rewrite:
+  - `/(.*)` -> `/index.html`
+- Backend serves static `/uploads` path (legacy/local image handling), but current event image flow uses Cloudinary middleware.
+- CORS middleware currently allows all origins (`origin: "*"`) and no credentials.
+
+## Current implementation notes
+
+- Admin signup is not exposed via register flow; create first admin directly in MongoDB by setting `role: "admin"` on a user.
+- Organizer create/update routes expect image upload support; configure Cloudinary env values.
+- No automated tests are present yet (`backend` test script is placeholder).
+
+## Suggested next improvements
+
+1. Add a root `docker-compose` for one-command local startup.
+2. Add integration tests for auth, booking, and organizer approval workflows.
+3. Tighten CORS and add rate-limiting for auth endpoints.
+4. Add seed script for first admin user.
