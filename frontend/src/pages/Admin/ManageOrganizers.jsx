@@ -166,9 +166,9 @@ function ManageOrganizers() {
   };
 
   return (
-    <div className="site-shell text-white p-4 sm:p-6 lg:p-8">
+    <div className="site-shell p-3 text-white sm:p-6 lg:p-8">
       {/* HEADER */}
-      <div className="glass-panel relative mb-8 overflow-hidden rounded-[28px] p-6 sm:p-8">
+      <div className="glass-panel relative mb-8 overflow-hidden rounded-[28px] p-4 sm:p-8">
         <div className="absolute -top-16 -left-10 h-40 w-40 rounded-full bg-fuchsia-500/20 blur-3xl" />
         <div className="absolute -bottom-16 -right-10 h-48 w-48 rounded-full bg-cyan-500/20 blur-3xl" />
 
@@ -186,7 +186,7 @@ function ManageOrganizers() {
       </div>
 
       {/* STATS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mb-8">
+      <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {statCards.map((card, index) => {
           const Icon = card.icon;
 
@@ -205,7 +205,7 @@ function ManageOrganizers() {
               <div className="relative flex items-start justify-between">
                 <div>
                   <p className="text-sm text-slate-300">{card.title}</p>
-                  <h2 className={`mt-2 text-3xl font-bold ${card.text}`}>
+                  <h2 className={`mt-2 text-2xl font-bold sm:text-3xl ${card.text}`}>
                     {card.value}
                   </h2>
                 </div>
@@ -222,8 +222,8 @@ function ManageOrganizers() {
       </div>
 
       {/* SEARCH + FILTER + LIST */}
-      <div className="glass-panel rounded-[28px] p-5 sm:p-6">
-        <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+      <div className="glass-panel rounded-[28px] p-4 sm:p-6">
+        <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h2 className="text-2xl font-semibold">Organizers</h2>
             <p className="mt-1 text-sm text-slate-300">
@@ -231,7 +231,7 @@ function ManageOrganizers() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
+          <div className="flex w-full flex-col gap-3 sm:flex-row lg:w-auto">
             <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 w-full sm:w-[320px]">
               <Search className="h-4.5 w-4.5 text-slate-400 shrink-0" />
               <input
@@ -246,7 +246,7 @@ function ManageOrganizers() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none"
+              className="w-full min-w-[9rem] rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none sm:w-auto"
             >
               <option value="all" className="bg-slate-900">
                 All Status
@@ -285,7 +285,7 @@ function ManageOrganizers() {
                 >
                   {/* ORGANIZER CARD */}
                   <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-                    <div className="flex min-w-0 items-center gap-4">
+                    <div className="flex min-w-0 items-start gap-3 sm:items-center sm:gap-4">
                       <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-linear-to-r from-pink-500 via-violet-500 to-indigo-600 text-lg font-bold text-white shadow-lg">
                         {getInitial(org.name)}
                       </div>
@@ -324,7 +324,7 @@ function ManageOrganizers() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col gap-3 sm:flex-row xl:items-center">
+                    <div className="flex w-full flex-col gap-3 sm:flex-row xl:w-auto xl:items-center">
                       <button
                         onClick={() => toggleOpen(org._id)}
                         className="flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-indigo-500 to-purple-600 px-4 py-3 font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.02] sm:w-auto"
@@ -355,7 +355,7 @@ function ManageOrganizers() {
                         className="overflow-hidden"
                       >
                         <div className="mt-5 border-t border-white/10 pt-5">
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+                          <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                               <div className="flex items-center gap-2 text-sm text-slate-400 mb-2">
                                 <CalendarDays className="h-4 w-4 text-amber-300" />
