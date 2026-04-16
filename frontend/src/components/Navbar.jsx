@@ -4,11 +4,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   CalendarCheck2,
   ChevronDown,
-  LayoutDashboard,
   LogOut,
   Menu,
   User,
-  Users,
   X,
 } from "lucide-react";
 import { getStoredUser } from "../utils/authStorage";
@@ -49,6 +47,26 @@ function Navbar() {
     setProfileOpen(false);
   }, [location.pathname]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = menuOpen ? "hidden" : previousOverflow || "";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menuOpen]);
+
   const logoutHandler = () => {
     localStorage.removeItem("user");
     navigate("/");
@@ -77,25 +95,25 @@ function Navbar() {
 
   return (
     <header
-      className={`sticky inset-x-0 top-0 z-50 border-b backdrop-blur-2xl transition-all duration-300 ${navBgClass}`}
+      className={`fixed inset-x-0 top-0 z-50 border-b backdrop-blur-2xl transition-all duration-300 ${navBgClass}`}
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-linear(circle_at_8%_0%,rgba(99,102,241,0.24),transparent_32%),radial-linear(circle_at_92%_0%,rgba(236,72,153,0.22),transparent_34%),linear-linear(to_right,rgba(2,6,23,0.92),rgba(10,15,36,0.88),rgba(30,27,75,0.86))]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-fuchsia-400/65 to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-cyan-300/50 to-transparent" />
 
-      <div className="relative flex min-h-19 w-full items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="relative flex min-h-16 w-full items-center justify-between gap-2 px-3 sm:min-h-19 sm:gap-4 sm:px-6 lg:px-8">
         <Link
           to={getHomeRoute()}
-          className="group flex shrink-0 items-center py-1"
+          className="group flex min-w-0 shrink items-center py-1"
         >
           <img
             src="/logo.svg"
             alt="Event Management System Logo"
-            className="block h-12 w-auto max-w-[200px] object-contain sm:h-14 sm:max-w-[240px] md:h-16 md:max-w-[280px] transition duration-300 group-hover:-translate-y-0.5"
+            className="block h-10 w-auto max-w-[165px] object-contain sm:h-14 sm:max-w-[240px] md:h-16 md:max-w-[280px] transition duration-300 group-hover:-translate-y-0.5"
           />
         </Link>
 
-        <div className="hidden items-center gap-2 md:flex lg:gap-3">
+        <div className="hidden items-center gap-2 lg:flex lg:gap-3">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
@@ -185,7 +203,7 @@ function Navbar() {
 
         <button
           onClick={() => setMenuOpen((prev) => !prev)}
-          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/16 bg-white/10 text-white shadow md:hidden"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/16 bg-white/10 text-white shadow lg:hidden"
           aria-label="Toggle menu"
         >
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -199,9 +217,9 @@ function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -14 }}
             transition={{ duration: 0.2 }}
-            className="border-t border-white/10 bg-slate-950/94 backdrop-blur-2xl md:hidden"
+            className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-white/10 bg-slate-950/94 backdrop-blur-2xl lg:hidden sm:max-h-[calc(100dvh-4.75rem)]"
           >
-            <div className="w-full px-4 py-4">
+            <div className="w-full px-3 py-3 sm:px-4 sm:py-4">
               <div className="space-y-3 rounded-3xl border border-white/10 bg-white/6 p-4 shadow-[0_12px_40px_rgba(2,6,23,0.35)]">
                 {user && (
                   <div className="mb-1 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/8 p-3">
@@ -240,14 +258,14 @@ function Navbar() {
                     <Link
                       to="/login"
                       onClick={() => setMenuOpen(false)}
-                      className="rounded-2xl border border-white/14 bg-white/8 px-4 py-3 text-center text-sm font-semibold text-white"
+                      className="block w-full rounded-2xl border border-white/14 bg-white/8 px-4 py-3 text-center text-sm font-semibold text-white"
                     >
                       Login
                     </Link>
                     <Link
                       to="/register"
                       onClick={() => setMenuOpen(false)}
-                      className="rounded-2xl bg-linear-to-r from-indigo-500 via-violet-500 to-pink-500 px-4 py-3 text-center text-sm font-bold text-white"
+                      className="block w-full rounded-2xl bg-linear-to-r from-indigo-500 via-violet-500 to-pink-500 px-4 py-3 text-center text-sm font-bold text-white"
                     >
                       Get Started
                     </Link>

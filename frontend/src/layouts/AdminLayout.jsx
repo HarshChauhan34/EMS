@@ -8,7 +8,7 @@ function AdminLayout() {
   const isActive = (path) => location.pathname === path;
 
   const navClass = (path) =>
-    `group relative overflow-hidden px-4 py-3 rounded-2xl text-left transition-all duration-300 font-medium ${
+    `group relative overflow-hidden px-4 py-3 rounded-2xl text-center md:text-left transition-all duration-300 font-medium ${
       isActive(path)
         ? "bg-linear-to-r from-indigo-500 via-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/20"
         : "text-slate-200 hover:bg-white/10 hover:text-white border border-transparent hover:border-white/10"
@@ -77,21 +77,6 @@ function AdminLayout() {
         </div>
       </aside>
 
-      {/* MOBILE TOPBAR */}
-      <div className="glass-panel fixed top-0 left-0 right-0 z-30 flex md:hidden items-center justify-between border-b border-white/10 rounded-none px-4 py-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 via-violet-500 to-pink-500 shadow-lg">
-            ⚡
-          </div>
-          <div>
-            <h2 className="text-lg font-bold leading-none">Admin</h2>
-            <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
-              Control Center
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* MOBILE NAV */}
       <div className="glass-panel fixed bottom-0 left-0 right-0 z-30 grid md:hidden grid-cols-3 gap-2 border-t border-white/10 rounded-none p-2">
         <button
@@ -117,7 +102,7 @@ function AdminLayout() {
       </div>
 
       {/* PAGE CONTENT */}
-      <main className="flex-1 p-4 pt-24 md:p-8 md:ml-72 md:pt-8 pb-24 md:pb-8">
+      <main className="flex-1 p-4 pt-4 pb-24 md:ml-72 md:p-8 md:pt-8 md:pb-8">
         <div className="min-h-[calc(100vh-8rem)] rounded-[28px] border border-white/10 bg-white/3 p-3 sm:p-4 md:p-0">
           <Outlet />
         </div>

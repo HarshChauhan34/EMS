@@ -47,74 +47,76 @@ function App() {
     <div className="site-shell">
       {!hideNavbar && <Navbar />}
 
-      <Routes>
-        {/* ================= PUBLIC ================= */}
-        <Route path="/" element={<Home />} />
-        <Route path="/event/:id" element={<EventDetails />} />
+      <div className={hideNavbar ? "" : "pt-16 sm:pt-20"}>
+        <Routes>
+          {/* ================= PUBLIC ================= */}
+          <Route path="/" element={<Home />} />
+          <Route path="/event/:id" element={<EventDetails />} />
 
-        {/* ================= AUTH ================= */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+          {/* ================= AUTH ================= */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-        {/* ================= USER ================= */}
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
+          {/* ================= USER ================= */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/my-bookings"
-          element={
-            <UserRoute>
-              <MyBookings />
-            </UserRoute>
-          }
-        />
+          <Route
+            path="/my-bookings"
+            element={
+              <UserRoute>
+                <MyBookings />
+              </UserRoute>
+            }
+          />
 
-        {/* ================= ADMIN ================= */}
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <AdminLayout />
-            </AdminRoute>
-          }
-        >
-          <Route index element={<AdminDashboard />} />
-          <Route path="users" element={<ManageUsers />} />
-          <Route path="organizers" element={<ManageOrganizers />} />
-        </Route>
+          {/* ================= ADMIN ================= */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminLayout />
+              </AdminRoute>
+            }
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path="users" element={<ManageUsers />} />
+            <Route path="organizers" element={<ManageOrganizers />} />
+          </Route>
 
-        {/* ================= ORGANIZER ================= */}
-        <Route
-          path="/organizer"
-          element={
-            <OrganizerRoute>
-              <OrganizerLayout />
-            </OrganizerRoute>
-          }
-        >
-          <Route index element={<OrganizerDashboard />} />
-          <Route path="create-event" element={<CreateEvent />} />
-          <Route path="edit-event/:id" element={<EditEvent />} />
-        </Route>
+          {/* ================= ORGANIZER ================= */}
+          <Route
+            path="/organizer"
+            element={
+              <OrganizerRoute>
+                <OrganizerLayout />
+              </OrganizerRoute>
+            }
+          >
+            <Route index element={<OrganizerDashboard />} />
+            <Route path="create-event" element={<CreateEvent />} />
+            <Route path="edit-event/:id" element={<EditEvent />} />
+          </Route>
 
-        {/* ================= 404 PAGE ================= */}
-        <Route
-          path="*"
-          element={
-            <h1 className="text-center mt-20 text-2xl font-bold">
-              404 - Page Not Found 🚫
-            </h1>
-          }
-        />
-      </Routes>
+          {/* ================= 404 PAGE ================= */}
+          <Route
+            path="*"
+            element={
+              <h1 className="text-center mt-20 text-2xl font-bold">
+                404 - Page Not Found 🚫
+              </h1>
+            }
+          />
+        </Routes>
+      </div>
     </div>
   );
 }

@@ -176,13 +176,7 @@ function EventDetails() {
       <div className="w-full">
         {/* top actions */}
         <div className="mb-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
-          <button
-            onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-xl transition hover:bg-white/15"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </button>
+          
 
           <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-cyan-300 sm:text-xs sm:tracking-[0.18em]">
             <Sparkles className="h-4 w-4" />
