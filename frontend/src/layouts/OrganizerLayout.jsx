@@ -84,19 +84,19 @@ function OrganizerLayout() {
       </div>
 
       {/* MOBILE NAV */}
-      <div className="glass-panel fixed bottom-0 left-0 right-0 z-30 grid md:hidden grid-cols-2 gap-2 border-t border-white/10 rounded-none p-3">
+      <div className="glass-panel fixed bottom-0 left-0 right-0 z-30 grid md:hidden grid-cols-2 gap-2 border-t border-white/10 rounded-none p-2">
         <button
           onClick={() => navigate("/organizer")}
-          className={`${navClass("/organizer")} px-3 py-2 text-center text-sm`}
+          className={`${navClass("/organizer")} px-2 py-2 text-center text-[11px] leading-tight`}
         >
-          📊 Dashboard
+          Dashboard
         </button>
 
         <button
           onClick={() => navigate("/organizer/create-event")}
-          className={`${navClass("/organizer/create-event")} px-3 py-2 text-center text-sm`}
+          className={`${navClass("/organizer/create-event")} px-2 py-2 text-center text-[11px] leading-tight`}
         >
-          ➕ Create Event
+          Create Event
         </button>
       </div>
 

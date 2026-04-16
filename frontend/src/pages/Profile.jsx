@@ -72,7 +72,7 @@ function Profile() {
   if (!user) return null;
 
   return (
-    <div className="site-shell text-white px-4 py-6 sm:px-6 lg:px-8 tex">
+    <div className="site-shell px-4 py-6 text-white sm:px-6 lg:px-8">
       <div className="w-full">
         {/* TOP PROFILE HERO */}
         <div className="glass-panel relative overflow-hidden rounded-4xl p-6 sm:p-8 lg:p-10">

@@ -297,7 +297,7 @@ function AdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="mt-5 grid grid-cols-2 gap-3">
+                  <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <button
                       onClick={() => handleApprove(org._id)}
                       disabled={isLoading}

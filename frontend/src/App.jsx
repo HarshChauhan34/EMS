@@ -37,7 +37,11 @@ import OrganizerLayout from "./layouts/OrganizerLayout";
 
 function App() {
   const { pathname } = useLocation();
-  const hideNavbar = pathname === "/login" || pathname === "/register";
+  const hideNavbar =
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname === "/forgot-password" ||
+    pathname.startsWith("/reset-password/");
 
   return (
     <div className="site-shell">

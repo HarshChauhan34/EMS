@@ -232,7 +232,7 @@ function ManageUsers() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 w-full lg:w-90">
+          <div className="flex w-full items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 lg:w-[22rem]">
             <Search className="h-4.5 w-4.5 text-slate-400 shrink-0" />
             <input
               type="text"
@@ -282,10 +282,10 @@ function ManageUsers() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-3 xl:items-center">
+                    <div className="flex flex-col gap-3 sm:flex-row xl:items-center">
                       <button
                         onClick={() => handleViewBookings(u._id)}
-                        className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-indigo-500 to-purple-600 px-4 py-3 font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.02] disabled:opacity-50"
+                        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-indigo-500 to-purple-600 px-4 py-3 font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.02] disabled:opacity-50 sm:w-auto"
                         disabled={isLoading || isDeleting}
                       >
                         {isLoading ? (
@@ -305,7 +305,7 @@ function ManageUsers() {
 
                       <button
                         onClick={() => handleDeleteUser(u._id, u.name)}
-                        className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-rose-500 to-red-600 px-4 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 transition hover:scale-[1.02] disabled:opacity-50"
+                        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-rose-500 to-red-600 px-4 py-3 font-semibold text-white shadow-lg shadow-rose-500/20 transition hover:scale-[1.02] disabled:opacity-50 sm:w-auto"
                         disabled={isDeleting || isLoading}
                       >
                         <Trash2 className="h-4 w-4" />

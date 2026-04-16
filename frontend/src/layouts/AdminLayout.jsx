@@ -93,26 +93,26 @@ function AdminLayout() {
       </div>
 
       {/* MOBILE NAV */}
-      <div className="glass-panel fixed bottom-0 left-0 right-0 z-30 grid md:hidden grid-cols-3 gap-2 border-t border-white/10 rounded-none p-3">
+      <div className="glass-panel fixed bottom-0 left-0 right-0 z-30 grid md:hidden grid-cols-3 gap-2 border-t border-white/10 rounded-none p-2">
         <button
           onClick={() => navigate("/admin")}
-          className={`${navClass("/admin")} px-3 py-2 text-center text-sm`}
+          className={`${navClass("/admin")} px-2 py-2 text-center text-[11px] leading-tight`}
         >
-          🎛 Dashboard
+          Dashboard
         </button>
 
         <button
           onClick={() => navigate("/admin/users")}
-          className={`${navClass("/admin/users")} px-3 py-2 text-center text-sm`}
+          className={`${navClass("/admin/users")} px-2 py-2 text-center text-[11px] leading-tight`}
         >
-          👥 Users
+          Users
         </button>
 
         <button
           onClick={() => navigate("/admin/organizers")}
-          className={`${navClass("/admin/organizers")} px-3 py-2 text-center text-sm`}
+          className={`${navClass("/admin/organizers")} px-2 py-2 text-center text-[11px] leading-tight`}
         >
-          🧑‍💼Organizers
+          Organizers
         </button>
       </div>
 

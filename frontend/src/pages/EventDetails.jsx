@@ -175,7 +175,7 @@ function EventDetails() {
     <div className="site-shell text-white px-4 py-6 sm:px-6 lg:px-8">
       <div className="w-full">
         {/* top actions */}
-        <div className="mb-6 flex items-center justify-between gap-3">
+        <div className="mb-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
           <button
             onClick={() => navigate(-1)}
             className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-xl transition hover:bg-white/15"
@@ -184,7 +184,7 @@ function EventDetails() {
             Back
           </button>
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-cyan-300 sm:text-xs sm:tracking-[0.18em]">
             <Sparkles className="h-4 w-4" />
             Premium Event View
           </div>
@@ -214,12 +214,12 @@ function EventDetails() {
                 <div className="absolute -left-10 -top-10 h-28 w-28 rounded-full bg-pink-500/20 blur-3xl" />
                 <div className="absolute -right-10 bottom-10 h-32 w-32 rounded-full bg-cyan-500/15 blur-3xl" />
 
-                <div className="absolute left-0 right-0 top-0 flex items-center justify-between p-4 sm:p-6">
-                  <span className="rounded-full border border-white/20 bg-linear-to-r from-fuchsia-500/90 via-pink-500/90 to-violet-600/90 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow-lg backdrop-blur-md">
-                    {event.category}
-                  </span>
+                <div className="absolute left-0 right-0 top-0 flex flex-wrap items-center justify-between gap-2 p-4 sm:p-6">
+                    <span className="rounded-full border border-white/20 bg-linear-to-r from-fuchsia-500/90 via-pink-500/90 to-violet-600/90 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white shadow-lg backdrop-blur-md sm:px-4 sm:py-2 sm:text-xs">
+                      {event.category}
+                    </span>
 
-                  <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-xs font-semibold text-emerald-300">
+                  <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-[11px] font-semibold text-emerald-300 sm:px-4 sm:py-2 sm:text-xs">
                     {event.availableSeats > 0 ? "Open for Booking" : "Sold Out"}
                   </span>
                 </div>
@@ -331,7 +331,7 @@ function EventDetails() {
               </div>
 
               <div className="p-6 space-y-5">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                     <p className="text-xs text-slate-400">Price / Seat</p>
                     <p className="mt-1 text-lg font-bold text-emerald-300">
@@ -381,7 +381,7 @@ function EventDetails() {
                     </div>
 
                     <div className="rounded-2xl border border-white/10 bg-linear-to-r from-emerald-500/10 to-cyan-500/10 p-4">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
                         <span className="text-sm font-medium text-slate-300">
                           Total Amount
                         </span>

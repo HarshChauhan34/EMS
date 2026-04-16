@@ -324,10 +324,10 @@ function ManageOrganizers() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-3 xl:items-center">
+                    <div className="flex flex-col gap-3 sm:flex-row xl:items-center">
                       <button
                         onClick={() => toggleOpen(org._id)}
-                        className="flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-indigo-500 to-purple-600 px-4 py-3 font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.02]"
+                        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-indigo-500 to-purple-600 px-4 py-3 font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:scale-[1.02] sm:w-auto"
                       >
                         {isOpen ? (
                           <>

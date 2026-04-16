@@ -92,7 +92,7 @@ function CreateEvent() {
   };
 
   return (
-    <div className="site-shell flex items-center justify-center px-4 py-10 text-white">
+    <div className="site-shell flex items-start justify-center px-4 py-10 text-white md:items-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
