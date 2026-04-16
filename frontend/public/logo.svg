@@ -1,89 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="1200" height="320" viewBox="0 0 1200 320" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="gradArc" x1="40" y1="260" x2="340" y2="20" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#0EA5E9"/>
-      <stop offset="50%" stop-color="#7C3AED"/>
-      <stop offset="100%" stop-color="#EC4899"/>
-    </linearGradient>
-
-    <linearGradient id="gradBlue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0EA5E9"/>
-      <stop offset="100%" stop-color="#2563EB"/>
-    </linearGradient>
-
-    <linearGradient id="gradPurple" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#7C3AED"/>
-      <stop offset="100%" stop-color="#9333EA"/>
-    </linearGradient>
-
-    <linearGradient id="gradPink" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#F43F5E"/>
-      <stop offset="100%" stop-color="#EC4899"/>
+    <linearGradient id="gradArc" x1="40" y1="260" x2="340" y2="20">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="50%" stop-color="#A78BFA"/>
+      <stop offset="100%" stop-color="#F472B6"/>
     </linearGradient>
 
     <style>
-      .title { font: 800 82px 'Arial', 'Helvetica Neue', sans-serif; letter-spacing: 3px; fill: #14236B; }
-      .subtitle { font: 700 42px 'Arial', 'Helvetica Neue', sans-serif; letter-spacing: 9px; fill: #1D8FE1; }
-      .system { font: 700 34px 'Arial', 'Helvetica Neue', sans-serif; letter-spacing: 12px; fill: #3F3F46; }
+      .title { font: 800 82px Arial; letter-spacing: 3px; fill: #F8FAFC; }
+      .subtitle { font: 700 42px Arial; letter-spacing: 9px; fill: #E0F2FE; }
+      .system { font: 700 34px Arial; letter-spacing: 12px; fill: #F1F5F9; }
     </style>
   </defs>
 
   <!-- Icon -->
   <g transform="translate(20,18)">
-    <!-- outer swoosh -->
-    <path d="M255 35
-             C185 0, 85 14, 34 91
-             C-12 160, 4 248, 67 302
-             C123 350, 218 356, 290 320"
+    <path d="M255 35 C185 0, 85 14, 34 91 C-12 160, 4 248, 67 302 C123 350, 218 356, 290 320"
           stroke="url(#gradArc)" stroke-width="16" fill="none" stroke-linecap="round"/>
 
-    <!-- calendar -->
-    <g transform="translate(72,52)">
-      <rect x="32" y="30" width="150" height="135" rx="24" fill="#14236B"/>
-      <rect x="52" y="56" width="110" height="87" rx="18" fill="white" opacity="0.96"/>
-      <rect x="50" y="0" width="20" height="42" rx="10" fill="#14236B"/>
-      <rect x="144" y="0" width="20" height="42" rx="10" fill="#14236B"/>
-
-      <!-- date cells -->
-      <g fill="#2563EB" opacity="0.95">
-        <rect x="72" y="78" width="22" height="22" rx="5"/>
-        <rect x="106" y="78" width="22" height="22" rx="5"/>
-        <rect x="140" y="78" width="22" height="22" rx="5"/>
-        <rect x="72" y="112" width="22" height="22" rx="5"/>
-        <rect x="106" y="112" width="22" height="22" rx="5" fill="#4F46E5"/>
-        <rect x="140" y="112" width="22" height="22" rx="5"/>
-      </g>
-    </g>
-
-    <!-- people -->
-    <g transform="translate(42,170)">
-      <!-- left -->
-      <circle cx="72" cy="42" r="22" fill="url(#gradPurple)"/>
-      <path d="M40 122 C45 84, 68 72, 98 76 C121 79, 132 90, 142 110
-               C114 108, 97 113, 79 126 C64 136, 52 135, 40 122Z" fill="url(#gradPurple)"/>
-
-      <!-- center -->
-      <circle cx="165" cy="20" r="26" fill="url(#gradBlue)"/>
-      <path d="M115 116 C126 90, 142 72, 165 50 C188 72, 204 90, 215 116
-               C196 122, 178 126, 165 126 C152 126, 134 122, 115 116Z" fill="url(#gradBlue)"/>
-
-      <!-- right -->
-      <circle cx="258" cy="42" r="22" fill="url(#gradPink)"/>
-      <path d="M188 120 C201 106, 212 94, 232 80 C253 66, 278 68, 305 78
-               C294 95, 280 110, 264 122 C239 125, 214 123, 188 120Z" fill="url(#gradPink)"/>
-    </g>
-
-    <!-- confetti -->
-    <g transform="translate(264,72)">
-      <path d="M12 80 C24 60, 34 42, 38 20" stroke="#EC4899" stroke-width="8" stroke-linecap="round"/>
-      <path d="M30 88 C50 74, 66 62, 84 44" stroke="#0EA5E9" stroke-width="8" stroke-linecap="round"/>
-      <path d="M18 102 C30 114, 44 126, 58 136" stroke="#7C3AED" stroke-width="7" stroke-linecap="round"/>
-      <circle cx="44" cy="8" r="7" fill="#F59E0B"/>
-      <circle cx="74" cy="34" r="6" fill="#EC4899"/>
-      <circle cx="98" cy="82" r="6" fill="#3B82F6"/>
-      <rect x="46" y="118" width="10" height="10" rx="2" transform="rotate(45 51 123)" fill="#0EA5E9"/>
-    </g>
+    <!-- Calendar -->
+    <rect x="110" y="80" width="150" height="120" rx="20" fill="#1E3A8A"/>
+    <rect x="130" y="100" width="110" height="80" rx="10" fill="white"/>
   </g>
 
   <!-- Text -->
@@ -91,8 +29,8 @@
     <text x="0" y="110" class="title">EVENT</text>
     <text x="0" y="176" class="subtitle">MANAGEMENT</text>
 
-    <line x1="0" y1="218" x2="118" y2="218" stroke="#7C3AED" stroke-width="6" stroke-linecap="round"/>
-    <text x="145" y="230" class="system">SYSTEM</text>
-    <line x1="438" y1="218" x2="620" y2="218" stroke="#EC4899" stroke-width="6" stroke-linecap="round"/>
+    <line x1="0" y1="218" x2="120" y2="218" stroke="#A78BFA" stroke-width="5"/>
+    <text x="140" y="230" class="system">SYSTEM</text>
+    <line x1="420" y1="218" x2="620" y2="218" stroke="#F472B6" stroke-width="5"/>
   </g>
 </svg>
